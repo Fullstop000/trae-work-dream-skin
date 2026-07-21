@@ -114,5 +114,12 @@
     "gridColor": "#00f0ff12",
     "magenta": "#ff2bd6",
     "glow": "0 0 10px #00f0ff99, 0 0 24px #00f0ff52"
+  },
+  "icons": {
+    "overrides": {
+      "chatNew": "terminal.svg",
+      "marketplace": "bag.svg",
+      "automation": "chip.svg"
+    }
   }
 }

@@ -13,6 +13,7 @@
   const DISABLED_KEY = `${LS_PREFIX}disabled`;
   const STYLE_ID = "trae-dream-skin-style";
   const UI_STYLE_ID = "trae-dream-skin-ui-style";
+  const ICONS_STYLE_ID = "trae-dream-skin-icons-style";
   const PANEL_ID = "trae-dream-skin-panel";
   const BUTTON_ID = "trae-dream-skin-button";
 
@@ -20,6 +21,7 @@
   window.__TRAE_DREAM_SKIN_OBS__ = null;
   document.getElementById(STYLE_ID)?.remove();
   document.getElementById(UI_STYLE_ID)?.remove();
+  document.getElementById(ICONS_STYLE_ID)?.remove();
   document.getElementById(PANEL_ID)?.remove();
   document.getElementById(BUTTON_ID)?.remove();
   // 清理上一次注入在 <html> 上写的令牌变量（v3）
@@ -1007,6 +1009,7 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     if (activeThemeClass) document.body.classList.remove(activeThemeClass);
     activeThemeClass = null;
     document.getElementById(STYLE_ID)?.remove();
+    document.getElementById(ICONS_STYLE_ID)?.remove();
     document.getElementById(PANEL_ID)?.remove();
     panel.style.display = "none";
     panel.querySelectorAll(".ds-card").forEach((card) => card.classList.remove("ds-active"));
@@ -1150,6 +1153,43 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     setVar("--trae-skin-workbench-panel", withAlpha(surface.secondary, workbenchOpacity.panel ?? 0.72));
   };
 
+  // ---------- v3：图标 glyph 替换（CSS mask，颜色跟随 currentColor） ----------
+  const applyIconOverrides = (settings) => {
+    document.getElementById(ICONS_STYLE_ID)?.remove();
+    const overrides = settings.icons?.overrides || {};
+    const assets = settings.icons?.assets || {};
+    const rules = [];
+    for (const [key, spec] of Object.entries(overrides)) {
+      const art = assets[key];
+      if (!art) continue;
+      const selector = (typeof spec === "object" && spec?.selector)
+        ? spec.selector
+        : key.startsWith("codicon-") ? `.${key}` : `svg.trae-icon-${key}`;
+      const mask = `url("${art}") center / contain no-repeat`;
+      if (key.startsWith("codicon-") || (typeof spec === "object" && spec?.pseudo)) {
+        rules.push(`${selector}::before {
+  content: "" !important; display: inline-block !important;
+  width: 1em; height: 1em; background: currentColor !important;
+  -webkit-mask: ${mask} !important; mask: ${mask} !important;
+  -webkit-mask-mode: alpha !important; mask-mode: alpha !important;
+}`);
+      } else {
+        rules.push(`${selector} * { display: none !important; }
+${selector} {
+  background: currentColor !important;
+  -webkit-mask: ${mask} !important; mask: ${mask} !important;
+  -webkit-mask-mode: alpha !important; mask-mode: alpha !important;
+}`);
+      }
+    }
+    if (!rules.length) return 0;
+    const el = document.createElement("style");
+    el.id = ICONS_STYLE_ID;
+    el.textContent = rules.join("\n");
+    (document.head || document.documentElement).appendChild(el);
+    return rules.length;
+  };
+
   // ---------- v3 主入口：握手 → 扇出 → 自有层 → 护栏 ----------
   const applyV3Theme = (theme, settings) => {
     const appearance = settings.appearance === "light" ? "light" : "dark";
@@ -1169,13 +1209,14 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
 
     const roles = TOKEN_MAP.deriveRoles(tokens, { appearance });
     setTraeSkinVarsV3(roles, settings);
+    const iconCount = applyIconOverrides(settings);
 
     document.body.classList.add("trae-skin-v2", "trae-skin-v3");
     document.body.classList.toggle("trae-skin-appearance-dark", appearance === "dark");
 
     const warnings = TOKEN_MAP.auditContrast(tokens, { appearance });
     if (warnings.length) console.warn("[dream-skin] contrast warnings:", JSON.stringify(warnings));
-    return { contrastWarnings: warnings.length };
+    return { contrastWarnings: warnings.length, iconOverrides: iconCount };
   };
 
   const apply = (id) => {
@@ -1207,6 +1248,7 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     } else {
       // v1/v2 主题没有外观握手设计，切回去时还原 App 原始外观
       restoreNativeAppearance();
+      document.getElementById(ICONS_STYLE_ID)?.remove();
     }
     if (schemaVersion >= 2) {
       document.body.classList.add("trae-skin-v2");

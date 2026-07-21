@@ -106,6 +106,19 @@ function buildCatalog(themesDir) {
     ]) {
       if (meta[key] != null) settings[key] = meta[key];
     }
+    // icons.overrides: 解析 icons/ 目录下的素材文件为 data URL
+    if (settings.icons?.overrides && typeof settings.icons.overrides === "object") {
+      const assets = {};
+      for (const [key, spec] of Object.entries(settings.icons.overrides)) {
+        const file = typeof spec === "string" ? spec : spec?.src;
+        if (!file || !/\.(svg|png|jpe?g)$/i.test(file)) continue;
+        const full = path.join(dir, "icons", file);
+        if (fs.existsSync(full)) assets[key] = dataUri(full);
+      }
+      if (Object.keys(assets).length) {
+        settings.icons = { ...settings.icons, assets };
+      }
+    }
     catalog.push({
       id: String(meta.id),
       name: String(meta.name),
