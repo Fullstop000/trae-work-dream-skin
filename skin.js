@@ -687,9 +687,14 @@ body.trae-skin-v2 #${BUTTON_ID} {
 #${PANEL_ID} .ds-gallery-view,
 #${PANEL_ID} .ds-config-view { animation: trae-skin-fade-in 0.15s ease; }
 #${PANEL_ID} .ds-footer {
-  flex: 0 0 auto; padding: 7px 12px;
+  flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; padding: 7px 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 10px; opacity: 0.5;
+  font-size: 10px;
+}
+#${PANEL_ID} .ds-footer-text {
+  min-width: 0; opacity: 0.5;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 #${PANEL_ID} .ds-config-view { display: none; }
 #${PANEL_ID} .ds-config-head {
@@ -743,13 +748,6 @@ body.trae-skin-v2 #${BUTTON_ID} {
   color: rgba(255, 255, 255, 0.86); background: rgba(0, 0, 0, 0.28);
   font: 10px/1.55 "JetBrains Mono", "SFMono-Regular", monospace;
   white-space: pre-wrap; overflow-wrap: anywhere; user-select: text;
-}
-#${PANEL_ID} .ds-reset-row {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 8px; margin: 9px 2px 1px;
-}
-#${PANEL_ID} .ds-reset-desc {
-  min-width: 0; opacity: 0.58; font-size: 10px;
 }
 #${PANEL_ID} .ds-reset-actions {
   display: flex; flex: 0 0 auto; align-items: center; gap: 5px;
@@ -1348,15 +1346,11 @@ ${selector} {
   blurSwitch.setAttribute("role", "switch");
   blurSwitch.setAttribute("aria-label", "面板模糊");
   blurRow.append(blurCopy, blurSwitch);
-  const resetRow = document.createElement("div");
-  resetRow.className = "ds-reset-row";
-  const resetDesc = document.createElement("div");
-  resetDesc.className = "ds-reset-desc";
-  resetDesc.textContent = "移除 Dream Skin，恢复 TRAE 原生主题";
   const resetConfig = document.createElement("button");
   resetConfig.className = "ds-reset-config";
   resetConfig.type = "button";
-  resetConfig.textContent = "恢复 TRAE 默认";
+  resetConfig.textContent = "恢复默认";
+  resetConfig.title = "移除 Dream Skin，恢复 TRAE 原生主题";
   const resetCancel = document.createElement("button");
   resetCancel.className = "ds-reset-cancel";
   resetCancel.type = "button";
@@ -1364,13 +1358,15 @@ ${selector} {
   const resetActions = document.createElement("div");
   resetActions.className = "ds-reset-actions";
   resetActions.append(resetCancel, resetConfig);
-  resetRow.append(resetDesc, resetActions);
   configHead.append(configName, copyConfig);
-  configView.append(configHead, blurRow, configCode, resetRow);
+  configView.append(configHead, blurRow, configCode);
   panelBody.append(galleryView, configView);
   const footer = document.createElement("div");
   footer.className = "ds-footer";
-  footer.textContent = `${CATALOG.length} 套主题 · Dream Skin v${VERSION}`;
+  const footerText = document.createElement("span");
+  footerText.className = "ds-footer-text";
+  footerText.textContent = `${CATALOG.length} 套主题 · Dream Skin v${VERSION}`;
+  footer.append(footerText, resetActions);
   panel.append(header, panelBody, footer);
 
   let configOpen = false;
@@ -1435,8 +1431,7 @@ ${selector} {
     clearTimeout(resetTimer);
     resetConfig.classList.remove("ds-reset-armed");
     resetCancel.classList.remove("ds-reset-cancel-visible");
-    resetConfig.textContent = "恢复 TRAE 默认";
-    resetDesc.textContent = "移除 Dream Skin，恢复 TRAE 原生主题";
+    resetConfig.textContent = "恢复默认";
   };
   resetCancel.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -1449,7 +1444,6 @@ ${selector} {
       resetConfig.classList.add("ds-reset-armed");
       resetCancel.classList.add("ds-reset-cancel-visible");
       resetConfig.textContent = "确认恢复";
-      resetDesc.textContent = "将移除全部主题与本地配置";
       resetTimer = setTimeout(disarmReset, 8000);
       return;
     }
