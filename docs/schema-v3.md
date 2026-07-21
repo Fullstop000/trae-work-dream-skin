@@ -3,7 +3,7 @@
 v3 的核心思想：**主题作者只声明"角色"（tokens），引擎负责把角色扇出到 TRAE Work 的全部设计令牌命名空间**。
 一致性由架构保证——任何组件、在任何页面，只要读设计系统令牌，拿到的都是同一组值。
 
-> 当前引擎为 v3-only：v1/v2 路径已移除，主题库全部主题为 v3（迁移验证：老主题观感与基线逐值一致）。
+> 当前唯一支持的 schema 版本。
 
 ## 设计依据（实地普查，2026-07）
 
@@ -79,14 +79,14 @@ themes/<id>/
     "settings": { "overlay": "…", "panel": "…", "sidebar": "…", "card": "…", "control": "…", "active": "…" }
   },
 
-  "effects": {                    // 特效（v2 extensions.effects 的 v3 位置）
+  "effects": {                    // 特效
     "mode": "max",                // max = 扫描线/网格/发光
     "panelBlurEnabled": false,
     "scanlineColor": "#00f0ff14", "gridColor": "#00f0ff12",
     "magenta": "#ff2bd6", "glow": "0 0 10px #00f0ff99"
   },
 
-  "decorations": {                // 侧栏装饰图（v2 extensions.decorations 的 v3 位置）
+  "decorations": {                // 侧栏装饰图
     "leftSidebar": { "asset": "leftSidebar", "position": "center top", "size": "cover",
                      "overlay": { "color": "#061820", "opacity": 0.4 } },
     "rightPanel":  { "asset": "rightPanel", "position": "center", "size": "cover",
@@ -106,7 +106,7 @@ themes/<id>/
 
 1. **外观握手**：`appearance: "dark"` 时引擎把 `<html data-theme>` 置为 dark、body 换成 `.vs-dark`（light 同理），
    App 自带的暗色样式表、icube 别名层、CSS module 颜色全部进入对应语境——tooltip 黑字、用户名黑字这类问题在握手后自愈。
-   用户在 App 设置里手动切主题时引擎监听 `data-theme` 并重断言。切到 v1/v2 主题或恢复默认时，App 原始外观被精确还原。
+   用户在 App 设置里手动切主题时引擎监听 `data-theme` 并重断言。恢复默认时，App 原始外观被精确还原。
 
 2. **全命名空间扇出**：角色被写到 `<html>` 的内联样式上（优先级高于 `:root` 和 `[data-theme]` 定义），覆盖：
    `--bg-bg-*`(29) `--text-text-*`(15) `--icon-icon-*`(15) `--border-border-*`(6)
@@ -129,18 +129,7 @@ themes/<id>/
 5. **图标 glyph 替换**：CSS mask 方案（`background: currentColor` + mask），颜色自动跟随 `--icon-icon-*`；
    93% 的 App 内联 SVG 带 `trae-icon-*` 语义类名（抽查 107 个），漏网的用 `selector` 逃生舱。
 
-## 四、v2 → v3 迁移指引
-
-1. `colors.accent/text/icon/border/success..info` → `tokens.accent/text/icons/border/state`（icon→icons，state 收编四个状态色，accent.default→accent.base）
-2. `colors.background` 各值去掉 alpha 通道 → `tokens.surface`（透明度不再揉进颜色，改由 `surfaces.opacity` 表达）
-3. `layout.{leftSidebar,chatPanel,mainArea,landing,gap,divider}` → `surfaces.{colors,opacity,blurPx,saturation,gap,divider}`
-4. `extensions.effects` → `effects`；`extensions.decorations` → `decorations`
-5. `components.chat/popover/settings` 原样保留（可选，默认从角色推导）；`components.work` 废弃（静态样式未消费）
-6. 迁移后跑 `./dream-skin.command theme <id>` 并确认 apply 返回 `contrastWarnings: 0`
-
-参考范例：`themes/neon-district/`（特效主题）、`themes/xianzhou-luofu/`（装饰图主题）。
-
-## 五、硬编码登记表（逃生舱）
+## 四、硬编码登记表（逃生舱）
 
 握手 + 扇出之后仍漏色的真·硬编码组件，集中登记在 `skin.js` 静态样式区（选择器用 `[class*="module__semantic"]`
 属性子串抵御哈希后缀漂移）。原则：**补丁集中在引擎一处，不写进 theme.json**；TRAE 升级后只改一行。
