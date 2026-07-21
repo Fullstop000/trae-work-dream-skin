@@ -103,6 +103,7 @@ function buildCatalog(themesDir) {
       "surfaces",
       "effects",
       "icons",
+      "decorations",
     ]) {
       if (meta[key] != null) settings[key] = meta[key];
     }

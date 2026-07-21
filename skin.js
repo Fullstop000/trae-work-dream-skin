@@ -1061,7 +1061,7 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
   };
 
   // ---------- v3：--trae-skin-* 自有层（画廊 + 毛玻璃 + 特效），从角色推导 ----------
-  const setTraeSkinVarsV3 = (roles, settings) => {
+  const setTraeSkinVarsV3 = (roles, settings, theme) => {
     const { accent, surface, text, icons, border, state } = roles;
     const background = settings.background || {};
     const surfaces = settings.surfaces || {};
@@ -1076,6 +1076,12 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     const workbench = settings.workbench || {};
     const workbenchOpacity = workbench.opacity || {};
     const effects = settings.effects || {};
+    const surfacesColors = surfaces.colors || {};
+    const components = settings.components || {};
+    const chatC = components.chat || {};
+    const popoverC = components.popover || {};
+    const settingsC = components.settings || {};
+    const decorations = settings.decorations || {};
 
     document.body.classList.toggle("trae-skin-effects-max", effects.mode === "max");
 
@@ -1092,10 +1098,10 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
       background.overlay?.opacity ?? 0,
     ));
 
-    setSurface("left", { background: surface.secondary, opacity: surfacesOpacity.left ?? 0.72, backdropBlur: surfacesBlur.left ?? 16, backdropSaturation: surfacesSaturation }, surface.secondary, 0.72, 16);
-    setSurface("chat", { background: surface.base, opacity: surfacesOpacity.chat ?? 0.72, backdropBlur: surfacesBlur.chat ?? 20, backdropSaturation: surfacesSaturation }, surface.base, 0.72, 20);
-    setSurface("main", { background: surface.base, opacity: surfacesOpacity.main ?? 0.68, backdropBlur: surfacesBlur.main ?? 18, backdropSaturation: surfacesSaturation }, surface.base, 0.68, 18);
-    setSurface("landing", { background: surface.base, opacity: surfacesOpacity.landing ?? 0.68, backdropBlur: surfacesBlur.landing ?? 18, backdropSaturation: surfacesSaturation }, surface.base, 0.68, 18);
+    setSurface("left", { background: surfacesColors.left ?? surface.secondary, opacity: surfacesOpacity.left ?? 0.72, backdropBlur: surfacesBlur.left ?? 16, backdropSaturation: surfacesSaturation }, surface.secondary, 0.72, 16);
+    setSurface("chat", { background: surfacesColors.chat ?? surface.base, opacity: surfacesOpacity.chat ?? 0.72, backdropBlur: surfacesBlur.chat ?? 20, backdropSaturation: surfacesSaturation }, surface.base, 0.72, 20);
+    setSurface("main", { background: surfacesColors.main ?? surface.base, opacity: surfacesOpacity.main ?? 0.68, backdropBlur: surfacesBlur.main ?? 18, backdropSaturation: surfacesSaturation }, surface.base, 0.68, 18);
+    setSurface("landing", { background: surfacesColors.landing ?? surface.base, opacity: surfacesOpacity.landing ?? 0.68, backdropBlur: surfacesBlur.landing ?? 18, backdropSaturation: surfacesSaturation }, surface.base, 0.68, 18);
     setVar("--trae-skin-layout-gap", surfaces.gap || withAlpha(surface.secondary, 0.35));
     setVar("--trae-skin-divider", surfaces.divider || border.subtle);
 
@@ -1140,13 +1146,34 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     setVar("--trae-skin-scrollbar-hover", scrollbar.thumbHover || accent.base);
     setVar("--trae-skin-scrollbar-width", asLength(scrollbar.width, "8px"));
 
-    setVar("--trae-skin-chat-user-bubble", surface.card);
-    setVar("--trae-skin-chat-user-border", border.subtle);
-    setVar("--trae-skin-chat-code", surface.input);
-    setVar("--trae-skin-chat-card", surface.card);
-    setVar("--trae-skin-popover", surface.menu);
-    setVar("--trae-skin-popover-hover", withAlpha(state.info, 0.1));
-    setVar("--trae-skin-popover-selected", accent.subtle);
+    setVar("--trae-skin-chat-user-bubble", chatC.userBubble || surface.card);
+    setVar("--trae-skin-chat-user-border", chatC.userBubbleBorder || border.subtle);
+    setVar("--trae-skin-chat-code", chatC.code || surface.input);
+    setVar("--trae-skin-chat-card", chatC.card || surface.card);
+    setVar("--trae-skin-chat-assistant-message", chatC.assistantMessage || "transparent");
+    setVar("--trae-skin-chat-assistant-border", chatC.assistantMessageBorder || "transparent");
+    setVar("--trae-skin-chat-assistant-shadow", chatC.assistantMessageShadow || "none");
+    setVar("--trae-skin-popover", popoverC.background || surface.menu);
+    setVar("--trae-skin-popover-hover", popoverC.itemHover || withAlpha(state.info, 0.1));
+    setVar("--trae-skin-popover-selected", popoverC.itemSelected || accent.subtle);
+
+    setVar("--trae-skin-settings-overlay", settingsC.overlay || withAlpha(surface.base, 0.72));
+    setVar("--trae-skin-settings-panel", settingsC.panel || surface.menu);
+    setVar("--trae-skin-settings-sidebar", settingsC.sidebar || surface.secondary);
+    setVar("--trae-skin-settings-card", settingsC.card || surface.card);
+    setVar("--trae-skin-settings-control", settingsC.control || surface.input);
+    setVar("--trae-skin-settings-active", settingsC.active || accent.subtle);
+
+    // 侧栏/右栏装饰图（与 v2 extensions.decorations 同语义，v3 移到顶层 decorations）
+    const setDecorationV3 = (name, asset, config, fallbackColor) => {
+      if (!asset || !config) return;
+      const overlay = withAlpha(config.overlay?.color || fallbackColor, config.overlay?.opacity ?? 0.42);
+      setVar(`--trae-skin-${name}-art-layer`, `linear-gradient(${overlay}, ${overlay}), url("${asset}")`);
+      setVar(`--trae-skin-${name}-art-position`, config.position || "center");
+      setVar(`--trae-skin-${name}-art-size`, config.size || "cover");
+    };
+    setDecorationV3("left", theme.assets?.leftSidebar, decorations.leftSidebar, surface.secondary);
+    setDecorationV3("right", theme.assets?.rightPanel, decorations.rightPanel, surface.base);
 
     setVar("--trae-skin-workbench-sidebar", withAlpha(surface.secondary, workbenchOpacity.sidebar ?? 0.72));
     setVar("--trae-skin-workbench-editor", withAlpha(surface.base, workbenchOpacity.editor ?? 0.76));
@@ -1208,7 +1235,7 @@ ${selector} {
     window.__TRAE_DREAM_SKIN_HTML_VARS__ = applied;
 
     const roles = TOKEN_MAP.deriveRoles(tokens, { appearance });
-    setTraeSkinVarsV3(roles, settings);
+    setTraeSkinVarsV3(roles, settings, theme);
     const iconCount = applyIconOverrides(settings);
 
     document.body.classList.add("trae-skin-v2", "trae-skin-v3");
@@ -1249,8 +1276,7 @@ ${selector} {
       // v1/v2 主题没有外观握手设计，切回去时还原 App 原始外观
       restoreNativeAppearance();
       document.getElementById(ICONS_STYLE_ID)?.remove();
-    }
-    if (schemaVersion >= 2) {
+      if (schemaVersion >= 2) {
       document.body.classList.add("trae-skin-v2");
       document.body.classList.toggle(
         "trae-skin-appearance-dark",
@@ -1460,6 +1486,7 @@ ${selector} {
       setVar("--trae-skin-workbench-sidebar", withAlpha(bg.secondary || workbenchBase, workbenchOpacity.sidebar ?? 0.72));
       setVar("--trae-skin-workbench-editor", withAlpha(workbenchBase, workbenchOpacity.editor ?? 0.76));
       setVar("--trae-skin-workbench-panel", withAlpha(bg.secondary || workbenchBase, workbenchOpacity.panel ?? 0.72));
+      }
     }
 
     try { localStorage.setItem(LS_KEY, id); } catch {}
