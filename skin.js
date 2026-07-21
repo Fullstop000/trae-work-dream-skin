@@ -14,6 +14,7 @@
   const STYLE_ID = "trae-dream-skin-style";
   const UI_STYLE_ID = "trae-dream-skin-ui-style";
   const ICONS_STYLE_ID = "trae-dream-skin-icons-style";
+  const SCOPE_STYLE_ID = "trae-dream-skin-scope-style";
   const PANEL_ID = "trae-dream-skin-panel";
   const BUTTON_ID = "trae-dream-skin-button";
 
@@ -22,6 +23,7 @@
   document.getElementById(STYLE_ID)?.remove();
   document.getElementById(UI_STYLE_ID)?.remove();
   document.getElementById(ICONS_STYLE_ID)?.remove();
+  document.getElementById(SCOPE_STYLE_ID)?.remove();
   document.getElementById(PANEL_ID)?.remove();
   document.getElementById(BUTTON_ID)?.remove();
   // 清理上一次注入在 <html> 上写的令牌变量（v3）
@@ -999,6 +1001,7 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     activeThemeClass = null;
     document.getElementById(STYLE_ID)?.remove();
     document.getElementById(ICONS_STYLE_ID)?.remove();
+    document.getElementById(SCOPE_STYLE_ID)?.remove();
     document.getElementById(PANEL_ID)?.remove();
     panel.style.display = "none";
     panel.querySelectorAll(".ds-card").forEach((card) => card.classList.remove("ds-active"));
@@ -1226,6 +1229,16 @@ ${selector} {
       applied.push(name);
     }
     window.__TRAE_DREAM_SKIN_HTML_VARS__ = applied;
+
+    // App 还在 body / .solo-theme / body.icube-chat-next 上重定义令牌（如 --bg-bg-overlay-l1），
+    // 按最近祖先原则会遮蔽 <html> 内联值——用带 !important 的作用域规则压过它们
+    document.getElementById(SCOPE_STYLE_ID)?.remove();
+    const scopeStyle = document.createElement("style");
+    scopeStyle.id = SCOPE_STYLE_ID;
+    scopeStyle.textContent = `body, .solo-theme, body.icube-chat-next {\n${Object.entries(varMap)
+      .map(([name, value]) => `  ${name}: ${value} !important;`)
+      .join("\n")}\n}`;
+    (document.head || document.documentElement).appendChild(scopeStyle);
 
     const roles = TOKEN_MAP.deriveRoles(tokens, { appearance });
     setTraeSkinVarsV3(roles, settings, theme);

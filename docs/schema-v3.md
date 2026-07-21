@@ -114,6 +114,11 @@ themes/<id>/
    `--popup-menu-*`(18)。
    未覆盖：固定分类色板（accent-accent-9 色）、code-code、gradient、solo-title、special——保持 App 原值。
 
+   此外，App 还会在 `body` / `.solo-theme` / `body.icube-chat-next` 上按"最近祖先优先"重定义部分令牌
+   （典型如 `--bg-bg-overlay-l1`），会遮蔽 `<html>` 内联值。引擎额外生成一份带 `!important` 的
+   作用域样式（`trae-dream-skin-scope-style`），把全部扇出变量在这三个作用域上再声明一遍，
+   保证任何嵌套层级的组件都拿到主题值（修复 Code 落地页输入框与 Work 不一致的问题）。
+
 3. **角色推导**：缺省角色自动补全——hover/active 用 `color-mix` 派生、subtle 用透明度、
    `onAccent` 按 WCAG 亮度自动选黑/白、text/icons/border/state 有完整默认链。
 
