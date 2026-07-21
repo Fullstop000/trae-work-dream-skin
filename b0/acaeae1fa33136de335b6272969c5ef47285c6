@@ -1,0 +1,23 @@
+README.md
+  s_5291ab27127984::t_9201f7e781dac9 3-4,6,8,11-12,15-17,19,21-23,25-31,33,35-40,45-46,49-52,56-62
+themes/eva-01-light/theme.json
+  s_5291ab27127984::t_e723d592cbbe1f 2-7,9,14-15,17-18,21-26,28-32,34-38,40-42,44,46-61,64-67,69-73,76-79,81-86,90,93-95,98,103-105,107-108,111-113,116-119,122-143,147-149,152-179
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "b0acaeae1fa33136de335b6272969c5ef47285c6",
+  "prompts": {},
+  "sessions": {
+    "s_5291ab27127984": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7f84-876a-7610-9b06-9cdfefaa1fab",
+        "model": "unknown"
+      },
+      "human_author": "Fullstop000 <fullstop1005@gmail.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
