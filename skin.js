@@ -625,7 +625,7 @@ body.trae-skin-v2 #${BUTTON_ID} {
   position: fixed; right: 16px; bottom: 62px; z-index: 2147483000;
   box-sizing: border-box;
   width: min(400px, calc(100vw - 32px));
-  max-height: calc(100vh - 110px);
+  height: min(640px, calc(100vh - 110px));
   display: flex; flex-direction: column; overflow: hidden;
   background: rgba(20, 22, 34, 0.88); color: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px;
