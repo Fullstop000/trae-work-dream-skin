@@ -4,6 +4,18 @@ TRAE Work CN（TRAE SOLO CN.app）的主题画廊平台：内置多套主题，A
 思路移植自 [Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin)：本机回环 CDP 注入，
 不改官方安装包、不碰代码签名。
 
+## 安装（开箱即用）
+
+把 `dist/trae-work-dream-skin-install.command` 发给用户，双击即可：
+
+1. 自动检测 TRAE Work CN 与 Node.js（v18+，缺啥报啥）
+2. 自解压安装到 `~/.trae-work-dream-skin`（只含运行时文件，主题源文件不打包）
+3. 创建桌面启动器「TRAE Dream Skin.command」
+4. 询问是否立即启用（退出并带皮肤重启 App）
+
+以后双击桌面启动器 = 启用/刷新；App 右下角调色盘 = 换主题；`~/.trae-work-dream-skin/restore.sh` = 还原。
+重复运行安装器即升级（`run/` 里的主题选择会保留）。本仓库内构建：`bash scripts/build-installer.sh`。
+
 **v3 主题协议**（当前唯一支持的 schema）：主题只声明角色（tokens），引擎把角色扇出到
 TRAE 全部设计令牌命名空间，并把 App 自己的 `data-theme` 外观开关握手到与皮肤一致——
 组件在任何页面自动一致。协议文档：[docs/schema-v3.md](docs/schema-v3.md)。
