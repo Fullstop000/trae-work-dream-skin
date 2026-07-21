@@ -1,1 +1,33 @@
-{"id":"cloudsea","name":"云海观星台","desc":"云端制图师与漂浮群岛","surfaceLight":0.16,"surfaceDark":0.24,"blurPx":2}
+{
+  "schemaVersion": 3,
+  "id": "cloudsea",
+  "name": "云海观星台",
+  "desc": "云端制图师与漂浮群岛",
+  "appearance": "light",
+  "surfaces": {
+    "colors": {
+      "left": "#ffffff",
+      "chat": "#ffffff",
+      "main": "#ffffff",
+      "landing": "#ffffff"
+    },
+    "opacity": {
+      "left": 0.55,
+      "chat": 0.16,
+      "main": 0.16,
+      "landing": 0.16
+    },
+    "blurPx": {
+      "left": 16,
+      "chat": 24,
+      "main": 18,
+      "landing": 18
+    },
+    "saturation": 1.3
+  },
+  "tokens": {
+    "accent": {
+      "base": "#5aa8ff"
+    }
+  }
+}

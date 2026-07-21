@@ -1,1 +1,33 @@
-{"id":"forest","name":"雾林","desc":"深绿薄荷清新"}
+{
+  "schemaVersion": 3,
+  "id": "forest",
+  "name": "雾林",
+  "desc": "深绿薄荷清新",
+  "appearance": "light",
+  "surfaces": {
+    "colors": {
+      "left": "#ffffff",
+      "chat": "#ffffff",
+      "main": "#ffffff",
+      "landing": "#ffffff"
+    },
+    "opacity": {
+      "left": 0.55,
+      "chat": 0.78,
+      "main": 0.78,
+      "landing": 0.78
+    },
+    "blurPx": {
+      "left": 16,
+      "chat": 24,
+      "main": 18,
+      "landing": 18
+    },
+    "saturation": 1.3
+  },
+  "tokens": {
+    "accent": {
+      "base": "#34d399"
+    }
+  }
+}

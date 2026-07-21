@@ -952,9 +952,7 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     return config;
   };
   const panelBlurEnabled = (theme) => {
-    const defaultValue = theme.settings?.extensions?.effects?.panelBlurEnabled
-      ?? theme.settings?.effects?.panelBlurEnabled
-      ?? true;
+    const defaultValue = theme.settings?.effects?.panelBlurEnabled ?? true;
     try {
       const saved = localStorage.getItem(`${BLUR_LS_PREFIX}${theme.id}`);
       return saved == null ? Boolean(defaultValue) : saved === "true";
@@ -1104,6 +1102,10 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     setSurface("landing", { background: surfacesColors.landing ?? surface.base, opacity: surfacesOpacity.landing ?? 0.68, backdropBlur: surfacesBlur.landing ?? 18, backdropSaturation: surfacesSaturation }, surface.base, 0.68, 18);
     setVar("--trae-skin-layout-gap", surfaces.gap || withAlpha(surface.secondary, 0.35));
     setVar("--trae-skin-divider", surfaces.divider || border.subtle);
+    // 静态样式里少数旧容器仍读这三个变量，统一从 chat 表面推导
+    setVar("--trae-skin-surface-light", surfacesOpacity.chat ?? 0.72);
+    setVar("--trae-skin-surface-dark", surfacesOpacity.chat ?? 0.72);
+    setVar("--trae-skin-blur", `${surfacesBlur.chat ?? 20}px`);
 
     setVar("--trae-skin-text-primary", text.primary);
     setVar("--trae-skin-text-secondary", text.secondary);
@@ -1261,233 +1263,11 @@ ${selector} {
     activeThemeClass = `trae-skin-theme-${theme.id.replace(/[^a-z0-9_-]/gi, "-")}`;
     document.body.classList.add(activeThemeClass);
     setVar("--trae-skin-art", `url("${theme.art}")`);
-    setVar("--trae-skin-surface-light", theme.surfaceLight ?? 0.78);
-    setVar("--trae-skin-surface-dark", theme.surfaceDark ?? 0.72);
-    setVar("--trae-skin-blur", `${theme.blurPx ?? 24}px`);
     const blurEnabled = panelBlurEnabled(theme);
     document.body.classList.toggle("trae-skin-blur-disabled", !blurEnabled);
 
     const settings = theme.settings || {};
-    const schemaVersion = asNumber(settings.schemaVersion, 1);
-    let v3Result = null;
-    if (schemaVersion >= 3) {
-      v3Result = applyV3Theme(theme, settings);
-    } else {
-      // v1/v2 主题没有外观握手设计，切回去时还原 App 原始外观
-      restoreNativeAppearance();
-      document.getElementById(ICONS_STYLE_ID)?.remove();
-      if (schemaVersion >= 2) {
-      document.body.classList.add("trae-skin-v2");
-      document.body.classList.toggle(
-        "trae-skin-appearance-dark",
-        settings.appearance === "dark",
-      );
-
-      const background = settings.background || {};
-      const layout = settings.layout || {};
-      const colors = settings.colors || {};
-      const bg = colors.background || {};
-      const accent = colors.accent || {};
-      const text = colors.text || {};
-      const icon = colors.icon || {};
-      const border = colors.border || {};
-      const typography = settings.typography || {};
-      const shape = settings.shape || {};
-      const radius = shape.radius || {};
-      const elevation = settings.elevation || {};
-      const scrollbar = settings.scrollbar || {};
-      const components = settings.components || {};
-      const chat = components.chat || {};
-      const popover = components.popover || {};
-      const settingsPanel = components.settings || {};
-      const workbench = settings.workbench || {};
-      const workbenchOpacity = workbench.opacity || {};
-      const effects = settings.extensions?.effects || {};
-      const decorations = settings.extensions?.decorations || {};
-      document.body.classList.toggle(
-        "trae-skin-effects-max",
-        effects.mode === "max",
-      );
-
-      setVar("--trae-skin-background-color", background.color || bg.base || "#10121a");
-      setVar("--trae-skin-background-position", background.position || "center");
-      setVar("--trae-skin-background-size", background.size || "cover");
-      setVar("--trae-skin-background-repeat", background.repeat || "no-repeat");
-      setVar("--trae-skin-background-blur", asLength(background.blur, "0px"));
-      setVar(
-        "--trae-skin-background-brightness",
-        asNumber(background.brightness, 1, 0, 2),
-      );
-      setVar(
-        "--trae-skin-background-saturation",
-        asNumber(background.saturation, 1, 0, 3),
-      );
-      setVar(
-        "--trae-skin-background-scale",
-        background.blur ? 1.035 : 1,
-      );
-      setVar(
-        "--trae-skin-background-overlay",
-        withAlpha(
-          background.overlay?.color || "transparent",
-          background.overlay?.opacity ?? 0,
-        ),
-      );
-
-      setSurface("left", layout.leftSidebar, bg.base || "#10121a", 0.72, 16);
-      setSurface("chat", layout.chatPanel, bg.base || "#10121a", 0.72, 20);
-      setSurface("main", layout.mainArea, bg.base || "#10121a", 0.68, 18);
-      setSurface("landing", layout.landing, bg.base || "#10121a", 0.68, 18);
-      setVar("--trae-skin-layout-gap", layout.gap || withAlpha(bg.secondary || "#151925", 0.35));
-      setVar("--trae-skin-divider", layout.divider || border.subtle || "#ffffff1f");
-
-      const semanticVars = {
-        "--bg-bg-base-default": bg.base,
-        "--bg-bg-base-secondary": bg.secondary,
-        "--bg-bg-base-tertiary": bg.tertiary,
-        "--bg-bg-card": bg.card,
-        "--bg-bg-card-hover": bg.cardHover,
-        "--bg-bg-input": bg.input,
-        "--bg-bg-menu": bg.menu,
-        "--bg-bg-tooltip": bg.tooltip,
-        "--bg-bg-overlay-l0": bg.overlay,
-        "--bg-bg-overlay-l1": bg.overlay,
-        "--bg-bg-overlay-l2": bg.overlay,
-        "--bg-bg-overlay-l3": border.subtle,
-        "--bg-bg-overlay-l4": border.default,
-        "--bg-bg-brand": accent.default,
-        "--bg-bg-brand-sub": accent.default,
-        "--bg-bg-brand-hover": accent.hover,
-        "--bg-bg-brand-hover-sub": accent.hover,
-        "--bg-bg-brand-active": accent.active,
-        "--bg-bg-brand-popup": accent.subtle,
-        "--bg-bg-brand-popup-sub": accent.subtle,
-        "--text-text-default": text.primary,
-        "--text-text-default-hover": text.primary,
-        "--text-text-default-active": text.primary,
-        "--text-text-secondary": text.secondary,
-        "--text-text-secondary-hover": text.primary,
-        "--text-text-secondary-active": text.primary,
-        "--text-text-tertiary": text.tertiary,
-        "--text-text-disabled": text.disabled,
-        "--text-text-onaccent": text.onAccent || accent.onAccent,
-        "--text-text-onbrand": text.onAccent || accent.onAccent,
-        "--text-text-brand": accent.default,
-        "--text-text-brand-sub": accent.default,
-        "--text-text-brand-hover": accent.hover,
-        "--text-text-brand-hover-sub": accent.hover,
-        "--icon-icon-default": icon.primary,
-        "--icon-icon-default-hover": text.primary,
-        "--icon-icon-default-active": accent.default,
-        "--icon-icon-secondary": icon.secondary,
-        "--icon-icon-secondary-hover": icon.primary,
-        "--icon-icon-secondary-active": accent.default,
-        "--icon-icon-tertiary": icon.tertiary,
-        "--icon-icon-disabled": icon.disabled,
-        "--icon-icon-onaccent": text.onAccent || accent.onAccent,
-        "--icon-icon-onbrand": text.onAccent || accent.onAccent,
-        "--icon-icon-brand": accent.default,
-        "--icon-icon-brand-sub": accent.default,
-        "--icon-icon-brand-hover": accent.hover,
-        "--icon-icon-brand-hover-sub": accent.hover,
-        "--border-border-neutral-l1": border.subtle,
-        "--border-border-neutral-l2": border.default,
-        "--border-border-neutral-l3": border.strong,
-        "--border-border-brand": accent.default,
-        "--border-border-brand-sub": accent.default,
-      };
-      for (const [name, value] of Object.entries(semanticVars)) setVar(name, value);
-
-      setVar("--trae-skin-text-primary", text.primary || "#f5f5f5");
-      setVar("--trae-skin-text-secondary", text.secondary || "#b8bdc7");
-      setVar("--trae-skin-text-tertiary", text.tertiary || "#7c8491");
-      setVar("--trae-skin-text-disabled", text.disabled || "#555d69");
-      setVar("--trae-skin-accent", accent.default || "#7c9cff");
-      setVar("--trae-skin-accent-hover", accent.hover || accent.default || "#9bb2ff");
-      setVar("--trae-skin-accent-subtle", accent.subtle || withAlpha(accent.default || "#7c9cff", 0.18));
-      setVar("--trae-skin-accent-on", accent.onAccent || text.onAccent || "#0a0a0a");
-      setVar("--trae-skin-info", colors.info || accent.default || "#7c9cff");
-      setVar("--trae-skin-info-subtle", withAlpha(colors.info || accent.default || "#7c9cff", 0.12));
-      setVar("--trae-skin-error", colors.error || "#ff5263");
-      setVar("--trae-skin-warning", colors.warning || "#f5bf42");
-      setVar("--trae-skin-success", colors.success || "#57d38c");
-      setVar("--trae-skin-input", bg.input || bg.base || "#10121a");
-      setVar("--trae-skin-menu", bg.menu || bg.card || "#151925");
-      setVar("--trae-skin-border-subtle", border.subtle || "#ffffff1f");
-      setVar("--trae-skin-border-default", border.default || "#ffffff38");
-      setVar("--trae-skin-border-strong", border.strong || "#ffffff5c");
-      setVar("--trae-skin-scanline-color", effects.scanlineColor || "transparent");
-      setVar("--trae-skin-grid-color", effects.gridColor || "transparent");
-      setVar("--trae-skin-magenta", effects.magenta || colors.error || "#ff2bd6");
-      setVar("--trae-skin-neon-glow", effects.glow || "none");
-
-      const setDecoration = (name, asset, config, fallbackOverlay) => {
-        if (!asset || !config) return;
-        const overlay = withAlpha(
-          config.overlay?.color || fallbackOverlay,
-          config.overlay?.opacity ?? 0.42,
-        );
-        setVar(
-          `--trae-skin-${name}-art-layer`,
-          `linear-gradient(${overlay}, ${overlay}), url("${asset}")`,
-        );
-        setVar(`--trae-skin-${name}-art-position`, config.position || "center");
-        setVar(`--trae-skin-${name}-art-size`, config.size || "cover");
-      };
-      setDecoration(
-        "left",
-        theme.assets?.leftSidebar,
-        decorations.leftSidebar,
-        layout.leftSidebar?.background || bg.base || "#071a27",
-      );
-      setDecoration(
-        "right",
-        theme.assets?.rightPanel,
-        decorations.rightPanel,
-        layout.mainArea?.background || bg.base || "#071a27",
-      );
-
-      setVar("--trae-skin-font-ui", typography.ui?.family || "inherit");
-      setVar("--trae-skin-font-heading", typography.heading?.family || typography.ui?.family || "inherit");
-      setVar("--trae-skin-font-code", typography.code?.family || "monospace");
-      setVar("--trae-skin-heading-weight", typography.heading?.weight || 600);
-      setVar("--trae-skin-heading-spacing", typography.heading?.letterSpacing || "normal");
-      setVar("--trae-skin-radius-small", asLength(radius.small, "6px"));
-      setVar("--trae-skin-radius-medium", asLength(radius.medium, "10px"));
-      setVar("--trae-skin-radius-large", asLength(radius.large, "14px"));
-      setVar("--trae-skin-radius-pill", asLength(radius.pill, "999px"));
-      setVar("--trae-skin-shadow-card", elevation.card || "0 8px 24px #00000026");
-      setVar("--trae-skin-shadow-floating", elevation.floating || "0 16px 48px #00000073");
-      setVar("--trae-skin-focus-ring", elevation.focusRing || `0 0 0 2px ${accent.default || "#7c9cff"}`);
-
-      setVar("--trae-skin-scrollbar-track", scrollbar.track || "transparent");
-      setVar("--trae-skin-scrollbar-thumb", scrollbar.thumb || border.default || "#ffffff38");
-      setVar("--trae-skin-scrollbar-hover", scrollbar.thumbHover || accent.default || "#7c9cff");
-      setVar("--trae-skin-scrollbar-width", asLength(scrollbar.width, "8px"));
-
-      setVar("--trae-skin-chat-user-bubble", chat.userBubble || bg.card || "#151925");
-      setVar("--trae-skin-chat-user-border", chat.userBubbleBorder || border.subtle || "#ffffff1f");
-      setVar("--trae-skin-chat-assistant-message", chat.assistantMessage || chat.card || bg.card || "#151925");
-      setVar("--trae-skin-chat-assistant-border", chat.assistantMessageBorder || border.subtle || "#ffffff1f");
-      setVar("--trae-skin-chat-assistant-shadow", chat.assistantMessageShadow || elevation.card || "none");
-      setVar("--trae-skin-chat-code", chat.code || bg.input || "#10121a");
-      setVar("--trae-skin-chat-card", chat.card || bg.card || "#151925");
-      setVar("--trae-skin-popover", popover.background || bg.menu || "#151925");
-      setVar("--trae-skin-popover-hover", popover.itemHover || withAlpha(colors.info || accent.default || "#7c9cff", 0.1));
-      setVar("--trae-skin-popover-selected", popover.itemSelected || accent.subtle || withAlpha(accent.default || "#7c9cff", 0.18));
-      setVar("--trae-skin-settings-overlay", settingsPanel.overlay || "#00000080");
-      setVar("--trae-skin-settings-panel", settingsPanel.panel || popover.background || bg.menu || "#151925");
-      setVar("--trae-skin-settings-sidebar", settingsPanel.sidebar || bg.secondary || bg.card || "#151925");
-      setVar("--trae-skin-settings-card", settingsPanel.card || bg.card || "#151925");
-      setVar("--trae-skin-settings-control", settingsPanel.control || bg.input || "#10121a");
-      setVar("--trae-skin-settings-active", settingsPanel.active || popover.itemSelected || accent.subtle || withAlpha(accent.default || "#7c9cff", 0.18));
-
-      const workbenchBase = bg.base || "#10121a";
-      setVar("--trae-skin-workbench-sidebar", withAlpha(bg.secondary || workbenchBase, workbenchOpacity.sidebar ?? 0.72));
-      setVar("--trae-skin-workbench-editor", withAlpha(workbenchBase, workbenchOpacity.editor ?? 0.76));
-      setVar("--trae-skin-workbench-panel", withAlpha(bg.secondary || workbenchBase, workbenchOpacity.panel ?? 0.72));
-      }
-    }
+    const v3Result = applyV3Theme(theme, settings);
 
     try { localStorage.setItem(LS_KEY, id); } catch {}
     panel?.querySelectorAll(".ds-card").forEach((card) => {

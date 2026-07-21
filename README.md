@@ -4,9 +4,10 @@ TRAE Work CN（TRAE SOLO CN.app）的主题画廊平台：内置多套主题，A
 思路移植自 [Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin)：本机回环 CDP 注入，
 不改官方安装包、不碰代码签名。
 
-**v3 主题协议**：主题只声明角色（tokens），引擎把角色扇出到 TRAE 全部设计令牌命名空间，
-并把 App 自己的 `data-theme` 外观开关握手到与皮肤一致——组件在任何页面自动一致。
-协议文档：[docs/schema-v3.md](docs/schema-v3.md)（v2 主题继续按原路径渲染，有基线回归守护）。
+**v3 主题协议**（当前唯一支持的 schema）：主题只声明角色（tokens），引擎把角色扇出到
+TRAE 全部设计令牌命名空间，并把 App 自己的 `data-theme` 外观开关握手到与皮肤一致——
+组件在任何页面自动一致。协议文档：[docs/schema-v3.md](docs/schema-v3.md)。
+（v1/v2 引擎路径已移除，全部主题均为 v3；迁移前的 v2 设置范围存档见 [THEME_SETTINGS.md](./THEME_SETTINGS.md)。）
 
 ## 用法
 

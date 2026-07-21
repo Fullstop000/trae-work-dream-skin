@@ -1,1 +1,33 @@
-{"id":"ocean","name":"深海","desc":"深蓝青色沉静"}
+{
+  "schemaVersion": 3,
+  "id": "ocean",
+  "name": "深海",
+  "desc": "深蓝青色沉静",
+  "appearance": "light",
+  "surfaces": {
+    "colors": {
+      "left": "#ffffff",
+      "chat": "#ffffff",
+      "main": "#ffffff",
+      "landing": "#ffffff"
+    },
+    "opacity": {
+      "left": 0.55,
+      "chat": 0.78,
+      "main": 0.78,
+      "landing": 0.78
+    },
+    "blurPx": {
+      "left": 16,
+      "chat": 24,
+      "main": 18,
+      "landing": 18
+    },
+    "saturation": 1.3
+  },
+  "tokens": {
+    "accent": {
+      "base": "#1e90ff"
+    }
+  }
+}

@@ -1,1 +1,33 @@
-{"id":"duskdune","name":"暮沙驿站","desc":"沙海机器人通信站","surfaceLight":0.18,"surfaceDark":0.25,"blurPx":2}
+{
+  "schemaVersion": 3,
+  "id": "duskdune",
+  "name": "暮沙驿站",
+  "desc": "沙海机器人通信站",
+  "appearance": "light",
+  "surfaces": {
+    "colors": {
+      "left": "#ffffff",
+      "chat": "#ffffff",
+      "main": "#ffffff",
+      "landing": "#ffffff"
+    },
+    "opacity": {
+      "left": 0.55,
+      "chat": 0.18,
+      "main": 0.18,
+      "landing": 0.18
+    },
+    "blurPx": {
+      "left": 16,
+      "chat": 24,
+      "main": 18,
+      "landing": 18
+    },
+    "saturation": 1.3
+  },
+  "tokens": {
+    "accent": {
+      "base": "#e8975a"
+    }
+  }
+}
