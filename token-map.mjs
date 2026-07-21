@@ -115,7 +115,7 @@
     if (!surface.cardHover) surface.cardHover = surface.tertiary;
     if (!surface.input) surface.input = dark ? mix(surface.base, 85, "black") : mix(surface.base, 97, "black");
     if (!surface.menu) surface.menu = surface.card;
-    if (!surface.tooltip) surface.tooltip = dark ? mix(surface.base, 80, "white") : "#3b3f45";
+    if (!surface.tooltip) surface.tooltip = dark ? mix(surface.base, 80, "white") : mix(surface.base, 96, "black");
     if (!surface.invert) surface.invert = dark ? "#f5f5f5" : "#171717";
 
     const text = { ...(t.text || {}) };
