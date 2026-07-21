@@ -3,6 +3,7 @@
   "id": "cloudsea",
   "name": "云海观星台",
   "desc": "云端制图师与漂浮群岛",
+  "category": "插画",
   "appearance": "light",
   "surfaces": {
     "colors": {

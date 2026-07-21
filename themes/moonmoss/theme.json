@@ -3,6 +3,7 @@
   "id": "moonmoss",
   "name": "月苔工坊",
   "desc": "小熊猫的月下温室工作室",
+  "category": "插画",
   "appearance": "light",
   "surfaces": {
     "colors": {

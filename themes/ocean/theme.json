@@ -3,6 +3,7 @@
   "id": "ocean",
   "name": "深海",
   "desc": "深蓝青色沉静",
+  "category": "渐变",
   "appearance": "light",
   "surfaces": {
     "colors": {

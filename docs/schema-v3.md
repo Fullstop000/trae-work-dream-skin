@@ -37,6 +37,7 @@ themes/<id>/
   "id": "neon-district",
   "name": "霓虹城区 MAX",
   "desc": "一句话描述",
+  "category": "科幻",              // 可选：画廊分类 Tab 归类，缺省归入「其他」
   "appearance": "dark",          // dark | light —— 触发外观握手（见三-1）
 
   "background": {                 // 背景层（Dream Skin 自有）

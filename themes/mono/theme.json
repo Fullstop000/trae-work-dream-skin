@@ -3,6 +3,7 @@
   "id": "mono",
   "name": "墨",
   "desc": "低饱和灰黑极简",
+  "category": "渐变",
   "appearance": "light",
   "surfaces": {
     "colors": {

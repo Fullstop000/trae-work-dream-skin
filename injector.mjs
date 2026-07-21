@@ -124,6 +124,7 @@ function buildCatalog(themesDir) {
       id: String(meta.id),
       name: String(meta.name),
       desc: String(meta.desc || ""),
+      category: String(meta.category || "其他"),
       surfaceLight: optionalNumber(meta.surfaceLight, 0, 1),
       surfaceDark: optionalNumber(meta.surfaceDark, 0, 1),
       blurPx: optionalNumber(meta.blurPx, 0, 40),

@@ -3,6 +3,7 @@
   "id": "sunset",
   "name": "日落",
   "desc": "暖橙落日氛围",
+  "category": "渐变",
   "appearance": "light",
   "surfaces": {
     "colors": {

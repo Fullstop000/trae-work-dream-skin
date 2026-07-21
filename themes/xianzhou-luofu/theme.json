@@ -3,6 +3,7 @@
   "id": "xianzhou-luofu",
   "name": "仙舟「罗浮」",
   "desc": "工笔岩彩仙舟、玉界门云海与仙舟群像",
+  "category": "游戏",
   "appearance": "dark",
   "background": {
     "color": "#071a27",
@@ -24,8 +25,18 @@
       "main": "#132b30",
       "landing": "#132b30"
     },
-    "opacity": { "left": 0.74, "chat": 0.64, "main": 0.44, "landing": 0.5 },
-    "blurPx": { "left": 10, "chat": 10, "main": 7, "landing": 8 },
+    "opacity": {
+      "left": 0.74,
+      "chat": 0.64,
+      "main": 0.44,
+      "landing": 0.5
+    },
+    "blurPx": {
+      "left": 10,
+      "chat": 10,
+      "main": 7,
+      "landing": 8
+    },
     "saturation": 1.16,
     "gap": "#07171ba3",
     "divider": "#9d493b70"

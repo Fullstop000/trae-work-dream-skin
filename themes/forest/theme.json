@@ -3,6 +3,7 @@
   "id": "forest",
   "name": "雾林",
   "desc": "深绿薄荷清新",
+  "category": "渐变",
   "appearance": "light",
   "surfaces": {
     "colors": {

@@ -3,6 +3,7 @@
   "id": "sakura",
   "name": "樱夜",
   "desc": "粉紫夜樱",
+  "category": "渐变",
   "appearance": "light",
   "surfaces": {
     "colors": {

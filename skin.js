@@ -687,6 +687,33 @@ body.trae-skin-v2 #${BUTTON_ID} {
 }
 #${PANEL_ID} .ds-gallery-view,
 #${PANEL_ID} .ds-config-view { animation: trae-skin-fade-in 0.15s ease; }
+/* 分类 Tab */
+#${PANEL_ID} .ds-tabs {
+  flex: 0 0 auto; display: flex; gap: 4px;
+  padding: 8px 12px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+}
+#${PANEL_ID} .ds-tabs::-webkit-scrollbar { height: 0; }
+#${PANEL_ID} .ds-tab {
+  flex: 0 0 auto; padding: 3px 9px; border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: inherit; background: transparent;
+  font: inherit; font-size: 11px; cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+#${PANEL_ID} .ds-tab:hover { background: rgba(255, 255, 255, 0.08); }
+#${PANEL_ID} .ds-tab.ds-tab-active {
+  background: #7c9cff; border-color: #7c9cff;
+  color: #0a0a0a; font-weight: 600;
+}
+body.trae-skin-v2 #${PANEL_ID} .ds-tabs { border-bottom-color: var(--trae-skin-border-subtle); }
+body.trae-skin-v2 #${PANEL_ID} .ds-tab { border-color: var(--trae-skin-border-subtle); }
+body.trae-skin-v2 #${PANEL_ID} .ds-tab:hover { background: var(--trae-skin-info-subtle); }
+body.trae-skin-v2 #${PANEL_ID} .ds-tab.ds-tab-active {
+  background: var(--trae-skin-accent); border-color: var(--trae-skin-accent);
+  color: var(--trae-skin-accent-on);
+}
 #${PANEL_ID} .ds-footer {
   flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
   gap: 8px; padding: 7px 12px;
@@ -934,6 +961,7 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
       id: theme.id,
       name: theme.name,
       desc: theme.desc,
+      category: theme.category,
     };
     if (theme.settings?.schemaVersion) {
       Object.assign(config, theme.settings);
@@ -1367,13 +1395,48 @@ ${selector} {
   configHead.append(configName, copyConfig);
   configView.append(configHead, blurRow, configCode);
   panelBody.append(galleryView, configView);
+
+  // 分类 Tab（固定在头部下，不随列表滚动；选择持久化）
+  const CATEGORY_LS = `${LS_PREFIX}category`;
+  const ALL_LABEL = "全部";
+  const categories = [ALL_LABEL, ...new Set(CATALOG.map((t) => t.category || "其他"))];
+  const tabsBar = document.createElement("div");
+  tabsBar.className = "ds-tabs";
+  let activeCategory = ALL_LABEL;
+  try {
+    const saved = localStorage.getItem(CATEGORY_LS);
+    if (saved && categories.includes(saved)) activeCategory = saved;
+  } catch {}
+  const applyCategoryFilter = () => {
+    galleryView.querySelectorAll(".ds-card").forEach((card) => {
+      card.style.display = (activeCategory === ALL_LABEL || card.dataset.category === activeCategory) ? "" : "none";
+    });
+    tabsBar.querySelectorAll(".ds-tab").forEach((tab) => {
+      tab.classList.toggle("ds-tab-active", tab.dataset.category === activeCategory);
+    });
+    try { localStorage.setItem(CATEGORY_LS, activeCategory); } catch {}
+  };
+  for (const cat of categories) {
+    const tab = document.createElement("button");
+    tab.className = "ds-tab";
+    tab.type = "button";
+    tab.dataset.category = cat;
+    tab.textContent = cat;
+    tab.addEventListener("click", (event) => {
+      event.stopPropagation();
+      activeCategory = cat;
+      applyCategoryFilter();
+    });
+    tabsBar.appendChild(tab);
+  }
+
   const footer = document.createElement("div");
   footer.className = "ds-footer";
   const footerText = document.createElement("span");
   footerText.className = "ds-footer-text";
   footerText.textContent = `${CATALOG.length} 套主题 · Dream Skin v${VERSION}`;
   footer.append(footerText, resetActions);
-  panel.append(header, panelBody, footer);
+  panel.append(header, tabsBar, panelBody, footer);
 
   let configOpen = false;
   const showConfig = (open) => {
@@ -1474,6 +1537,7 @@ ${selector} {
     const card = document.createElement("div");
     card.className = "ds-card";
     card.dataset.themeId = theme.id;
+    card.dataset.category = theme.category || "其他";
     const badge = document.createElement("span");
     badge.className = "ds-badge";
     badge.textContent = "✓ 使用中";
@@ -1497,6 +1561,7 @@ ${selector} {
     card.addEventListener("click", () => activateTheme(theme.id));
     galleryView.appendChild(card);
   }
+  applyCategoryFilter();
 
   const button = document.createElement("button");
   button.id = BUTTON_ID;
