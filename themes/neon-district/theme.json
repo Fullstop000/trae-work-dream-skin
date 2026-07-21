@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "neon-district",
   "name": "霓虹城区 MAX",
   "desc": "酸黄、青蓝与洋红过载的雨夜黑客城区",
@@ -17,61 +17,38 @@
       "opacity": 0.02
     }
   },
-  "layout": {
-    "leftSidebar": {
-      "background": "#080b12",
-      "opacity": 0.66,
-      "backdropBlur": 6,
-      "backdropSaturation": 1.35
-    },
-    "chatPanel": {
-      "background": "#0b1018",
-      "opacity": 0.44,
-      "backdropBlur": 4,
-      "backdropSaturation": 1.4
-    },
-    "mainArea": {
-      "background": "#0a0f17",
-      "opacity": 0.36,
-      "backdropBlur": 3,
-      "backdropSaturation": 1.45
-    },
-    "landing": {
-      "background": "#0a0f17",
-      "opacity": 0.4,
-      "backdropBlur": 3,
-      "backdropSaturation": 1.45
-    },
+  "surfaces": {
+    "opacity": { "left": 0.66, "chat": 0.44, "main": 0.36, "landing": 0.4 },
+    "blurPx": { "left": 6, "chat": 4, "main": 3, "landing": 3 },
+    "saturation": 1.4,
     "gap": "#04070da3",
     "divider": "#00f0ff8f"
   },
-  "colors": {
-    "background": {
-      "base": "#070b11b5",
-      "secondary": "#0b121cc2",
-      "tertiary": "#122334cc",
-      "card": "#09131edb",
-      "cardHover": "#102b3be8",
-      "input": "#030810e8",
-      "menu": "#0b111af2",
-      "tooltip": "#121b25f2",
-      "overlay": "#25344324"
-    },
+  "tokens": {
     "accent": {
-      "default": "#f4e900",
+      "base": "#f4e900",
       "hover": "#fff96b",
       "active": "#c9bf00",
       "subtle": "#f4e90033",
       "onAccent": "#0a0d12"
     },
+    "surface": {
+      "base": "#070b11",
+      "secondary": "#0b121c",
+      "tertiary": "#122334",
+      "card": "#09131e",
+      "cardHover": "#102b3b",
+      "input": "#030810",
+      "menu": "#0b111a",
+      "tooltip": "#121b25"
+    },
     "text": {
       "primary": "#edf4f7",
       "secondary": "#b4c6cd",
       "tertiary": "#728891",
-      "disabled": "#4e6068",
-      "onAccent": "#080b10"
+      "disabled": "#4e6068"
     },
-    "icon": {
+    "icons": {
       "primary": "#dffcff",
       "secondary": "#47e8f2",
       "tertiary": "#ff52dc",
@@ -80,12 +57,15 @@
     "border": {
       "subtle": "#00f0ff33",
       "default": "#00f0ff73",
-      "strong": "#f4e900b8"
+      "strong": "#f4e900b8",
+      "contrast": "#f4e900"
     },
-    "success": "#60f59a",
-    "warning": "#f4e900",
-    "error": "#ff244d",
-    "info": "#00f0ff"
+    "state": {
+      "success": "#60f59a",
+      "warning": "#f4e900",
+      "error": "#ff244d",
+      "info": "#00f0ff"
+    }
   },
   "typography": {
     "ui": {
@@ -120,26 +100,6 @@
     "thumbHover": "#ff2bd6cc",
     "width": 7
   },
-  "components": {
-    "chat": {
-      "userBubble": "#061522d9",
-      "userBubbleBorder": "#00f0ffb3",
-      "assistantAccent": "#f4e900",
-      "input": "#090f17e8",
-      "code": "#060a10d9",
-      "card": "#07131ee6"
-    },
-    "work": {
-      "tabBar": "#080d14c7",
-      "statusSidebar": "#0c131cbd",
-      "emptyIcon": "#25e6ff"
-    },
-    "popover": {
-      "background": "#030810f5",
-      "itemHover": "#00f0ff33",
-      "itemSelected": "#f4e9003d"
-    }
-  },
   "workbench": {
     "opacity": {
       "sidebar": 0.82,
@@ -147,14 +107,19 @@
       "panel": 0.8
     }
   },
-  "extensions": {
-    "effects": {
-      "mode": "max",
-      "panelBlurEnabled": false,
-      "scanlineColor": "#00f0ff14",
-      "gridColor": "#00f0ff12",
-      "magenta": "#ff2bd6",
-      "glow": "0 0 10px #00f0ff99, 0 0 24px #00f0ff52"
+  "effects": {
+    "mode": "max",
+    "panelBlurEnabled": false,
+    "scanlineColor": "#00f0ff14",
+    "gridColor": "#00f0ff12",
+    "magenta": "#ff2bd6",
+    "glow": "0 0 10px #00f0ff99, 0 0 24px #00f0ff52"
+  },
+  "icons": {
+    "overrides": {
+      "chatNew": "terminal.svg",
+      "marketplace": "bag.svg",
+      "automation": "chip.svg"
     }
   }
 }

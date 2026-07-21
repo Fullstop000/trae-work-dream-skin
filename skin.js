@@ -2,6 +2,8 @@
 // injector.mjs 替换 __CATALOG__ / __DEFAULT_THEME__ / __VERSION__ 后经 Runtime.evaluate 执行。
 // 幂等：重复执行先移除旧节点再重新挂载；主题选择存 localStorage，重启/导航后保持。
 (() => {
+  __TOKEN_MAP__
+  const TOKEN_MAP = self.DREAM_SKIN_TOKEN_MAP;
   const CATALOG = __CATALOG__;
   const DEFAULT_THEME = __DEFAULT_THEME__;
   const VERSION = __VERSION__;
@@ -11,6 +13,7 @@
   const DISABLED_KEY = `${LS_PREFIX}disabled`;
   const STYLE_ID = "trae-dream-skin-style";
   const UI_STYLE_ID = "trae-dream-skin-ui-style";
+  const ICONS_STYLE_ID = "trae-dream-skin-icons-style";
   const PANEL_ID = "trae-dream-skin-panel";
   const BUTTON_ID = "trae-dream-skin-button";
 
@@ -18,8 +21,26 @@
   window.__TRAE_DREAM_SKIN_OBS__ = null;
   document.getElementById(STYLE_ID)?.remove();
   document.getElementById(UI_STYLE_ID)?.remove();
+  document.getElementById(ICONS_STYLE_ID)?.remove();
   document.getElementById(PANEL_ID)?.remove();
   document.getElementById(BUTTON_ID)?.remove();
+  // 清理上一次注入在 <html> 上写的令牌变量（v3）
+  if (Array.isArray(window.__TRAE_DREAM_SKIN_HTML_VARS__)) {
+    for (const name of window.__TRAE_DREAM_SKIN_HTML_VARS__) {
+      document.documentElement.style.removeProperty(name);
+    }
+    window.__TRAE_DREAM_SKIN_HTML_VARS__ = null;
+  }
+  window.__TRAE_DREAM_SKIN_APPEARANCE_OBS__?.disconnect?.();
+  window.__TRAE_DREAM_SKIN_APPEARANCE_OBS__ = null;
+  // 记录 App 原始外观（只在首次注入时记录一次，恢复默认时还原）
+  if (!window.__TRAE_DREAM_SKIN_ORIG_APPEARANCE__) {
+    window.__TRAE_DREAM_SKIN_ORIG_APPEARANCE__ = {
+      dataTheme: document.documentElement.getAttribute("data-theme"),
+      light: Boolean(document.body?.classList.contains("light")),
+      vsDark: Boolean(document.body?.classList.contains("vs-dark")),
+    };
+  }
   if (document.body) {
     for (const className of [...document.body.classList]) {
       if (className.startsWith("trae-skin-theme-")) {
@@ -48,6 +69,7 @@
       }
       document.body.classList.remove(
         "trae-skin-v2",
+        "trae-skin-v3",
         "trae-skin-appearance-dark",
         "trae-skin-effects-max",
         "trae-skin-blur-disabled",
@@ -891,6 +913,13 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
         document.body.style.removeProperty(name);
       }
     }
+    // v3 写在 <html> 上的令牌变量
+    if (Array.isArray(window.__TRAE_DREAM_SKIN_HTML_VARS__)) {
+      for (const name of window.__TRAE_DREAM_SKIN_HTML_VARS__) {
+        document.documentElement.style.removeProperty(name);
+      }
+      window.__TRAE_DREAM_SKIN_HTML_VARS__ = null;
+    }
   };
   const setSurface = (name, config, fallbackColor, fallbackOpacity, fallbackBlur) => {
     const surface = config || {};
@@ -923,7 +952,9 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     return config;
   };
   const panelBlurEnabled = (theme) => {
-    const defaultValue = theme.settings?.extensions?.effects?.panelBlurEnabled ?? true;
+    const defaultValue = theme.settings?.extensions?.effects?.panelBlurEnabled
+      ?? theme.settings?.effects?.panelBlurEnabled
+      ?? true;
     try {
       const saved = localStorage.getItem(`${BLUR_LS_PREFIX}${theme.id}`);
       return saved == null ? Boolean(defaultValue) : saved === "true";
@@ -938,6 +969,23 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
   };
   let ensureSelfHeal = () => {};
   let activeThemeClass = null;
+
+  // v3 外观握手的逆操作：还原 App 原始外观（切换到 v1/v2 主题、恢复默认时调用）
+  const restoreNativeAppearance = () => {
+    window.__TRAE_DREAM_SKIN_APPEARANCE_OBS__?.disconnect?.();
+    window.__TRAE_DREAM_SKIN_APPEARANCE_OBS__ = null;
+    const orig = window.__TRAE_DREAM_SKIN_ORIG_APPEARANCE__;
+    if (!orig) return;
+    if (orig.dataTheme == null) {
+      document.documentElement.removeAttribute("data-theme");
+    } else {
+      document.documentElement.setAttribute("data-theme", orig.dataTheme);
+    }
+    if (document.body) {
+      document.body.classList.toggle("light", orig.light);
+      document.body.classList.toggle("vs-dark", orig.vsDark);
+    }
+  };
   const restoreNativeTheme = () => {
     try {
       for (let index = localStorage.length - 1; index >= 0; index -= 1) {
@@ -948,8 +996,12 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     } catch {}
     disabled = true;
     clearManagedVars();
+    // v3 外观握手的逆操作：还原 App 原始外观
+    restoreNativeAppearance();
+    window.__TRAE_DREAM_SKIN_ORIG_APPEARANCE__ = null;
     document.body.classList.remove(
       "trae-skin-v2",
+      "trae-skin-v3",
       "trae-skin-appearance-dark",
       "trae-skin-effects-max",
       "trae-skin-blur-disabled",
@@ -957,6 +1009,7 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     if (activeThemeClass) document.body.classList.remove(activeThemeClass);
     activeThemeClass = null;
     document.getElementById(STYLE_ID)?.remove();
+    document.getElementById(ICONS_STYLE_ID)?.remove();
     document.getElementById(PANEL_ID)?.remove();
     panel.style.display = "none";
     panel.querySelectorAll(".ds-card").forEach((card) => card.classList.remove("ds-active"));
@@ -971,12 +1024,235 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
   let renderCurrentConfig = () => {};
   let renderBlurControl = () => {};
 
+  // ---------- v3：外观握手 ----------
+  // 把 App 自己的主题开关（<html data-theme> + body .light/.vs-dark）翻到与皮肤一致，
+  // 让 App 的暗色样式表、icube 别名层、CSS module 颜色全部进入对应语境
+  const setAppearance = (appearance) => {
+    const root = document.documentElement;
+    const wantDark = appearance === "dark";
+    if (root.getAttribute("data-theme") !== appearance) {
+      root.setAttribute("data-theme", appearance);
+    }
+    if (document.body) {
+      document.body.classList.toggle("light", !wantDark);
+      document.body.classList.toggle("vs-dark", wantDark);
+    }
+  };
+
+  // 用户在 App 设置里手动切主题时，v3 皮肤重断言自己的外观
+  const ensureAppearanceObserver = () => {
+    if (window.__TRAE_DREAM_SKIN_APPEARANCE_OBS__) return;
+    const obs = new MutationObserver(() => {
+      let id = null;
+      try { id = localStorage.getItem(LS_KEY); } catch {}
+      const current = id ? findTheme(id) : null;
+      if (!current || Number(current.settings?.schemaVersion) < 3) {
+        obs.disconnect();
+        window.__TRAE_DREAM_SKIN_APPEARANCE_OBS__ = null;
+        return;
+      }
+      const want = current.settings.appearance === "light" ? "light" : "dark";
+      if (document.documentElement.getAttribute("data-theme") !== want) {
+        setAppearance(want);
+      }
+    });
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    window.__TRAE_DREAM_SKIN_APPEARANCE_OBS__ = obs;
+  };
+
+  // ---------- v3：--trae-skin-* 自有层（画廊 + 毛玻璃 + 特效），从角色推导 ----------
+  const setTraeSkinVarsV3 = (roles, settings, theme) => {
+    const { accent, surface, text, icons, border, state } = roles;
+    const background = settings.background || {};
+    const surfaces = settings.surfaces || {};
+    const surfacesOpacity = surfaces.opacity || {};
+    const surfacesBlur = surfaces.blurPx || {};
+    const surfacesSaturation = surfaces.saturation ?? 1.2;
+    const typography = settings.typography || {};
+    const shape = settings.shape || {};
+    const radius = shape.radius || {};
+    const elevation = settings.elevation || {};
+    const scrollbar = settings.scrollbar || {};
+    const workbench = settings.workbench || {};
+    const workbenchOpacity = workbench.opacity || {};
+    const effects = settings.effects || {};
+    const surfacesColors = surfaces.colors || {};
+    const components = settings.components || {};
+    const chatC = components.chat || {};
+    const popoverC = components.popover || {};
+    const settingsC = components.settings || {};
+    const decorations = settings.decorations || {};
+
+    document.body.classList.toggle("trae-skin-effects-max", effects.mode === "max");
+
+    setVar("--trae-skin-background-color", background.color || surface.base);
+    setVar("--trae-skin-background-position", background.position || "center");
+    setVar("--trae-skin-background-size", background.size || "cover");
+    setVar("--trae-skin-background-repeat", background.repeat || "no-repeat");
+    setVar("--trae-skin-background-blur", asLength(background.blur, "0px"));
+    setVar("--trae-skin-background-brightness", asNumber(background.brightness, 1, 0, 2));
+    setVar("--trae-skin-background-saturation", asNumber(background.saturation, 1, 0, 3));
+    setVar("--trae-skin-background-scale", background.blur ? 1.035 : 1);
+    setVar("--trae-skin-background-overlay", withAlpha(
+      background.overlay?.color || "transparent",
+      background.overlay?.opacity ?? 0,
+    ));
+
+    setSurface("left", { background: surfacesColors.left ?? surface.secondary, opacity: surfacesOpacity.left ?? 0.72, backdropBlur: surfacesBlur.left ?? 16, backdropSaturation: surfacesSaturation }, surface.secondary, 0.72, 16);
+    setSurface("chat", { background: surfacesColors.chat ?? surface.base, opacity: surfacesOpacity.chat ?? 0.72, backdropBlur: surfacesBlur.chat ?? 20, backdropSaturation: surfacesSaturation }, surface.base, 0.72, 20);
+    setSurface("main", { background: surfacesColors.main ?? surface.base, opacity: surfacesOpacity.main ?? 0.68, backdropBlur: surfacesBlur.main ?? 18, backdropSaturation: surfacesSaturation }, surface.base, 0.68, 18);
+    setSurface("landing", { background: surfacesColors.landing ?? surface.base, opacity: surfacesOpacity.landing ?? 0.68, backdropBlur: surfacesBlur.landing ?? 18, backdropSaturation: surfacesSaturation }, surface.base, 0.68, 18);
+    setVar("--trae-skin-layout-gap", surfaces.gap || withAlpha(surface.secondary, 0.35));
+    setVar("--trae-skin-divider", surfaces.divider || border.subtle);
+
+    setVar("--trae-skin-text-primary", text.primary);
+    setVar("--trae-skin-text-secondary", text.secondary);
+    setVar("--trae-skin-text-tertiary", text.tertiary);
+    setVar("--trae-skin-text-disabled", text.disabled);
+    setVar("--trae-skin-accent", accent.base);
+    setVar("--trae-skin-accent-hover", accent.hover);
+    setVar("--trae-skin-accent-subtle", accent.subtle);
+    setVar("--trae-skin-accent-on", accent.onAccent);
+    setVar("--trae-skin-info", state.info);
+    setVar("--trae-skin-info-subtle", withAlpha(state.info, 0.12));
+    setVar("--trae-skin-error", state.error);
+    setVar("--trae-skin-warning", state.warning);
+    setVar("--trae-skin-success", state.success);
+    setVar("--trae-skin-input", surface.input);
+    setVar("--trae-skin-menu", surface.menu);
+    setVar("--trae-skin-border-subtle", border.subtle);
+    setVar("--trae-skin-border-default", border.default);
+    setVar("--trae-skin-border-strong", border.strong);
+    setVar("--trae-skin-scanline-color", effects.scanlineColor || "transparent");
+    setVar("--trae-skin-grid-color", effects.gridColor || "transparent");
+    setVar("--trae-skin-magenta", effects.magenta || state.error);
+    setVar("--trae-skin-neon-glow", effects.glow || "none");
+
+    setVar("--trae-skin-font-ui", typography.ui?.family || "inherit");
+    setVar("--trae-skin-font-heading", typography.heading?.family || typography.ui?.family || "inherit");
+    setVar("--trae-skin-font-code", typography.code?.family || "monospace");
+    setVar("--trae-skin-heading-weight", typography.heading?.weight || 600);
+    setVar("--trae-skin-heading-spacing", typography.heading?.letterSpacing || "normal");
+    setVar("--trae-skin-radius-small", asLength(radius.small, "6px"));
+    setVar("--trae-skin-radius-medium", asLength(radius.medium, "10px"));
+    setVar("--trae-skin-radius-large", asLength(radius.large, "14px"));
+    setVar("--trae-skin-radius-pill", asLength(radius.pill, "999px"));
+    setVar("--trae-skin-shadow-card", elevation.card || "0 8px 24px #00000026");
+    setVar("--trae-skin-shadow-floating", elevation.floating || "0 16px 48px #00000073");
+    setVar("--trae-skin-focus-ring", elevation.focusRing || `0 0 0 2px ${accent.base}`);
+
+    setVar("--trae-skin-scrollbar-track", scrollbar.track || "transparent");
+    setVar("--trae-skin-scrollbar-thumb", scrollbar.thumb || border.default);
+    setVar("--trae-skin-scrollbar-hover", scrollbar.thumbHover || accent.base);
+    setVar("--trae-skin-scrollbar-width", asLength(scrollbar.width, "8px"));
+
+    setVar("--trae-skin-chat-user-bubble", chatC.userBubble || surface.card);
+    setVar("--trae-skin-chat-user-border", chatC.userBubbleBorder || border.subtle);
+    setVar("--trae-skin-chat-code", chatC.code || surface.input);
+    setVar("--trae-skin-chat-card", chatC.card || surface.card);
+    setVar("--trae-skin-chat-assistant-message", chatC.assistantMessage || "transparent");
+    setVar("--trae-skin-chat-assistant-border", chatC.assistantMessageBorder || "transparent");
+    setVar("--trae-skin-chat-assistant-shadow", chatC.assistantMessageShadow || "none");
+    setVar("--trae-skin-popover", popoverC.background || surface.menu);
+    setVar("--trae-skin-popover-hover", popoverC.itemHover || withAlpha(state.info, 0.1));
+    setVar("--trae-skin-popover-selected", popoverC.itemSelected || accent.subtle);
+
+    setVar("--trae-skin-settings-overlay", settingsC.overlay || withAlpha(surface.base, 0.72));
+    setVar("--trae-skin-settings-panel", settingsC.panel || surface.menu);
+    setVar("--trae-skin-settings-sidebar", settingsC.sidebar || surface.secondary);
+    setVar("--trae-skin-settings-card", settingsC.card || surface.card);
+    setVar("--trae-skin-settings-control", settingsC.control || surface.input);
+    setVar("--trae-skin-settings-active", settingsC.active || accent.subtle);
+
+    // 侧栏/右栏装饰图（与 v2 extensions.decorations 同语义，v3 移到顶层 decorations）
+    const setDecorationV3 = (name, asset, config, fallbackColor) => {
+      if (!asset || !config) return;
+      const overlay = withAlpha(config.overlay?.color || fallbackColor, config.overlay?.opacity ?? 0.42);
+      setVar(`--trae-skin-${name}-art-layer`, `linear-gradient(${overlay}, ${overlay}), url("${asset}")`);
+      setVar(`--trae-skin-${name}-art-position`, config.position || "center");
+      setVar(`--trae-skin-${name}-art-size`, config.size || "cover");
+    };
+    setDecorationV3("left", theme.assets?.leftSidebar, decorations.leftSidebar, surface.secondary);
+    setDecorationV3("right", theme.assets?.rightPanel, decorations.rightPanel, surface.base);
+
+    setVar("--trae-skin-workbench-sidebar", withAlpha(surface.secondary, workbenchOpacity.sidebar ?? 0.72));
+    setVar("--trae-skin-workbench-editor", withAlpha(surface.base, workbenchOpacity.editor ?? 0.76));
+    setVar("--trae-skin-workbench-panel", withAlpha(surface.secondary, workbenchOpacity.panel ?? 0.72));
+  };
+
+  // ---------- v3：图标 glyph 替换（CSS mask，颜色跟随 currentColor） ----------
+  const applyIconOverrides = (settings) => {
+    document.getElementById(ICONS_STYLE_ID)?.remove();
+    const overrides = settings.icons?.overrides || {};
+    const assets = settings.icons?.assets || {};
+    const rules = [];
+    for (const [key, spec] of Object.entries(overrides)) {
+      const art = assets[key];
+      if (!art) continue;
+      const selector = (typeof spec === "object" && spec?.selector)
+        ? spec.selector
+        : key.startsWith("codicon-") ? `.${key}` : `svg.trae-icon-${key}`;
+      const mask = `url("${art}") center / contain no-repeat`;
+      if (key.startsWith("codicon-") || (typeof spec === "object" && spec?.pseudo)) {
+        rules.push(`${selector}::before {
+  content: "" !important; display: inline-block !important;
+  width: 1em; height: 1em; background: currentColor !important;
+  -webkit-mask: ${mask} !important; mask: ${mask} !important;
+  -webkit-mask-mode: alpha !important; mask-mode: alpha !important;
+}`);
+      } else {
+        rules.push(`${selector} * { display: none !important; }
+${selector} {
+  background: currentColor !important;
+  -webkit-mask: ${mask} !important; mask: ${mask} !important;
+  -webkit-mask-mode: alpha !important; mask-mode: alpha !important;
+}`);
+      }
+    }
+    if (!rules.length) return 0;
+    const el = document.createElement("style");
+    el.id = ICONS_STYLE_ID;
+    el.textContent = rules.join("\n");
+    (document.head || document.documentElement).appendChild(el);
+    return rules.length;
+  };
+
+  // ---------- v3 主入口：握手 → 扇出 → 自有层 → 护栏 ----------
+  const applyV3Theme = (theme, settings) => {
+    const appearance = settings.appearance === "light" ? "light" : "dark";
+    setAppearance(appearance);
+    ensureAppearanceObserver();
+
+    // 角色 → 全命名空间扇出，写到 <html>（覆盖 :root 与 [data-theme] 定义）
+    const tokens = settings.tokens || {};
+    const varMap = TOKEN_MAP.buildVarMap(tokens, { appearance });
+    const htmlStyle = document.documentElement.style;
+    const applied = [];
+    for (const [name, value] of Object.entries(varMap)) {
+      htmlStyle.setProperty(name, value);
+      applied.push(name);
+    }
+    window.__TRAE_DREAM_SKIN_HTML_VARS__ = applied;
+
+    const roles = TOKEN_MAP.deriveRoles(tokens, { appearance });
+    setTraeSkinVarsV3(roles, settings, theme);
+    const iconCount = applyIconOverrides(settings);
+
+    document.body.classList.add("trae-skin-v2", "trae-skin-v3");
+    document.body.classList.toggle("trae-skin-appearance-dark", appearance === "dark");
+
+    const warnings = TOKEN_MAP.auditContrast(tokens, { appearance });
+    if (warnings.length) console.warn("[dream-skin] contrast warnings:", JSON.stringify(warnings));
+    return { contrastWarnings: warnings.length, iconOverrides: iconCount };
+  };
+
   const apply = (id) => {
     const theme = findTheme(id);
     if (!theme) return { ok: false, error: `unknown theme: ${id}` };
     clearManagedVars();
     document.body.classList.remove(
       "trae-skin-v2",
+      "trae-skin-v3",
       "trae-skin-appearance-dark",
       "trae-skin-effects-max",
       "trae-skin-blur-disabled",
@@ -992,7 +1268,15 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     document.body.classList.toggle("trae-skin-blur-disabled", !blurEnabled);
 
     const settings = theme.settings || {};
-    if (asNumber(settings.schemaVersion, 1) >= 2) {
+    const schemaVersion = asNumber(settings.schemaVersion, 1);
+    let v3Result = null;
+    if (schemaVersion >= 3) {
+      v3Result = applyV3Theme(theme, settings);
+    } else {
+      // v1/v2 主题没有外观握手设计，切回去时还原 App 原始外观
+      restoreNativeAppearance();
+      document.getElementById(ICONS_STYLE_ID)?.remove();
+      if (schemaVersion >= 2) {
       document.body.classList.add("trae-skin-v2");
       document.body.classList.toggle(
         "trae-skin-appearance-dark",
@@ -1202,6 +1486,7 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
       setVar("--trae-skin-workbench-sidebar", withAlpha(bg.secondary || workbenchBase, workbenchOpacity.sidebar ?? 0.72));
       setVar("--trae-skin-workbench-editor", withAlpha(workbenchBase, workbenchOpacity.editor ?? 0.76));
       setVar("--trae-skin-workbench-panel", withAlpha(bg.secondary || workbenchBase, workbenchOpacity.panel ?? 0.72));
+      }
     }
 
     try { localStorage.setItem(LS_KEY, id); } catch {}
@@ -1215,6 +1500,7 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
       id,
       schemaVersion: theme.settings?.schemaVersion || 1,
       panelBlurEnabled: blurEnabled,
+      ...(v3Result || {}),
     };
   };
 

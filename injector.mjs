@@ -99,8 +99,26 @@ function buildCatalog(themesDir) {
       "components",
       "workbench",
       "extensions",
+      "tokens",
+      "surfaces",
+      "effects",
+      "icons",
+      "decorations",
     ]) {
       if (meta[key] != null) settings[key] = meta[key];
+    }
+    // icons.overrides: 解析 icons/ 目录下的素材文件为 data URL
+    if (settings.icons?.overrides && typeof settings.icons.overrides === "object") {
+      const assets = {};
+      for (const [key, spec] of Object.entries(settings.icons.overrides)) {
+        const file = typeof spec === "string" ? spec : spec?.src;
+        if (!file || !/\.(svg|png|jpe?g)$/i.test(file)) continue;
+        const full = path.join(dir, "icons", file);
+        if (fs.existsSync(full)) assets[key] = dataUri(full);
+      }
+      if (Object.keys(assets).length) {
+        settings.icons = { ...settings.icons, assets };
+      }
     }
     catalog.push({
       id: String(meta.id),
@@ -130,12 +148,15 @@ function resolveDefaultTheme(catalog, requested) {
 
 function buildPayload(args) {
   const skin = fs.readFileSync(path.join(ROOT, "skin.js"), "utf8");
+  const tokenMap = fs.readFileSync(path.join(ROOT, "token-map.mjs"), "utf8");
   const catalog = buildCatalog(args.themesDir);
   if (catalog.length === 0) throw new Error(`no themes found in ${args.themesDir}`);
+  // 函数式替换，避免替换文本里的 $ 序列被当成特殊模式
   return skin
-    .replaceAll("__CATALOG__", JSON.stringify(catalog))
-    .replaceAll("__DEFAULT_THEME__", JSON.stringify(resolveDefaultTheme(catalog, args.defaultTheme)))
-    .replaceAll("__VERSION__", JSON.stringify(VERSION));
+    .replaceAll("__TOKEN_MAP__", () => tokenMap)
+    .replaceAll("__CATALOG__", () => JSON.stringify(catalog))
+    .replaceAll("__DEFAULT_THEME__", () => JSON.stringify(resolveDefaultTheme(catalog, args.defaultTheme)))
+    .replaceAll("__VERSION__", () => JSON.stringify(VERSION));
 }
 
 class CdpSession {

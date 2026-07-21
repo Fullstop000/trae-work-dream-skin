@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "xianzhou-luofu",
   "name": "仙舟「罗浮」",
   "desc": "工笔岩彩仙舟、玉界门云海与仙舟群像",
@@ -17,61 +17,44 @@
       "opacity": 0.06
     }
   },
-  "layout": {
-    "leftSidebar": {
-      "background": "#0b1d23",
-      "opacity": 0.74,
-      "backdropBlur": 10,
-      "backdropSaturation": 1.16
+  "surfaces": {
+    "colors": {
+      "left": "#0b1d23",
+      "chat": "#10272c",
+      "main": "#132b30",
+      "landing": "#132b30"
     },
-    "chatPanel": {
-      "background": "#10272c",
-      "opacity": 0.64,
-      "backdropBlur": 10,
-      "backdropSaturation": 1.18
-    },
-    "mainArea": {
-      "background": "#132b30",
-      "opacity": 0.44,
-      "backdropBlur": 7,
-      "backdropSaturation": 1.14
-    },
-    "landing": {
-      "background": "#132b30",
-      "opacity": 0.5,
-      "backdropBlur": 8,
-      "backdropSaturation": 1.14
-    },
+    "opacity": { "left": 0.74, "chat": 0.64, "main": 0.44, "landing": 0.5 },
+    "blurPx": { "left": 10, "chat": 10, "main": 7, "landing": 8 },
+    "saturation": 1.16,
     "gap": "#07171ba3",
     "divider": "#9d493b70"
   },
-  "colors": {
-    "background": {
-      "base": "#0b1d23d4",
-      "secondary": "#10272cd9",
-      "tertiary": "#193238d9",
-      "card": "#10282ee0",
-      "cardHover": "#26383be0",
-      "input": "#0a1d22eb",
-      "menu": "#0d2025f2",
-      "tooltip": "#162b2ff2",
-      "overlay": "#9d493b1f"
-    },
+  "tokens": {
     "accent": {
-      "default": "#dfbf69",
+      "base": "#dfbf69",
       "hover": "#f2d88f",
       "active": "#b89443",
       "subtle": "#dfbf6930",
       "onAccent": "#14242a"
     },
+    "surface": {
+      "base": "#0b1d23",
+      "secondary": "#10272c",
+      "tertiary": "#193238",
+      "card": "#10282e",
+      "cardHover": "#26383b",
+      "input": "#0a1d22",
+      "menu": "#0d2025",
+      "tooltip": "#162b2f"
+    },
     "text": {
       "primary": "#f4f0e7",
       "secondary": "#c9d8d3",
       "tertiary": "#8daaa4",
-      "disabled": "#5b7470",
-      "onAccent": "#10232a"
+      "disabled": "#5b7470"
     },
-    "icon": {
+    "icons": {
       "primary": "#dff2ec",
       "secondary": "#78cfc3",
       "tertiary": "#d7b964",
@@ -80,12 +63,15 @@
     "border": {
       "subtle": "#9d493b33",
       "default": "#6fc8bd66",
-      "strong": "#dfbf69a8"
+      "strong": "#dfbf69a8",
+      "contrast": "#dfbf69"
     },
-    "success": "#79d7ad",
-    "warning": "#dfbf69",
-    "error": "#e67f72",
-    "info": "#6fc8bd"
+    "state": {
+      "success": "#79d7ad",
+      "warning": "#dfbf69",
+      "error": "#e67f72",
+      "info": "#6fc8bd"
+    }
   },
   "typography": {
     "ui": {
@@ -124,18 +110,11 @@
     "chat": {
       "userBubble": "#1a3338e0",
       "userBubbleBorder": "#9d493b70",
-      "assistantAccent": "#dfbf69",
       "assistantMessage": "transparent",
       "assistantMessageBorder": "transparent",
       "assistantMessageShadow": "none",
-      "input": "#0b2025eb",
       "code": "#061820e6",
       "card": "#10282ee3"
-    },
-    "work": {
-      "tabBar": "#0c2025c7",
-      "statusSidebar": "#10272cc7",
-      "emptyIcon": "#dfbf69"
     },
     "popover": {
       "background": "#0b2025f5",
@@ -158,34 +137,32 @@
       "panel": 0.77
     }
   },
-  "extensions": {
-    "decorations": {
-      "leftSidebar": {
-        "asset": "leftSidebar",
-        "position": "center top",
-        "size": "cover",
-        "overlay": {
-          "color": "#061820",
-          "opacity": 0.4
-        }
-      },
-      "rightPanel": {
-        "asset": "rightPanel",
-        "position": "center",
-        "size": "cover",
-        "overlay": {
-          "color": "#071b25",
-          "opacity": 0.26
-        }
+  "effects": {
+    "mode": "standard",
+    "panelBlurEnabled": false,
+    "scanlineColor": "transparent",
+    "gridColor": "transparent",
+    "magenta": "#9d3f32",
+    "glow": "0 0 12px #dfbf6938"
+  },
+  "decorations": {
+    "leftSidebar": {
+      "asset": "leftSidebar",
+      "position": "center top",
+      "size": "cover",
+      "overlay": {
+        "color": "#061820",
+        "opacity": 0.4
       }
     },
-    "effects": {
-      "mode": "standard",
-      "panelBlurEnabled": false,
-      "scanlineColor": "transparent",
-      "gridColor": "transparent",
-      "magenta": "#9d3f32",
-      "glow": "0 0 12px #dfbf6938"
+    "rightPanel": {
+      "asset": "rightPanel",
+      "position": "center",
+      "size": "cover",
+      "overlay": {
+        "color": "#071b25",
+        "opacity": 0.26
+      }
     }
   }
 }
