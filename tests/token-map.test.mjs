@@ -50,8 +50,13 @@ test("扇出覆盖全部普查命名空间", () => {
   for (const s of TM.ICUBE_ICON) expected.push(`--vscode-icube--icon-icon-${s}`);
   for (const s of TM.ICUBE_BORDER) expected.push(`--vscode-icube--border-border-${s}`);
   for (const s of TM.RAS_BG) expected.push(`--ras-bg-bg-${s}`);
+  for (const s of TM.RAS_TEXT) expected.push(`--ras-text-text-${s}`);
+  for (const s of TM.RAS_ICON) expected.push(`--ras-icon-icon-${s}`);
+  for (const s of TM.RAS_BORDER) expected.push(`--ras-border-border-${s}`);
   for (const k of TM.ICUBE_STATUS_KINDS) {
-    for (const p of TM.ICUBE_STATUS_PARTS) expected.push(`--vscode-icube--status-${k}-${p}`);
+    for (const p of TM.ICUBE_STATUS_PARTS) {
+      expected.push(`--vscode-icube--status-${k}-${p}`, `--ras-status-${k}-${p}`);
+    }
   }
   for (const [stop] of TM.RAMP_STOPS) {
     expected.push(`--brand-brand-${stop}`, `--brand-brand-grey-${stop}`);

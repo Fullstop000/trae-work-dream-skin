@@ -90,6 +90,9 @@
   const ICUBE_STATUS_PARTS = ["default", "hover", "active", "surface-l1", "surface-l2", "surface-l3"];
   // --ras-* 镜像层
   const RAS_BG = ["base-default", "base-secondary", "base-tertiary", "brand", "brand-design", "brand-disabled", "brand-disabled-design", "brand-disabled-sub", "brand-hover", "brand-hover-design", "brand-hover-sub", "brand-popup", "brand-popup-design", "brand-popup-sub", "brand-sub", "invert", "invert-active", "invert-disabled", "invert-hover", "menu", "overlay-l1", "overlay-l2", "overlay-l3", "overlay-l4", "tooltip"];
+  const RAS_TEXT = ["brand", "brand-design", "brand-hover", "brand-hover-design", "brand-hover-sub", "brand-sub", "default", "default-active", "default-hover", "disabled", "onaccent", "onbrand", "secondary", "secondary-active", "secondary-hover", "tertiary"];
+  const RAS_ICON = ["brand", "brand-design", "brand-hover", "brand-hover-design", "brand-hover-sub", "brand-sub", "default", "default-active", "default-hover", "disabled", "onaccent", "onbrand", "secondary", "secondary-active", "secondary-hover", "tertiary"];
+  const RAS_BORDER = ["brand", "brand-design", "brand-sub", "contrast", "neutral-l1", "neutral-l2", "neutral-l3"];
   // 品牌色阶停靠点：[suffix, accent 占比%, 混向]
   const RAMP_STOPS = [[50, 8, "white"], [100, 16, "white"], [200, 28, "white"], [300, 44, "white"], [400, 66, "white"], [500, 100, null], [600, 82, "black"], [700, 66, "black"], [800, 50, "black"], [900, 34, "black"], [950, 20, "black"]];
 
@@ -187,8 +190,8 @@
         case "secondary": case "secondary-hover": case "secondary-active": return text.secondary;
         case "tertiary": return text.tertiary;
         case "disabled": return text.disabled;
-        case "brand": case "brand-sub": return accent.base;
-        case "brand-hover": case "brand-hover-sub": return accent.hover;
+        case "brand": case "brand-sub": case "brand-design": return accent.base;
+        case "brand-hover": case "brand-hover-sub": case "brand-hover-design": return accent.hover;
         case "onaccent": case "onbrand": return accent.onAccent;
         case "preformat-foreground": return text.secondary;
         default: return undefined;
@@ -200,8 +203,8 @@
         case "secondary": case "secondary-hover": case "secondary-active": return icons.secondary;
         case "tertiary": return icons.tertiary;
         case "disabled": return icons.disabled;
-        case "brand": case "brand-sub": return accent.base;
-        case "brand-hover": case "brand-hover-sub": return accent.hover;
+        case "brand": case "brand-sub": case "brand-design": return accent.base;
+        case "brand-hover": case "brand-hover-sub": case "brand-hover-design": return accent.hover;
         case "onaccent": case "onbrand": return accent.onAccent;
         case "white": return "#ffffff";
         default: return undefined;
@@ -212,7 +215,7 @@
         case "neutral-l1": return border.subtle;
         case "neutral-l2": return border.default;
         case "neutral-l3": return border.strong;
-        case "brand": return accent.base;
+        case "brand": case "brand-design": return accent.base;
         case "brand-sub": return accent.subtle;
         case "contrast": return border.contrast;
         default: return undefined;
@@ -230,8 +233,11 @@
     for (const s of ICUBE_ICON) put(`--vscode-icube--icon-icon-${s}`, iconValue(s));
     for (const s of ICUBE_BORDER) put(`--vscode-icube--border-border-${s}`, borderValue(s));
     for (const s of RAS_BG) put(`--ras-bg-bg-${s}`, bgValue(s));
+    for (const s of RAS_TEXT) put(`--ras-text-text-${s}`, textValue(s));
+    for (const s of RAS_ICON) put(`--ras-icon-icon-${s}`, iconValue(s));
+    for (const s of RAS_BORDER) put(`--ras-border-border-${s}`, borderValue(s));
 
-    // 状态色家族（--vscode-icube--status-*）
+    // 状态色家族（--vscode-icube--status-* 与 --ras-status-* 同步）
     const statusColor = { primary: accent.base, error: state.error, success: state.success, warning: state.warning, alert: state.info };
     for (const kind of ICUBE_STATUS_KINDS) {
       const c = statusColor[kind];
@@ -242,6 +248,7 @@
         else if (part === "active") v = mix(c, 84, "black");
         else v = withAlpha(c, { "surface-l1": 0.12, "surface-l2": 0.2, "surface-l3": 0.3 }[part]);
         put(`--vscode-icube--status-${kind}-${part}`, v);
+        put(`--ras-status-${kind}-${part}`, v);
       }
     }
     // diff 提示色
@@ -307,6 +314,6 @@
     deriveRoles, buildVarMap, auditContrast,
     NS_BG, NS_TEXT, NS_ICON, NS_BORDER,
     ICUBE_BG, ICUBE_TEXT, ICUBE_ICON, ICUBE_BORDER, ICUBE_STATUS_KINDS, ICUBE_STATUS_PARTS,
-    RAS_BG, RAMP_STOPS,
+    RAS_BG, RAS_TEXT, RAS_ICON, RAS_BORDER, RAMP_STOPS,
   };
 });

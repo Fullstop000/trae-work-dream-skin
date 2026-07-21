@@ -1,0 +1,360 @@
+{
+  "bg-bg": [
+    "bg-bg-base-default",
+    "bg-bg-base-secondary",
+    "bg-bg-base-tertiary",
+    "bg-bg-brand",
+    "bg-bg-brand-design",
+    "bg-bg-brand-disabled",
+    "bg-bg-brand-disabled-design",
+    "bg-bg-brand-disabled-sub",
+    "bg-bg-brand-hover",
+    "bg-bg-brand-hover-design",
+    "bg-bg-brand-hover-sub",
+    "bg-bg-brand-popup",
+    "bg-bg-brand-popup-design",
+    "bg-bg-brand-popup-sub",
+    "bg-bg-brand-sub",
+    "bg-bg-invert",
+    "bg-bg-invert-active",
+    "bg-bg-invert-disabled",
+    "bg-bg-invert-hover",
+    "bg-bg-menu",
+    "bg-bg-overlay-l1",
+    "bg-bg-overlay-l2",
+    "bg-bg-overlay-l3",
+    "bg-bg-overlay-l4",
+    "bg-bg-tooltip"
+  ],
+  "text-text": [
+    "text-text-brand",
+    "text-text-brand-design",
+    "text-text-brand-hover",
+    "text-text-brand-hover-design",
+    "text-text-brand-hover-sub",
+    "text-text-brand-sub",
+    "text-text-default",
+    "text-text-default-active",
+    "text-text-default-hover",
+    "text-text-disabled",
+    "text-text-onaccent",
+    "text-text-onbrand",
+    "text-text-secondary",
+    "text-text-secondary-active",
+    "text-text-secondary-hover",
+    "text-text-tertiary"
+  ],
+  "icon-icon": [
+    "icon-icon-brand",
+    "icon-icon-brand-design",
+    "icon-icon-brand-hover",
+    "icon-icon-brand-hover-design",
+    "icon-icon-brand-hover-sub",
+    "icon-icon-brand-sub",
+    "icon-icon-default",
+    "icon-icon-default-active",
+    "icon-icon-default-hover",
+    "icon-icon-disabled",
+    "icon-icon-onaccent",
+    "icon-icon-onbrand",
+    "icon-icon-secondary",
+    "icon-icon-secondary-active",
+    "icon-icon-secondary-hover",
+    "icon-icon-tertiary"
+  ],
+  "border-border": [
+    "border-border-brand",
+    "border-border-brand-design",
+    "border-border-brand-sub",
+    "border-border-contrast",
+    "border-border-neutral-l1",
+    "border-border-neutral-l2",
+    "border-border-neutral-l3"
+  ],
+  "code-code": [
+    "code-code-action",
+    "code-code-attribute",
+    "code-code-constant",
+    "code-code-doc",
+    "code-code-function",
+    "code-code-instruction",
+    "code-code-link",
+    "code-code-number",
+    "code-code-parameter",
+    "code-code-tag",
+    "code-code-text"
+  ],
+  "accent-accent": [
+    "accent-accent-amber",
+    "accent-accent-blue",
+    "accent-accent-coral",
+    "accent-accent-cyan",
+    "accent-accent-lime",
+    "accent-accent-magenta",
+    "accent-accent-slate",
+    "accent-accent-teal",
+    "accent-accent-violet"
+  ],
+  "status-primary": [
+    "status-primary-active",
+    "status-primary-default",
+    "status-primary-hover",
+    "status-primary-surface-l1",
+    "status-primary-surface-l2",
+    "status-primary-surface-l3"
+  ],
+  "status-success": [
+    "status-success-active",
+    "status-success-default",
+    "status-success-hover",
+    "status-success-surface-l1",
+    "status-success-surface-l2",
+    "status-success-surface-l3"
+  ],
+  "status-alert": [
+    "status-alert-active",
+    "status-alert-default",
+    "status-alert-hover",
+    "status-alert-surface-l1",
+    "status-alert-surface-l2",
+    "status-alert-surface-l3"
+  ],
+  "status-warning": [
+    "status-warning-active",
+    "status-warning-default",
+    "status-warning-hover",
+    "status-warning-surface-l1",
+    "status-warning-surface-l2",
+    "status-warning-surface-l3"
+  ],
+  "status-error": [
+    "status-error-active",
+    "status-error-default",
+    "status-error-hover",
+    "status-error-surface-l1",
+    "status-error-surface-l2",
+    "status-error-surface-l3"
+  ],
+  "special-white": [
+    "special-white"
+  ],
+  "special-black": [
+    "special-black"
+  ],
+  "special-bgtabsoverlay": [
+    "special-bgtabsoverlay"
+  ],
+  "font-family": [
+    "font-family-default",
+    "font-family-heading",
+    "font-family-mono"
+  ],
+  "font-weight": [
+    "font-weight-code",
+    "font-weight-default",
+    "font-weight-medium",
+    "font-weight-strong"
+  ],
+  "body-xs": [
+    "body-xs-font-family",
+    "body-xs-font-size",
+    "body-xs-font-weight",
+    "body-xs-fontFamily",
+    "body-xs-fontSize",
+    "body-xs-fontWeight",
+    "body-xs-line-height",
+    "body-xs-lineHeight"
+  ],
+  "body-sm": [
+    "body-sm-font-family",
+    "body-sm-font-size",
+    "body-sm-font-weight",
+    "body-sm-fontFamily",
+    "body-sm-fontSize",
+    "body-sm-fontWeight",
+    "body-sm-line-height",
+    "body-sm-lineHeight",
+    "body-sm-strong-font-family",
+    "body-sm-strong-font-size",
+    "body-sm-strong-font-weight",
+    "body-sm-strong-fontFamily",
+    "body-sm-strong-fontSize",
+    "body-sm-strong-fontWeight",
+    "body-sm-strong-line-height",
+    "body-sm-strong-lineHeight"
+  ],
+  "body-md": [
+    "body-md-font-family",
+    "body-md-font-size",
+    "body-md-font-weight",
+    "body-md-fontFamily",
+    "body-md-fontSize",
+    "body-md-fontWeight",
+    "body-md-line-height",
+    "body-md-lineHeight",
+    "body-md-strong-font-family",
+    "body-md-strong-font-size",
+    "body-md-strong-font-weight",
+    "body-md-strong-fontFamily",
+    "body-md-strong-fontSize",
+    "body-md-strong-fontWeight",
+    "body-md-strong-line-height",
+    "body-md-strong-lineHeight"
+  ],
+  "body-base": [
+    "body-base-font-family",
+    "body-base-font-size",
+    "body-base-font-weight",
+    "body-base-fontFamily",
+    "body-base-fontSize",
+    "body-base-fontWeight",
+    "body-base-line-height",
+    "body-base-lineHeight",
+    "body-base-strong-font-family",
+    "body-base-strong-font-size",
+    "body-base-strong-font-weight",
+    "body-base-strong-fontFamily",
+    "body-base-strong-fontSize",
+    "body-base-strong-fontWeight",
+    "body-base-strong-line-height",
+    "body-base-strong-lineHeight"
+  ],
+  "heading-3xs": [
+    "heading-3xs-font-family",
+    "heading-3xs-font-size",
+    "heading-3xs-font-weight",
+    "heading-3xs-fontFamily",
+    "heading-3xs-fontSize",
+    "heading-3xs-fontWeight",
+    "heading-3xs-line-height",
+    "heading-3xs-lineHeight"
+  ],
+  "heading-2xs": [
+    "heading-2xs-font-family",
+    "heading-2xs-font-size",
+    "heading-2xs-font-weight",
+    "heading-2xs-fontFamily",
+    "heading-2xs-fontSize",
+    "heading-2xs-fontWeight",
+    "heading-2xs-line-height",
+    "heading-2xs-lineHeight"
+  ],
+  "heading-xs": [
+    "heading-xs-font-family",
+    "heading-xs-font-size",
+    "heading-xs-font-weight",
+    "heading-xs-fontFamily",
+    "heading-xs-fontSize",
+    "heading-xs-fontWeight",
+    "heading-xs-line-height",
+    "heading-xs-lineHeight"
+  ],
+  "heading-sm": [
+    "heading-sm-font-family",
+    "heading-sm-font-size",
+    "heading-sm-font-weight",
+    "heading-sm-fontFamily",
+    "heading-sm-fontSize",
+    "heading-sm-fontWeight",
+    "heading-sm-line-height",
+    "heading-sm-lineHeight"
+  ],
+  "heading-md": [
+    "heading-md-font-family",
+    "heading-md-font-size",
+    "heading-md-font-weight",
+    "heading-md-fontFamily",
+    "heading-md-fontSize",
+    "heading-md-fontWeight",
+    "heading-md-line-height",
+    "heading-md-lineHeight"
+  ],
+  "heading-lg": [
+    "heading-lg-font-family",
+    "heading-lg-font-size",
+    "heading-lg-font-weight",
+    "heading-lg-fontFamily",
+    "heading-lg-fontSize",
+    "heading-lg-fontWeight",
+    "heading-lg-line-height",
+    "heading-lg-lineHeight"
+  ],
+  "heading-xl": [
+    "heading-xl-font-family",
+    "heading-xl-font-size",
+    "heading-xl-font-weight",
+    "heading-xl-fontFamily",
+    "heading-xl-fontSize",
+    "heading-xl-fontWeight",
+    "heading-xl-line-height",
+    "heading-xl-lineHeight"
+  ],
+  "heading-2xl": [
+    "heading-2xl-font-family",
+    "heading-2xl-font-size",
+    "heading-2xl-font-weight",
+    "heading-2xl-fontFamily",
+    "heading-2xl-fontSize",
+    "heading-2xl-fontWeight",
+    "heading-2xl-line-height",
+    "heading-2xl-lineHeight"
+  ],
+  "heading-3xl": [
+    "heading-3xl-font-family",
+    "heading-3xl-font-size",
+    "heading-3xl-font-weight",
+    "heading-3xl-fontFamily",
+    "heading-3xl-fontSize",
+    "heading-3xl-fontWeight",
+    "heading-3xl-line-height",
+    "heading-3xl-lineHeight"
+  ],
+  "code-terminal": [
+    "code-terminal-font-family",
+    "code-terminal-font-size",
+    "code-terminal-font-weight",
+    "code-terminal-fontFamily",
+    "code-terminal-fontSize",
+    "code-terminal-fontWeight",
+    "code-terminal-line-height",
+    "code-terminal-lineHeight"
+  ],
+  "code-editor": [
+    "code-editor-font-family",
+    "code-editor-font-size",
+    "code-editor-font-weight",
+    "code-editor-fontFamily",
+    "code-editor-fontSize",
+    "code-editor-fontWeight",
+    "code-editor-line-height",
+    "code-editor-lineHeight"
+  ],
+  "radius-radius": [
+    "radius-radius-10",
+    "radius-radius-2",
+    "radius-radius-4",
+    "radius-radius-6",
+    "radius-radius-8",
+    "radius-radius-full"
+  ],
+  "spacers-spacer": [
+    "spacers-spacer-0",
+    "spacers-spacer-12",
+    "spacers-spacer-16",
+    "spacers-spacer-24",
+    "spacers-spacer-32",
+    "spacers-spacer-4",
+    "spacers-spacer-40",
+    "spacers-spacer-6",
+    "spacers-spacer-8"
+  ],
+  "header-height": [
+    "header-height"
+  ],
+  "account-setting": [
+    "account-setting-header-height"
+  ],
+  "agent-settings": [
+    "agent-settings-font-sans"
+  ]
+}
