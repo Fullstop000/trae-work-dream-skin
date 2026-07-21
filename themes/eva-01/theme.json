@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 3,
+  "id": "eva-01",
+  "name": "EVA 初号机",
+  "desc": "紫黑发射井、荧光绿装甲与 NERV 红色警报",
+  "category": "科幻",
+  "appearance": "dark",
+  "background": {
+    "color": "#08060d",
+    "position": "center center",
+    "size": "cover",
+    "repeat": "no-repeat",
+    "blur": 0,
+    "brightness": 0.92,
+    "saturation": 1.12,
+    "overlay": {
+      "color": "#08060d",
+      "opacity": 0.08
+    }
+  },
+  "surfaces": {
+    "colors": {
+      "left": "#100b17",
+      "chat": "#160f21",
+      "main": "#1a1025",
+      "landing": "#140d1d"
+    },
+    "opacity": {
+      "left": 0.72,
+      "chat": 0.58,
+      "main": 0.46,
+      "landing": 0.5
+    },
+    "blurPx": {
+      "left": 8,
+      "chat": 8,
+      "main": 5,
+      "landing": 6
+    },
+    "saturation": 1.25,
+    "gap": "#08060da8",
+    "divider": "#a6ff0061"
+  },
+  "tokens": {
+    "accent": {
+      "base": "#a6ff00",
+      "hover": "#c5ff52",
+      "active": "#7dca00",
+      "subtle": "#a6ff0029",
+      "onAccent": "#101706"
+    },
+    "surface": {
+      "base": "#09070d",
+      "secondary": "#120c1a",
+      "tertiary": "#21142e",
+      "card": "#160d20",
+      "cardHover": "#2d1740",
+      "input": "#0b0811",
+      "menu": "#110c18",
+      "tooltip": "#1b1224",
+      "invert": "#f4f1f7"
+    },
+    "text": {
+      "primary": "#f2edf5",
+      "secondary": "#c4b9cb",
+      "tertiary": "#91829c",
+      "disabled": "#61566a"
+    },
+    "icons": {
+      "primary": "#eee8f2",
+      "secondary": "#a6ff00",
+      "tertiary": "#e43b4b",
+      "disabled": "#665a70"
+    },
+    "border": {
+      "subtle": "#75468a52",
+      "default": "#9459ad8f",
+      "strong": "#a6ff00b8",
+      "contrast": "#a6ff00"
+    },
+    "state": {
+      "success": "#a6ff00",
+      "warning": "#ffb52e",
+      "error": "#e23244",
+      "info": "#b778d1"
+    }
+  },
+  "typography": {
+    "ui": {
+      "family": "\"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"PingFang SC\", sans-serif"
+    },
+    "heading": {
+      "family": "\"JetBrains Mono\", \"SFMono-Regular\", monospace",
+      "weight": 650,
+      "letterSpacing": "0.08em"
+    },
+    "code": {
+      "family": "\"JetBrains Mono\", \"SFMono-Regular\", monospace"
+    }
+  },
+  "shape": {
+    "radius": {
+      "small": 0,
+      "medium": 2,
+      "large": 4,
+      "pill": 999
+    },
+    "borderWidth": 1
+  },
+  "elevation": {
+    "card": "0 12px 30px #0000008a, inset 0 1px 0 #a6ff001c",
+    "floating": "0 22px 64px #000000c7, 0 0 20px #7f3aa347, 0 0 0 1px #a6ff006b",
+    "focusRing": "0 0 0 2px #09070d, 0 0 0 4px #a6ff00, 0 0 16px #a6ff0066"
+  },
+  "scrollbar": {
+    "track": "#09070d80",
+    "thumb": "#9459ad8f",
+    "thumbHover": "#a6ff00c2",
+    "width": 7
+  },
+  "components": {
+    "chat": {
+      "userBubble": "#271438e6",
+      "userBubbleBorder": "#a6ff0073",
+      "assistantMessage": "transparent",
+      "assistantMessageBorder": "transparent",
+      "assistantMessageShadow": "none",
+      "code": "#0a0710eb",
+      "card": "#160d20e8"
+    },
+    "popover": {
+      "background": "#110c18f7",
+      "itemHover": "#6f3a892e",
+      "itemSelected": "#a6ff0029"
+    },
+    "settings": {
+      "overlay": "#030205c7",
+      "panel": "#110c18fa",
+      "sidebar": "#160f21f5",
+      "card": "#21142eeb",
+      "control": "#0b0811f0",
+      "active": "#a6ff0029"
+    }
+  },
+  "workbench": {
+    "opacity": {
+      "sidebar": 0.82,
+      "editor": 0.76,
+      "panel": 0.8
+    }
+  },
+  "effects": {
+    "mode": "max",
+    "panelBlurEnabled": false,
+    "scanlineColor": "#a6ff000d",
+    "gridColor": "#78409012",
+    "magenta": "#e23244",
+    "glow": "0 0 10px #a6ff007a, 0 0 24px #71379042"
+  },
+  "decorations": {
+    "leftSidebar": {
+      "asset": "leftSidebar",
+      "position": "center top",
+      "size": "cover",
+      "overlay": {
+        "color": "#09070d",
+        "opacity": 0.3
+      }
+    },
+    "rightPanel": {
+      "asset": "rightPanel",
+      "position": "center",
+      "size": "cover",
+      "overlay": {
+        "color": "#09070d",
+        "opacity": 0.24
+      }
+    }
+  }
+}

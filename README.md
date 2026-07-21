@@ -44,7 +44,7 @@ App 右下角有一个调色盘浮动按钮，点开就是主题画廊，点击�
 极光 aurora · 日落 sunset · 深海 ocean · 雾林 forest · 樱夜 sakura · 墨 mono
 
 月苔工坊 moonmoss · 云海观星台 cloudsea · 黑曜机械师 obsidian · 暮沙驿站 duskdune ·
-霓虹城区 neon-district(v3) · 仙舟「罗浮」 xianzhou-luofu(v3)
+霓虹城区 neon-district(v3) · 仙舟「罗浮」 xianzhou-luofu(v3) · EVA 初号机 eva-01(v3)
 
 加新主题：`themes/<id>/` 里放 `background.(svg|png|jpg)` + `theme.json`（`{"id","name","desc"}`），
 然后 `./dream-skin.command` 热刷新或在画廊里点 ↻ 即可入画廊。
@@ -73,4 +73,3 @@ node --test "tests/*.test.mjs"   # token-map 映射单测（角色→命名空�
 - CDP 只绑 `127.0.0.1`；启动脚本校验端口属于目标 App 进程
 - 不修改 `.app` 内容、不碰签名；`restore.sh` 完全还原（含 App 原始 data-theme 外观）
 - App 升级后 DOM 类名可能变化导致皮肤失效（无副作用），硬编码补丁集中登记在 `skin.js` 一处
-
