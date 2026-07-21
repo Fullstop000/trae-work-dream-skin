@@ -622,8 +622,7 @@ body.trae-skin-v2 #${BUTTON_ID} {
 #${PANEL_ID} {
   position: fixed; right: 16px; bottom: 62px; z-index: 2147483000;
   box-sizing: border-box;
-  width: min(680px, calc(100vw - 32px));
-  aspect-ratio: 4 / 3;
+  width: min(400px, calc(100vw - 32px));
   max-height: calc(100vh - 110px);
   display: flex; flex-direction: column; overflow: hidden;
   background: rgba(20, 22, 34, 0.88); color: rgba(255, 255, 255, 0.92);
@@ -682,7 +681,7 @@ body.trae-skin-v2 #${BUTTON_ID} {
 #${PANEL_ID} .ds-body::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); border-radius: 999px; }
 #${PANEL_ID} .ds-body::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
 #${PANEL_ID} .ds-gallery-view {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  display: grid; grid-template-columns: 1fr; gap: 4px;
 }
 #${PANEL_ID} .ds-gallery-view,
 #${PANEL_ID} .ds-config-view { animation: trae-skin-fade-in 0.15s ease; }
@@ -771,39 +770,33 @@ body.trae-skin-v2 #${BUTTON_ID} {
   color: #ff8d98; border-color: #ff6675; background: rgba(255, 82, 99, 0.13);
 }
 #${PANEL_ID} .ds-card {
-  position: relative; overflow: hidden;
-  border: 2px solid transparent; border-radius: var(--trae-skin-radius-medium, 10px);
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 8px 6px 6px;
+  border: 1px solid transparent; border-radius: var(--trae-skin-radius-medium, 10px);
   cursor: pointer;
-  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
-#${PANEL_ID} .ds-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-}
+#${PANEL_ID} .ds-card:hover { background: rgba(255, 255, 255, 0.07); }
 #${PANEL_ID} .ds-card.ds-active {
   border-color: #7c9cff;
-  box-shadow: 0 0 0 3px rgba(124, 156, 255, 0.25);
+  background: rgba(124, 156, 255, 0.12);
 }
 #${PANEL_ID} .ds-preview {
-  width: 100%; aspect-ratio: 16 / 9;
+  flex: 0 0 auto; width: 64px; aspect-ratio: 16 / 9;
+  border-radius: 6px;
   background-size: cover; background-position: center;
-  transition: transform 0.3s ease;
 }
-#${PANEL_ID} .ds-card:hover .ds-preview { transform: scale(1.04); }
-#${PANEL_ID} .ds-meta {
-  position: absolute; inset: auto 0 0 0; padding: 22px 9px 7px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
-}
+#${PANEL_ID} .ds-meta { flex: 1 1 auto; min-width: 0; }
 #${PANEL_ID} .ds-name {
   display: block; font-size: 12px; font-weight: 600;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 #${PANEL_ID} .ds-desc {
-  display: block; margin-top: 1px; font-size: 10px; opacity: 0.72;
+  display: block; margin-top: 1px; font-size: 10px; opacity: 0.65;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 #${PANEL_ID} .ds-badge {
-  position: absolute; top: 6px; left: 6px; z-index: 1;
+  flex: 0 0 auto;
   display: none; align-items: center; gap: 3px;
   padding: 2px 6px; border-radius: 999px;
   background: #7c9cff; color: #0a0a0a;
@@ -819,7 +812,7 @@ body.trae-skin-v2 #${PANEL_ID} {
 }
 body.trae-skin-v2 #${PANEL_ID} .ds-card.ds-active {
   border-color: var(--trae-skin-accent);
-  box-shadow: 0 0 0 3px var(--trae-skin-accent-subtle);
+  background: var(--trae-skin-accent-subtle);
 }
 body.trae-skin-v2 #${PANEL_ID} .ds-badge {
   background: var(--trae-skin-accent);
@@ -1487,7 +1480,7 @@ ${selector} {
       desc.title = theme.desc;
       meta.appendChild(desc);
     }
-    card.append(badge, preview, meta);
+    card.append(preview, meta, badge);
     card.addEventListener("click", () => activateTheme(theme.id));
     galleryView.appendChild(card);
   }
