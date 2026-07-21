@@ -1,0 +1,23 @@
+skin.js
+  s_5291ab27127984::t_c60cf4e2836342 571-647
+themes/eva-01-light/theme.json
+  s_5291ab27127984::t_28c506420527f2 4-5,9,14-15,18,23-26,29-32,35-38,40-42,56,58,111-112,123-124,128-129,147-149,155-156,158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "972ae9701e81bde8e66a02c3961ce95661719fde",
+  "prompts": {},
+  "sessions": {
+    "s_5291ab27127984": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7f84-876a-7610-9b06-9cdfefaa1fab",
+        "model": "unknown"
+      },
+      "human_author": "Fullstop000 <fullstop1005@gmail.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
