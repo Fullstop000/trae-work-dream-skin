@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 2,
+  "id": "xianzhou-luofu",
+  "name": "仙舟「罗浮」",
+  "desc": "工笔岩彩仙舟、玉界门云海与仙舟群像",
+  "appearance": "dark",
+  "background": {
+    "color": "#071a27",
+    "position": "center center",
+    "size": "cover",
+    "repeat": "no-repeat",
+    "blur": 0,
+    "brightness": 0.98,
+    "saturation": 1.06,
+    "overlay": {
+      "color": "#061722",
+      "opacity": 0.06
+    }
+  },
+  "layout": {
+    "leftSidebar": {
+      "background": "#0b1d23",
+      "opacity": 0.74,
+      "backdropBlur": 10,
+      "backdropSaturation": 1.16
+    },
+    "chatPanel": {
+      "background": "#10272c",
+      "opacity": 0.64,
+      "backdropBlur": 10,
+      "backdropSaturation": 1.18
+    },
+    "mainArea": {
+      "background": "#132b30",
+      "opacity": 0.44,
+      "backdropBlur": 7,
+      "backdropSaturation": 1.14
+    },
+    "landing": {
+      "background": "#132b30",
+      "opacity": 0.5,
+      "backdropBlur": 8,
+      "backdropSaturation": 1.14
+    },
+    "gap": "#07171ba3",
+    "divider": "#9d493b70"
+  },
+  "colors": {
+    "background": {
+      "base": "#0b1d23d4",
+      "secondary": "#10272cd9",
+      "tertiary": "#193238d9",
+      "card": "#10282ee0",
+      "cardHover": "#26383be0",
+      "input": "#0a1d22eb",
+      "menu": "#0d2025f2",
+      "tooltip": "#162b2ff2",
+      "overlay": "#9d493b1f"
+    },
+    "accent": {
+      "default": "#dfbf69",
+      "hover": "#f2d88f",
+      "active": "#b89443",
+      "subtle": "#dfbf6930",
+      "onAccent": "#14242a"
+    },
+    "text": {
+      "primary": "#f4f0e7",
+      "secondary": "#c9d8d3",
+      "tertiary": "#8daaa4",
+      "disabled": "#5b7470",
+      "onAccent": "#10232a"
+    },
+    "icon": {
+      "primary": "#dff2ec",
+      "secondary": "#78cfc3",
+      "tertiary": "#d7b964",
+      "disabled": "#57716d"
+    },
+    "border": {
+      "subtle": "#9d493b33",
+      "default": "#6fc8bd66",
+      "strong": "#dfbf69a8"
+    },
+    "success": "#79d7ad",
+    "warning": "#dfbf69",
+    "error": "#e67f72",
+    "info": "#6fc8bd"
+  },
+  "typography": {
+    "ui": {
+      "family": "-apple-system, BlinkMacSystemFont, \"PingFang SC\", \"Noto Sans CJK SC\", sans-serif"
+    },
+    "heading": {
+      "family": "\"Songti SC\", \"STSong\", \"Noto Serif CJK SC\", serif",
+      "weight": 600,
+      "letterSpacing": "0.05em"
+    },
+    "code": {
+      "family": "\"JetBrains Mono\", \"SFMono-Regular\", monospace"
+    }
+  },
+  "shape": {
+    "radius": {
+      "small": 6,
+      "medium": 10,
+      "large": 14,
+      "pill": 999
+    },
+    "borderWidth": 1
+  },
+  "elevation": {
+    "card": "0 10px 28px #00101670, inset 0 1px 0 #dfbf6914",
+    "floating": "0 20px 56px #001016b3, 0 0 0 1px #dfbf6952",
+    "focusRing": "0 0 0 2px #071a27, 0 0 0 4px #dfbf69"
+  },
+  "scrollbar": {
+    "track": "#06182080",
+    "thumb": "#6fc8bd66",
+    "thumbHover": "#dfbf69b3",
+    "width": 7
+  },
+  "components": {
+    "chat": {
+      "userBubble": "#1a3338e0",
+      "userBubbleBorder": "#9d493b70",
+      "assistantAccent": "#dfbf69",
+      "assistantMessage": "transparent",
+      "assistantMessageBorder": "transparent",
+      "assistantMessageShadow": "none",
+      "input": "#0b2025eb",
+      "code": "#061820e6",
+      "card": "#10282ee3"
+    },
+    "work": {
+      "tabBar": "#0c2025c7",
+      "statusSidebar": "#10272cc7",
+      "emptyIcon": "#dfbf69"
+    },
+    "popover": {
+      "background": "#0b2025f5",
+      "itemHover": "#9d493b29",
+      "itemSelected": "#dfbf6933"
+    },
+    "settings": {
+      "overlay": "#02080cb8",
+      "panel": "#0b2025fa",
+      "sidebar": "#10272cf5",
+      "card": "#152d32eb",
+      "control": "#0a1f24ed",
+      "active": "#dfbf6933"
+    }
+  },
+  "workbench": {
+    "opacity": {
+      "sidebar": 0.8,
+      "editor": 0.74,
+      "panel": 0.77
+    }
+  },
+  "extensions": {
+    "decorations": {
+      "leftSidebar": {
+        "asset": "leftSidebar",
+        "position": "center top",
+        "size": "cover",
+        "overlay": {
+          "color": "#061820",
+          "opacity": 0.4
+        }
+      },
+      "rightPanel": {
+        "asset": "rightPanel",
+        "position": "center",
+        "size": "cover",
+        "overlay": {
+          "color": "#071b25",
+          "opacity": 0.26
+        }
+      }
+    },
+    "effects": {
+      "mode": "standard",
+      "panelBlurEnabled": false,
+      "scanlineColor": "transparent",
+      "gridColor": "transparent",
+      "magenta": "#9d3f32",
+      "glow": "0 0 12px #dfbf6938"
+    }
+  }
+}
