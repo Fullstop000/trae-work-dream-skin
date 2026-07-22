@@ -1,4 +1,4 @@
-// TRAE Work Dream Skin — V3 组件槽位规范化（纯函数，无 DOM 依赖）
+// TRAE Work Skin — V3 组件槽位规范化（纯函数，无 DOM 依赖）
 // 页面载荷由 injector 嵌入 skin.js；单测可直接加载本文件。
 // 前置条件：roles 必须是 TOKEN_MAP.deriveRoles 的完整输出。
 (function (root, factory) {

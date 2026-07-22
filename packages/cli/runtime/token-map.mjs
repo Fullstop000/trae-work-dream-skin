@@ -1,7 +1,7 @@
-// TRAE Work Dream Skin — 主题角色 → 设计令牌扇出映射（纯函数，无 DOM 依赖）
+// TRAE Work Skin — 主题角色 → 设计令牌扇出映射（纯函数，无 DOM 依赖）
 // 用法：
 //   页面载荷：injector 将本文件全文嵌入 skin.js（__TOKEN_MAP__ 占位符）
-//   单测：    require("../token-map.mjs")
+//   单测：    由仓库 tests/token-map.test.mjs 直接加载
 // 设计原则：映射表普查驱动，命名空间清单完整内置于本文件；
 //   主题作者只声明角色（tokens），组件在任何页面读任何命名空间都拿到同一组值。
 (function (root, factory) {

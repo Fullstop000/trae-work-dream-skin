@@ -1,0 +1,73 @@
+{
+  "name": "twskin",
+  "version": "0.4.0",
+  "description": "An unofficial community theme manager and CLI for TRAE Work on macOS.",
+  "type": "module",
+  "bin": {
+    "twskin": "./dist/bin/twskin.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/main.d.ts",
+      "import": "./dist/main.js"
+    }
+  },
+  "files": [
+    "dist/",
+    "docs/",
+    "runtime/",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "README.md",
+    "SECURITY.md"
+  ],
+  "scripts": {
+    "prepare:runtime": "node ./scripts/prepare-runtime.mjs",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run clean && tsc",
+    "check": "npm run typecheck && node ./scripts/check-package.mjs",
+    "test": "npm run build && node --test \"test/*.test.mjs\"",
+    "build:themes": "npm run build && node ../../scripts/build-theme-pack.mjs",
+    "prepack": "npm run prepare:runtime && npm run check && npm test",
+    "pack:dry-run": "npm pack --dry-run"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "os": [
+    "darwin"
+  ],
+  "keywords": [
+    "trae",
+    "theme",
+    "theme-manager",
+    "cli",
+    "macos",
+    "electron",
+    "cdp"
+  ],
+  "author": "Fullstop000",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fullstop000/trae-work-dream-skin.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/Fullstop000/trae-work-dream-skin/issues"
+  },
+  "homepage": "https://github.com/Fullstop000/trae-work-dream-skin#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "typescript": "^7.0.2"
+  }
+}

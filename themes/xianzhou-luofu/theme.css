@@ -1,0 +1,11 @@
+/* 仙舟「罗浮」专属组件细节 */
+body.trae-skin-theme-xianzhou-luofu .task-list-panel svg,
+body.trae-skin-theme-xianzhou-luofu .solo-lite-main-area svg {
+  filter: drop-shadow(0 0 4px #6fc8bd52);
+}
+body.trae-skin-theme-xianzhou-luofu [role="tab"][aria-selected="true"] svg,
+body.trae-skin-theme-xianzhou-luofu [aria-current="page"] svg,
+body.trae-skin-theme-xianzhou-luofu [data-state="checked"] svg {
+  color: #dfbf69 !important;
+  filter: drop-shadow(0 0 5px #dfbf6970);
+}

@@ -9,8 +9,8 @@ const loadUmd = (path) => {
   vm.runInNewContext(code, sandbox);
   return sandbox.module.exports;
 };
-const CM = loadUmd("../component-map.mjs");
-const TM = loadUmd("../token-map.mjs");
+const CM = loadUmd("../packages/cli/runtime/component-map.mjs");
+const TM = loadUmd("../packages/cli/runtime/token-map.mjs");
 
 const ROLES = {
   accent: { base: "#b6f52c", subtle: "#b6f52c24" },

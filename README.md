@@ -1,62 +1,78 @@
-# TRAE Work Dream Skin
+# TRAE Work Skin
 
-TRAE Work CN 的主题引擎：内置多套主题、图标替换、深浅色自动适配。
+TRAE Work CN 的非官方社区主题引擎：内置多套主题、图标替换、深浅色自动适配。
 通过本机 CDP（仅 127.0.0.1）在运行中的客户端注入主题样式，不修改官方安装包与代码签名。
+
+> **非官方声明：** TRAE Work Skin 是由社区开发的 TRAE Work 非官方主题管理器，
+> 与 TRAE 或字节跳动不存在隶属、授权或赞助关系。
 
 ## 安装
 
-双击 `dist/trae-work-dream-skin-install.command`，或终端执行：
+推荐通过 npm 安装正式 CLI（仅支持 macOS，需要 Node.js 22+）：
 
 ```bash
-bash trae-work-dream-skin-install.command   # 与双击等价
-# 可选：--yes 跳过确认直接启用；--no-launch 只安装不启用
+npm install --global twskin
+twskin start
 ```
 
-安装器自动完成：环境检测（TRAE Work CN + Node.js 18+）→ 安装到 `~/.trae-work-dream-skin` →
-创建桌面启动器和 `twds` 短命令（PATH 符号链接）→ 询问是否启用（重启 App 生效）。
-重新运行安装器即升级，主题选择保留。
+npm 包只包含经过 SHA-256 清单约束的 CLI 与注入运行时。主题从
+`~/.trae-work-skin/themes` 加载，也可用 `TWSKIN_THEMES_DIR` 指定其他目录。
+首次执行 `twskin start` 时，如果主题目录为空，CLI 会询问是否从最新 GitHub Release
+下载并校验官方主题包；后续启动直接使用本地主题。自动化安装可使用
+`twskin start --yes` 显式同意下载。
+CLI package 的发布说明、贡献规范与主题分发决策位于 [`packages/cli`](packages/cli/README.md)。
 
 ## 使用
 
 - App 右下角调色盘按钮 → 主题画廊：分类 Tab 筛选、点卡片即切（无需重启）、
   ↻ 重载新主题、配置（主题 JSON / 毛玻璃开关）、底部「恢复默认」
-- 桌面启动器或命令行完成全部操作：
+- 使用命令行完成全部操作：
 
 | 操作 | 命令 |
 |---|---|
-| 启用 / 刷新 | `twds` |
-| 切换主题 | `twds theme <id>` |
-| 主题列表 | `twds themes` |
-| 图片设为自定义主题 | `twds /path/to/图片.jpg` |
-| 还原官方外观 | `twds restore` |
+| 安装 / 启动 Theme Manager 与守护进程 | `twskin start` |
+| 查看运行状态 | `twskin status` |
+| 检查运行环境 | `twskin doctor` |
+| 切换主题 | `twskin theme <id>` |
+| 下载全部或指定官方主题 | `twskin theme download [id]` |
+| 从本地目录加载主题 | `twskin theme load <directory>` |
+| 主题列表 | `twskin themes` |
+| 还原官方外观 | `twskin restore` |
+| 卸载 | `twskin uninstall` |
+| 查看版本 / 帮助 | `twskin version` / `twskin help` |
+
+`twskin theme <id>` 在 Theme Manager 运行时立即热切换；未运行时保存选择，
+下次执行 `twskin start` 时生效。`status`、`themes`、`doctor` 也支持 `--json`。
 
 ## 主题
 
 极光 aurora · 日落 sunset · 深海 ocean · 雾林 forest · 樱夜 sakura · 墨 mono ·
 云海观星台 cloudsea · 暮沙驿站 duskdune · 月苔工坊 moonmoss · 黑曜机械师 obsidian ·
-霓虹城区 neon-district · 仙舟「罗浮」 xianzhou-luofu
+霓虹城区 neon-district · 仙舟「罗浮」 xianzhou-luofu · 鬼灭之刃「墨刃日轮」 kimetsu-no-yaiba
 
-主题按 `themes/<id>/` 组织（`theme.json` + `background.*` + 可选 `icons/`、侧栏装饰图），
+主题按 `themes/<id>/` 组织（`theme.json` + `background.*` + 可选 `theme.css`、`icons/`、侧栏装饰图），
 分类 Tab 取自 `theme.json` 的 `category` 字段。主题协议（schema v3）：[docs/schema-v3.md](docs/schema-v3.md)。
+`theme.css` 用于主题独有的组件造型和动效，切换主题时由注入器动态替换，不进入核心 `skin.js`。
+源码开发时默认直接读取本仓库的 `themes/`；npm 安装默认读取
+`~/.trae-work-skin/themes/`。官方主题通过 GitHub Release 独立发布，CLI 包中不内嵌图片。
 
 ## 开发
 
 ```bash
-node --test "tests/*.test.mjs"     # token/component 映射单测
-bash scripts/build-installer.sh    # 重建安装器到 dist/
+node --test "tests/*.test.mjs"                           # token/component 映射单测
+(cd packages/cli && npm run prepare:runtime && npm test) # CLI 与发布包测试
+(cd packages/cli && npm run build:themes)                # 构建独立 GitHub Release 主题包
 ```
 
-- `injector.mjs` — CDP 客户端（`--watch` 常驻注入 / `--once` 热刷新 / `--apply` 切主题 / `--eval` `--shot` 调试）
-- `skin.js` — 页面载荷：背景层、毛玻璃面板、画廊 UI、主题引擎、外观握手、图标 mask
-- `token-map.mjs` — 主题角色 → TRAE 设计令牌全命名空间扇出（纯函数）
-- `component-map.mjs` — V3 landing banner / mode tabs 等组件槽位规范化（纯函数）
+- `packages/cli/src/*.ts` — `twskin` 的严格 TypeScript 命令层，使用 Clack 提供交互提示与进度反馈
+- `packages/cli/runtime/` — 单一运行时源目录：CDP 注入器、页面逻辑、共享/Manager 样式、令牌/组件映射与 macOS 启停脚本
 - `fixtures/` — 设计令牌普查存档（映射表的数据依据）
 
 ## 安全边界
 
 - CDP 仅绑 127.0.0.1；启动脚本校验端口属于目标 App 进程
-- 不修改 `.app` 内容与签名；`restore.sh` 完全还原（含 App 原始外观）
-- App 升级导致皮肤失效时无副作用，重新运行启动器或 `dream-skin.command` 即可
+- 不修改 `.app` 内容与签名；`packages/cli/runtime/restore.sh` 完全还原（含 App 原始外观）
+- App 升级导致皮肤失效时无副作用，重新运行 `twskin start` 即可
 
 ## License
 

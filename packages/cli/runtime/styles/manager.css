@@ -1,0 +1,300 @@
+body.trae-skin-effects-max #trae-dream-skin-panel {
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+body.trae-skin-effects-max #trae-dream-skin-button {
+  box-shadow:
+    0 0 0 2px var(--trae-skin-info),
+    0 0 18px var(--trae-skin-accent),
+    0 0 36px var(--trae-skin-magenta) !important;
+}
+/* 画廊入口按钮 */
+#trae-dream-skin-button {
+  position: fixed; right: 16px; bottom: 16px; z-index: 2147483000;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(20, 22, 34, 0.82); color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.15s ease;
+}
+body.trae-skin-v2 #trae-dream-skin-button {
+  color: var(--trae-skin-accent-on);
+  background: var(--trae-skin-accent);
+  border-color: var(--trae-skin-border-strong);
+  box-shadow: var(--trae-skin-shadow-floating);
+}
+#trae-dream-skin-button:hover { transform: scale(1.08); }
+#trae-dream-skin-button svg { width: 18px; height: 18px; fill: currentColor; }
+
+/* 画廊面板 */
+#trae-dream-skin-panel {
+  position: fixed; right: 16px; bottom: 62px; z-index: 2147483000;
+  box-sizing: border-box;
+  width: min(400px, calc(100vw - 32px));
+  height: min(640px, calc(100vh - 110px));
+  display: flex; flex-direction: column; overflow: hidden;
+  background: rgba(20, 22, 34, 0.88); color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  font: 12px/1.5 -apple-system, "PingFang SC", sans-serif;
+  animation: trae-skin-panel-in 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes trae-skin-panel-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes trae-skin-fade-in { from { opacity: 0; } to { opacity: 1; } }
+#trae-dream-skin-panel .ds-header {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 6px;
+  padding: 10px 10px 9px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+#trae-dream-skin-panel .ds-header-text { flex: 1 1 auto; min-width: 0; }
+#trae-dream-skin-panel .ds-title { font-size: 13px; font-weight: 600; white-space: nowrap; }
+#trae-dream-skin-panel .ds-current {
+  margin-top: 1px; font-size: 10px; opacity: 0.55;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#trae-dream-skin-panel .ds-header-actions { flex: 0 0 auto; display: flex; align-items: center; gap: 5px; }
+#trae-dream-skin-panel .ds-config-toggle,
+#trae-dream-skin-panel .ds-close,
+#trae-dream-skin-panel .ds-reload {
+  border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 6px;
+  color: inherit; background: rgba(255, 255, 255, 0.08);
+  font: inherit; cursor: pointer;
+}
+#trae-dream-skin-panel .ds-config-toggle { padding: 3px 7px; }
+#trae-dream-skin-panel .ds-close,
+#trae-dream-skin-panel .ds-reload {
+  box-sizing: border-box; width: 23px; height: 23px; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; line-height: 1;
+}
+#trae-dream-skin-panel .ds-config-toggle:hover,
+#trae-dream-skin-panel .ds-close:hover,
+#trae-dream-skin-panel .ds-reload:hover { background: rgba(255, 255, 255, 0.14); }
+@keyframes trae-skin-spin { to { transform: rotate(360deg); } }
+#trae-dream-skin-panel .ds-reload-icon { display: inline-block; line-height: 1; }
+#trae-dream-skin-panel .ds-reload.ds-reload-loading { pointer-events: none; }
+#trae-dream-skin-panel .ds-reload.ds-reload-loading .ds-reload-icon {
+  animation: trae-skin-spin 0.8s linear infinite;
+}
+#trae-dream-skin-panel .ds-body {
+  flex: 1 1 auto; overflow-y: auto; padding: 12px;
+  scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+#trae-dream-skin-panel .ds-body::-webkit-scrollbar { width: 5px; }
+#trae-dream-skin-panel .ds-body::-webkit-scrollbar-track { background: transparent; }
+#trae-dream-skin-panel .ds-body::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); border-radius: 999px; }
+#trae-dream-skin-panel .ds-body::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+#trae-dream-skin-panel .ds-gallery-view {
+  display: grid; grid-template-columns: 1fr; gap: 4px;
+}
+#trae-dream-skin-panel .ds-gallery-view,
+#trae-dream-skin-panel .ds-config-view { animation: trae-skin-fade-in 0.15s ease; }
+/* 分类 Tab */
+#trae-dream-skin-panel .ds-tabs {
+  flex: 0 0 auto; display: flex; gap: 4px;
+  padding: 8px 12px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+}
+#trae-dream-skin-panel .ds-tabs::-webkit-scrollbar { height: 0; }
+#trae-dream-skin-panel .ds-tab {
+  flex: 0 0 auto; padding: 3px 9px; border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: inherit; background: transparent;
+  font: inherit; font-size: 11px; cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+#trae-dream-skin-panel .ds-tab:hover { background: rgba(255, 255, 255, 0.08); }
+#trae-dream-skin-panel .ds-tab.ds-tab-active {
+  background: #7c9cff; border-color: #7c9cff;
+  color: #0a0a0a; font-weight: 600;
+}
+body.trae-skin-v2 #trae-dream-skin-panel .ds-tabs { border-bottom-color: var(--trae-skin-border-subtle); }
+body.trae-skin-v2 #trae-dream-skin-panel .ds-tab { border-color: var(--trae-skin-border-subtle); }
+body.trae-skin-v2 #trae-dream-skin-panel .ds-tab:hover { background: var(--trae-skin-info-subtle); }
+body.trae-skin-v2 #trae-dream-skin-panel .ds-tab.ds-tab-active {
+  background: var(--trae-skin-accent); border-color: var(--trae-skin-accent);
+  color: var(--trae-skin-accent-on);
+}
+#trae-dream-skin-panel .ds-footer {
+  flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; padding: 7px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 10px;
+}
+#trae-dream-skin-panel .ds-footer-text {
+  min-width: 0; opacity: 0.5;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#trae-dream-skin-panel .ds-config-view { display: none; }
+#trae-dream-skin-panel .ds-config-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin: 2px 2px 8px;
+}
+#trae-dream-skin-panel .ds-config-name {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-weight: 600;
+}
+#trae-dream-skin-panel .ds-setting-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin: 0 2px 9px; padding: 8px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+#trae-dream-skin-panel .ds-setting-copy { min-width: 0; }
+#trae-dream-skin-panel .ds-setting-label { font-weight: 600; }
+#trae-dream-skin-panel .ds-setting-desc {
+  margin-top: 1px; opacity: 0.58; font-size: 10px; white-space: nowrap;
+}
+#trae-dream-skin-panel .ds-switch {
+  position: relative; flex: 0 0 auto; width: 34px; height: 19px;
+  padding: 0; border-radius: 999px; cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.12);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+#trae-dream-skin-panel .ds-switch::after {
+  content: ""; position: absolute; width: 13px; height: 13px;
+  left: 2px; top: 2px; border-radius: 50%; background: #fff;
+  transition: transform 0.15s ease;
+}
+#trae-dream-skin-panel .ds-switch[aria-checked="true"] {
+  background: #7c9cff; border-color: #aab7ff;
+}
+#trae-dream-skin-panel .ds-switch[aria-checked="true"]::after {
+  transform: translateX(15px);
+}
+#trae-dream-skin-panel .ds-copy-config {
+  flex: 0 0 auto; padding: 3px 7px; border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: inherit; background: rgba(255, 255, 255, 0.08);
+  font: inherit; cursor: pointer;
+}
+#trae-dream-skin-panel .ds-copy-config:hover { background: rgba(255, 255, 255, 0.14); }
+#trae-dream-skin-panel .ds-config-code {
+  box-sizing: border-box; width: 100%; max-height: 44vh; overflow: auto;
+  margin: 0; padding: 9px; border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.86); background: rgba(0, 0, 0, 0.28);
+  font: 10px/1.55 "JetBrains Mono", "SFMono-Regular", monospace;
+  white-space: pre-wrap; overflow-wrap: anywhere; user-select: text;
+}
+#trae-dream-skin-panel .ds-reset-actions {
+  display: flex; flex: 0 0 auto; align-items: center; gap: 5px;
+}
+#trae-dream-skin-panel .ds-reset-config,
+#trae-dream-skin-panel .ds-reset-cancel {
+  flex: 0 0 auto; padding: 4px 8px; border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: inherit; background: rgba(255, 255, 255, 0.08);
+  font: inherit; cursor: pointer;
+}
+#trae-dream-skin-panel .ds-reset-cancel { display: none; }
+#trae-dream-skin-panel .ds-reset-cancel.ds-reset-cancel-visible { display: block; }
+#trae-dream-skin-panel .ds-reset-cancel:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+#trae-dream-skin-panel .ds-reset-config:hover {
+  color: #ff8d98; border-color: #ff6675; background: rgba(255, 82, 99, 0.1);
+}
+#trae-dream-skin-panel .ds-reset-config.ds-reset-armed {
+  color: #ff8d98; border-color: #ff6675; background: rgba(255, 82, 99, 0.13);
+}
+#trae-dream-skin-panel .ds-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 8px 6px 6px;
+  border: 1px solid transparent; border-radius: var(--trae-skin-radius-medium, 10px);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+#trae-dream-skin-panel .ds-card:hover { background: rgba(255, 255, 255, 0.07); }
+#trae-dream-skin-panel .ds-card.ds-active {
+  border-color: #7c9cff;
+  background: rgba(124, 156, 255, 0.12);
+}
+#trae-dream-skin-panel .ds-preview {
+  flex: 0 0 auto; width: 64px; aspect-ratio: 16 / 9;
+  border-radius: 6px;
+  background-size: cover; background-position: center;
+}
+#trae-dream-skin-panel .ds-meta { flex: 1 1 auto; min-width: 0; }
+#trae-dream-skin-panel .ds-name {
+  display: block; font-size: 12px; font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#trae-dream-skin-panel .ds-desc {
+  display: block; margin-top: 1px; font-size: 10px; opacity: 0.65;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#trae-dream-skin-panel .ds-badge {
+  flex: 0 0 auto;
+  display: none; align-items: center; gap: 3px;
+  padding: 2px 6px; border-radius: 999px;
+  background: #7c9cff; color: #0a0a0a;
+  font-size: 10px; font-weight: 600;
+}
+#trae-dream-skin-panel .ds-card.ds-active .ds-badge { display: flex; }
+body.trae-skin-v2 #trae-dream-skin-panel {
+  color: var(--trae-skin-text-primary);
+  background: var(--trae-skin-popover);
+  border-color: var(--trae-skin-border-default);
+  border-radius: var(--trae-skin-radius-large);
+  box-shadow: var(--trae-skin-shadow-floating);
+}
+body.trae-skin-v2 #trae-dream-skin-panel .ds-card.ds-active {
+  border-color: var(--trae-skin-accent);
+  background: var(--trae-skin-accent-subtle);
+}
+body.trae-skin-v2 #trae-dream-skin-panel .ds-badge {
+  background: var(--trae-skin-accent);
+  color: var(--trae-skin-accent-on);
+}
+body.trae-skin-v2 #trae-dream-skin-panel .ds-header { border-bottom-color: var(--trae-skin-border-subtle); }
+body.trae-skin-v2 #trae-dream-skin-panel .ds-footer { border-top-color: var(--trae-skin-border-subtle); }
+body.trae-skin-v2 #trae-dream-skin-panel .ds-body::-webkit-scrollbar-thumb { background: var(--trae-skin-scrollbar-thumb); }
+body.trae-skin-v2 #trae-dream-skin-panel .ds-body::-webkit-scrollbar-thumb:hover { background: var(--trae-skin-scrollbar-hover); }
+body.trae-skin-effects-max #trae-dream-skin-panel .ds-header { padding-right: 16px; }
+body.trae-skin-v2 #trae-dream-skin-panel .ds-config-toggle,
+body.trae-skin-v2 #trae-dream-skin-panel .ds-close,
+body.trae-skin-v2 #trae-dream-skin-panel .ds-reload,
+body.trae-skin-v2 #trae-dream-skin-panel .ds-copy-config,
+body.trae-skin-v2 #trae-dream-skin-panel .ds-reset-config,
+body.trae-skin-v2 #trae-dream-skin-panel .ds-reset-cancel {
+  color: var(--trae-skin-text-primary);
+  background: var(--trae-skin-info-subtle);
+  border-color: var(--trae-skin-border-default);
+}
+body.trae-skin-v2 #trae-dream-skin-panel .ds-config-toggle:hover,
+body.trae-skin-v2 #trae-dream-skin-panel .ds-close:hover,
+body.trae-skin-v2 #trae-dream-skin-panel .ds-reload:hover,
+body.trae-skin-v2 #trae-dream-skin-panel .ds-copy-config:hover,
+body.trae-skin-v2 #trae-dream-skin-panel .ds-reset-config:hover,
+body.trae-skin-v2 #trae-dream-skin-panel .ds-reset-cancel:hover {
+  color: var(--trae-skin-accent);
+  border-color: var(--trae-skin-accent);
+}
+body.trae-skin-v2 #trae-dream-skin-panel .ds-reset-config.ds-reset-armed {
+  color: var(--trae-skin-error);
+  border-color: var(--trae-skin-error);
+}
+body.trae-skin-v2 #trae-dream-skin-panel .ds-config-code {
+  color: var(--trae-skin-text-secondary);
+  background: var(--trae-skin-chat-code);
+  border-color: var(--trae-skin-border-subtle);
+}
+body.trae-skin-v2 #trae-dream-skin-panel .ds-setting-row {
+  background: var(--trae-skin-info-subtle);
+  border-color: var(--trae-skin-border-subtle);
+}
+body.trae-skin-v2 #trae-dream-skin-panel .ds-switch[aria-checked="true"] {
+  background: var(--trae-skin-accent);
+  border-color: var(--trae-skin-border-strong);
+}
+body.trae-skin-v2 #trae-dream-skin-panel .ds-switch[aria-checked="true"]::after {
+  background: var(--trae-skin-accent-on);
+}

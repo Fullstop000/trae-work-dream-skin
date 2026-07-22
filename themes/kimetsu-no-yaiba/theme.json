@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 3,
+  "id": "kimetsu-no-yaiba",
+  "name": "鬼灭之刃 · 墨刃日轮",
+  "desc": "黑白漫画网点、猩红日轮与大正金线构成的鬼杀队任务界面",
+  "category": "动漫",
+  "appearance": "dark",
+  "background": {
+    "color": "#090808",
+    "position": "center center",
+    "size": "cover",
+    "repeat": "no-repeat",
+    "blur": 0,
+    "brightness": 0.94,
+    "saturation": 0.96,
+    "overlay": {
+      "color": "#070606",
+      "opacity": 0.05
+    }
+  },
+  "surfaces": {
+    "colors": {
+      "left": "#0b0909",
+      "chat": "#100d0c",
+      "main": "#0d0b0b",
+      "landing": "#0c0a0a"
+    },
+    "opacity": {
+      "left": 0.74,
+      "chat": 0.7,
+      "main": 0.76,
+      "landing": 0.68
+    },
+    "blurPx": {
+      "left": 8,
+      "chat": 10,
+      "main": 10,
+      "landing": 8
+    },
+    "saturation": 1.02,
+    "gap": "#060505c2",
+    "divider": "#b52a254a"
+  },
+  "tokens": {
+    "accent": {
+      "base": "#b62b26",
+      "hover": "#d0443e",
+      "active": "#8c1c19",
+      "subtle": "#b62b2630",
+      "onAccent": "#fff7e8"
+    },
+    "surface": {
+      "base": "#090808",
+      "secondary": "#100d0c",
+      "tertiary": "#1b1513",
+      "card": "#15100f",
+      "cardHover": "#241916",
+      "input": "#0b0909",
+      "menu": "#110e0d",
+      "tooltip": "#1a1412",
+      "invert": "#d8ccb8"
+    },
+    "text": {
+      "primary": "#e8dece",
+      "secondary": "#c0b3a0",
+      "tertiary": "#958775",
+      "disabled": "#796c60"
+    },
+    "icons": {
+      "primary": "#e6dac7",
+      "secondary": "#b62b26",
+      "tertiary": "#a98b50",
+      "disabled": "#6d6156"
+    },
+    "border": {
+      "subtle": "#d2c1a633",
+      "default": "#a98b5061",
+      "strong": "#c7ad7e9c",
+      "contrast": "#b62b26"
+    },
+    "state": {
+      "success": "#6f9a82",
+      "warning": "#c89c4e",
+      "error": "#d64a3d",
+      "info": "#8aa5a0"
+    }
+  },
+  "typography": {
+    "ui": {
+      "family": "-apple-system, BlinkMacSystemFont, \"PingFang SC\", \"Hiragino Sans GB\", sans-serif"
+    },
+    "heading": {
+      "family": "\"Songti SC\", \"STSong\", \"Hiragino Mincho ProN\", serif",
+      "weight": 700,
+      "letterSpacing": "0.1em"
+    },
+    "code": {
+      "family": "\"JetBrains Mono\", \"SFMono-Regular\", monospace"
+    }
+  },
+  "shape": {
+    "radius": {
+      "small": 0,
+      "medium": 2,
+      "large": 4,
+      "pill": 999
+    },
+    "borderWidth": 1
+  },
+  "elevation": {
+    "card": "0 12px 30px #0000008f, inset 0 1px 0 #d8ccb80d",
+    "floating": "0 24px 64px #000000c7, 0 0 0 1px #a98b5047",
+    "focusRing": "0 0 0 2px #090808, 0 0 0 4px #b62b26, 0 0 16px #b62b264d"
+  },
+  "scrollbar": {
+    "track": "#09080880",
+    "thumb": "#8a724e73",
+    "thumbHover": "#b62b26b8",
+    "width": 7
+  },
+  "components": {
+    "chat": {
+      "userBubble": "#2a1211e6",
+      "userBubbleBorder": "#b62b2675",
+      "assistantMessage": "transparent",
+      "assistantMessageBorder": "transparent",
+      "assistantMessageShadow": "none",
+      "code": "#090808ed",
+      "card": "#15100fe8"
+    },
+    "popover": {
+      "background": "#110e0df7",
+      "itemHover": "#a98b5024",
+      "itemSelected": "#b62b262e"
+    },
+    "settings": {
+      "overlay": "#030202d1",
+      "panel": "#110e0dfa",
+      "sidebar": "#100d0cf5",
+      "card": "#1b1513eb",
+      "control": "#0b0909f2",
+      "active": "#b62b2629"
+    },
+    "landing": {
+      "banner": {
+        "variant": "system-plate",
+        "colors": {
+          "surface": "#100c0bed",
+          "border": "#a98b508c",
+          "accent": "#b62b26",
+          "text": "#e8dece",
+          "muted": "#a99a86",
+          "status": "#e05a4f"
+        },
+        "metrics": {
+          "cornerCutPx": 6,
+          "maxWidthPx": 650,
+          "iconSizePx": 48
+        },
+        "effects": {
+          "shadow": "0 18px 48px #000000a3, inset 0 1px #d8ccb80d"
+        },
+        "content": {
+          "statusText": "鬼殺隊・任務中",
+          "modes": {
+            "work": { "code": "壱", "label": "任務記録" },
+            "code": { "code": "弐", "label": "刀匠工房" },
+            "design": { "code": "参", "label": "型ノ稽古" }
+          }
+        }
+      }
+    },
+    "navigation": {
+      "modeTabs": {
+        "variant": "launch-rail",
+        "colors": {
+          "track": "#0a0808ed",
+          "border": "#a98b506b",
+          "indicator": "#361311",
+          "accent": "#b62b26",
+          "activeText": "#fff3df",
+          "inactiveText": "#ad9f8c",
+          "hover": "#241715dc"
+        },
+        "metrics": {
+          "heightPx": 42,
+          "tabWidthPx": 88,
+          "gapPx": 3,
+          "cornerCutPx": 4
+        },
+        "effects": {
+          "shadow": "0 10px 30px #00000085, inset 0 1px #d8ccb80a"
+        },
+        "content": {
+          "iconPolicy": "always",
+          "showModeCode": true,
+          "modes": {
+            "work": { "code": "壱" },
+            "code": { "code": "弐" },
+            "design": { "code": "参" }
+          }
+        }
+      }
+    }
+  },
+  "workbench": {
+    "opacity": {
+      "sidebar": 0.82,
+      "editor": 0.8,
+      "panel": 0.82
+    }
+  },
+  "effects": {
+    "mode": "standard",
+    "panelBlurEnabled": true,
+    "scanlineColor": "transparent",
+    "gridColor": "#a98b5008",
+    "magenta": "#b62b26",
+    "glow": "0 0 12px #b62b2638"
+  },
+  "decorations": {
+    "leftSidebar": {
+      "asset": "leftSidebar",
+      "position": "center top",
+      "size": "cover",
+      "overlay": {
+        "color": "#090808",
+        "opacity": 0.28
+      }
+    },
+    "rightPanel": {
+      "asset": "rightPanel",
+      "position": "center",
+      "size": "cover",
+      "overlay": {
+        "color": "#090808",
+        "opacity": 0.2
+      }
+    }
+  }
+}

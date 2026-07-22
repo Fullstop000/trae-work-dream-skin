@@ -1,0 +1,687 @@
+/* 背景层：CSS 变量驱动，切主题只改变量 */
+html, body { background: transparent !important; }
+body::before {
+  content: "" !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+  background-color: var(--trae-skin-background-color, #10121a) !important;
+  background-image: var(--trae-skin-art) !important;
+  background-position: var(--trae-skin-background-position, center) !important;
+  background-size: var(--trae-skin-background-size, cover) !important;
+  background-repeat: var(--trae-skin-background-repeat, no-repeat) !important;
+  filter:
+    blur(var(--trae-skin-background-blur, 0px))
+    brightness(var(--trae-skin-background-brightness, 1))
+    saturate(var(--trae-skin-background-saturation, 1)) !important;
+  transform: scale(var(--trae-skin-background-scale, 1.01)) !important;
+}
+body::after {
+  content: "" !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+  background-color: var(--trae-skin-background-overlay, transparent) !important;
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 3px,
+      var(--trae-skin-scanline-color, transparent) 3px,
+      var(--trae-skin-scanline-color, transparent) 4px
+    ),
+    linear-gradient(
+      to right,
+      var(--trae-skin-grid-color, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      var(--trae-skin-grid-color, transparent) 1px,
+      transparent 1px
+    ) !important;
+  background-size: auto, 64px 64px, 64px 64px !important;
+}
+#root, #solo-lite-root, .solo-lite-layout {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+/* 主内容面板：Work 聊天面板 + Code/Design 落地页面板，半透明 + 毛玻璃 */
+.solo-lite-chat-panel-container,
+.panel-container > .panel-content {
+  background: rgba(255, 255, 255, var(--trae-skin-surface-light, 0.78)) !important;
+  backdrop-filter: blur(var(--trae-skin-blur, 24px)) saturate(1.3) !important;
+  -webkit-backdrop-filter: blur(var(--trae-skin-blur, 24px)) saturate(1.3) !important;
+}
+.task-list-panel {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+body.vs-dark .solo-lite-chat-panel-container,
+body.vs-dark .panel-container > .panel-content {
+  background: rgba(16, 18, 32, var(--trae-skin-surface-dark, 0.72)) !important;
+}
+body.vs-dark .task-list-panel { background: rgba(10, 12, 24, 0.55) !important; }
+
+/* Theme V2：每个主区域都有独立表面，不再只控制 background/blur */
+body.trae-skin-v2 {
+  color: var(--trae-skin-text-primary, inherit);
+  font-family: var(--trae-skin-font-ui, inherit);
+}
+body.trae-skin-v2 .task-list-panel {
+  background-color: var(--trae-skin-left-surface) !important;
+  background-image: var(--trae-skin-left-art-layer, none) !important;
+  background-position: center, var(--trae-skin-left-art-position, center) !important;
+  background-size: cover, var(--trae-skin-left-art-size, cover) !important;
+  background-repeat: no-repeat !important;
+  border-right: 1px solid var(--trae-skin-divider) !important;
+  backdrop-filter:
+    blur(var(--trae-skin-left-blur))
+    saturate(var(--trae-skin-left-saturation)) !important;
+  -webkit-backdrop-filter:
+    blur(var(--trae-skin-left-blur))
+    saturate(var(--trae-skin-left-saturation)) !important;
+}
+body.trae-skin-v2 .solo-lite-chat-panel-container {
+  background: var(--trae-skin-chat-surface) !important;
+  border-right: 1px solid var(--trae-skin-divider) !important;
+  backdrop-filter:
+    blur(var(--trae-skin-chat-blur))
+    saturate(var(--trae-skin-chat-saturation)) !important;
+  -webkit-backdrop-filter:
+    blur(var(--trae-skin-chat-blur))
+    saturate(var(--trae-skin-chat-saturation)) !important;
+}
+body.trae-skin-v2 .solo-lite-main-area {
+  background-color: var(--trae-skin-main-surface) !important;
+  background-image: var(--trae-skin-right-art-layer, none) !important;
+  background-position: center, var(--trae-skin-right-art-position, right center) !important;
+  background-size: cover, var(--trae-skin-right-art-size, auto 100%) !important;
+  background-repeat: no-repeat !important;
+  backdrop-filter:
+    blur(var(--trae-skin-main-blur))
+    saturate(var(--trae-skin-main-saturation)) !important;
+  -webkit-backdrop-filter:
+    blur(var(--trae-skin-main-blur))
+    saturate(var(--trae-skin-main-saturation)) !important;
+}
+body.trae-skin-v2 .panel-container > .panel-content {
+  background: var(--trae-skin-landing-surface) !important;
+  backdrop-filter:
+    blur(var(--trae-skin-landing-blur))
+    saturate(var(--trae-skin-landing-saturation)) !important;
+  -webkit-backdrop-filter:
+    blur(var(--trae-skin-landing-blur))
+    saturate(var(--trae-skin-landing-saturation)) !important;
+}
+
+/* 主面板四周 8px 缝隙：做磨砂+淡色，避免直接露出原图深色边缘（"黑条"） */
+.panel-container {
+  background: var(--trae-skin-layout-gap, rgba(255, 255, 255, 0.18)) !important;
+  backdrop-filter: blur(var(--trae-skin-blur, 24px)) !important;
+  -webkit-backdrop-filter: blur(var(--trae-skin-blur, 24px)) !important;
+}
+body.vs-dark:not(.trae-skin-v2) .panel-container { background: rgba(16, 18, 32, 0.18) !important; }
+
+/* Code 模式内嵌 IDE workbench（打开文件夹后出现）：各部件半透明 */
+.monaco-workbench .part.sidebar,
+.monaco-workbench .part.activitybar,
+.monaco-workbench .part.panel,
+.monaco-workbench .part.statusbar,
+.monaco-workbench .part.titlebar {
+  background-color: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+.monaco-workbench .part.editor,
+.monaco-workbench .monaco-editor-background,
+.monaco-workbench .monaco-editor .margin {
+  background-color: rgba(255, 255, 255, 0.72) !important;
+}
+body.vs-dark .monaco-workbench .part.sidebar,
+body.vs-dark .monaco-workbench .part.activitybar,
+body.vs-dark .monaco-workbench .part.panel,
+body.vs-dark .monaco-workbench .part.statusbar,
+body.vs-dark .monaco-workbench .part.titlebar {
+  background-color: rgba(10, 12, 24, 0.55) !important;
+}
+body.vs-dark .monaco-workbench .part.editor,
+body.vs-dark .monaco-workbench .monaco-editor-background,
+body.vs-dark .monaco-workbench .monaco-editor .margin {
+  background-color: rgba(16, 18, 32, 0.72) !important;
+}
+body.trae-skin-v2 .monaco-workbench .part.sidebar,
+body.trae-skin-v2 .monaco-workbench .part.activitybar,
+body.trae-skin-v2 .monaco-workbench .part.titlebar,
+body.trae-skin-v2 .monaco-workbench .part.statusbar {
+  background-color: var(--trae-skin-workbench-sidebar) !important;
+}
+body.trae-skin-v2 .monaco-workbench .part.panel {
+  background-color: var(--trae-skin-workbench-panel) !important;
+}
+body.trae-skin-v2 .monaco-workbench .part.editor,
+body.trae-skin-v2 .monaco-workbench .monaco-editor-background,
+body.trae-skin-v2 .monaco-workbench .monaco-editor .margin {
+  background-color: var(--trae-skin-workbench-editor) !important;
+}
+body.trae-skin-v2 .monaco-workbench {
+  --vscode-foreground: var(--trae-skin-text-primary) !important;
+  --vscode-descriptionForeground: var(--trae-skin-text-secondary) !important;
+  --vscode-disabledForeground: var(--trae-skin-text-disabled) !important;
+  --vscode-focusBorder: var(--trae-skin-accent) !important;
+  --vscode-selection-background: var(--trae-skin-accent-subtle) !important;
+  --vscode-textLink-foreground: var(--trae-skin-info) !important;
+  --vscode-textLink-activeForeground: var(--trae-skin-accent) !important;
+  --vscode-editor-foreground: var(--trae-skin-text-primary) !important;
+  --vscode-editor-background: transparent !important;
+  --vscode-editorCursor-foreground: var(--trae-skin-accent) !important;
+  --vscode-editorLineNumber-foreground: var(--trae-skin-text-tertiary) !important;
+  --vscode-editorLineNumber-activeForeground: var(--trae-skin-accent) !important;
+  --vscode-editor-selectionBackground: var(--trae-skin-accent-subtle) !important;
+  --vscode-editor-lineHighlightBorder: var(--trae-skin-border-subtle) !important;
+  --vscode-editorWidget-background: var(--trae-skin-menu) !important;
+  --vscode-editorWidget-border: var(--trae-skin-border-default) !important;
+  --vscode-input-background: var(--trae-skin-input) !important;
+  --vscode-input-foreground: var(--trae-skin-text-primary) !important;
+  --vscode-input-border: var(--trae-skin-border-default) !important;
+  --vscode-button-background: var(--trae-skin-accent) !important;
+  --vscode-button-foreground: var(--trae-skin-accent-on) !important;
+  --vscode-list-hoverBackground: var(--trae-skin-info-subtle) !important;
+  --vscode-list-activeSelectionBackground: var(--trae-skin-accent-subtle) !important;
+  --vscode-list-activeSelectionForeground: var(--trae-skin-text-primary) !important;
+  --vscode-panel-border: var(--trae-skin-border-default) !important;
+  --vscode-sideBar-border: var(--trae-skin-border-default) !important;
+  --vscode-tab-activeBorderTop: var(--trae-skin-accent) !important;
+  --vscode-terminal-foreground: var(--trae-skin-text-primary) !important;
+}
+
+/* Theme V2 组件细节 */
+body.trae-skin-v2 ::selection {
+  color: var(--trae-skin-text-primary);
+  background: var(--trae-skin-accent-subtle);
+}
+body.trae-skin-v2 button:focus-visible,
+body.trae-skin-v2 a[href]:focus-visible,
+body.trae-skin-v2 input:focus-visible,
+body.trae-skin-v2 select:focus-visible,
+body.trae-skin-v2 textarea:focus-visible,
+body.trae-skin-v2 [tabindex]:focus-visible:not([contenteditable="true"]):not([role="textbox"]) {
+  outline: none !important;
+  box-shadow: var(--trae-skin-focus-ring) !important;
+}
+body.trae-skin-v2 [contenteditable="true"]:focus-visible,
+body.trae-skin-v2 [role="textbox"]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+body.trae-skin-v2 button[role="tab"][aria-selected="true"] {
+  color: var(--trae-skin-accent) !important;
+}
+body.trae-skin-v2 .user-message__text-box {
+  background: var(--trae-skin-chat-user-bubble) !important;
+  border: 1px solid var(--trae-skin-chat-user-border) !important;
+  border-radius: var(--trae-skin-radius-large) !important;
+  box-shadow: var(--trae-skin-shadow-card) !important;
+}
+body.trae-skin-v2 .core-finish-card {
+  background: var(--trae-skin-chat-assistant-message) !important;
+  border-color: var(--trae-skin-chat-assistant-border) !important;
+  border-radius: var(--trae-skin-radius-medium) !important;
+  box-shadow: var(--trae-skin-chat-assistant-shadow) !important;
+}
+body.trae-skin-v2 .core-finish-card__code-card,
+body.trae-skin-v2 [class*="recommendationCard"],
+body.trae-skin-v2 [class*="card-QNuQ2F"] {
+  background: var(--trae-skin-chat-card) !important;
+  border-color: var(--trae-skin-border-subtle) !important;
+  border-radius: var(--trae-skin-radius-medium) !important;
+  box-shadow: var(--trae-skin-shadow-card) !important;
+}
+body.trae-skin-v2 [class*="messageInputContainer"],
+body.trae-skin-v2 [class*="message-input"],
+body.trae-skin-v2 [data-slate-editor="true"] {
+  border-color: var(--trae-skin-border-default) !important;
+}
+body.trae-skin-v2 .core-model-select-portal-content,
+body.trae-skin-v2 [data-radix-popper-content-wrapper] > * {
+  color: var(--trae-skin-text-primary) !important;
+  background: var(--trae-skin-popover) !important;
+  border-color: var(--trae-skin-border-default) !important;
+  border-radius: var(--trae-skin-radius-large) !important;
+  box-shadow: var(--trae-skin-shadow-floating) !important;
+}
+body.trae-skin-v2 [role="option"][data-highlighted],
+body.trae-skin-v2 [role="menuitem"][data-highlighted] {
+  background: var(--trae-skin-popover-hover) !important;
+}
+body.trae-skin-v2 [role="option"][aria-selected="true"],
+body.trae-skin-v2 [role="menuitem"][data-state="checked"] {
+  color: var(--trae-skin-accent) !important;
+  background: var(--trae-skin-popover-selected) !important;
+}
+
+/* Account card：Trae Work 使用独立 CSS module，不走通用 popover。 */
+body.trae-skin-v2 [class*="account-module__card___"],
+body.trae-skin-v2 [class*="account-module__subMenuInner___"] {
+  color: var(--trae-skin-text-primary) !important;
+  background: var(--trae-skin-popover) !important;
+  border: 1px solid var(--trae-skin-border-default) !important;
+  box-shadow: var(--trae-skin-shadow-floating) !important;
+}
+body.trae-skin-v2 [class*="account-module__card___"] [class*="account-module__"] {
+  color: var(--trae-skin-text-primary) !important;
+}
+body.trae-skin-v2 [class*="account-module__card___"] [class*="menuItemIconLeft"],
+body.trae-skin-v2 [class*="account-module__card___"] [class*="subMenuValue"] {
+  color: var(--trae-skin-text-secondary) !important;
+}
+body.trae-skin-v2 [class*="account-module__card___"] [class*="subMenuArrow"] {
+  color: var(--trae-skin-accent) !important;
+}
+body.trae-skin-v2 [class*="account-module__card___"] [class*="menuSectionDivider"] {
+  border-color: var(--trae-skin-border-subtle) !important;
+}
+body.trae-skin-v2 [class*="account-module__card___"] [class*="menuItem"]:hover,
+body.trae-skin-v2 [class*="account-module__card___"] [class*="subMenu"]:hover,
+body.trae-skin-v2 [class*="account-module__card___"] [class*="optionItem"]:hover {
+  background: var(--trae-skin-popover-hover) !important;
+}
+body.trae-skin-v2 [class*="account-module__logoutButton"] {
+  color: var(--trae-skin-text-primary) !important;
+  background: var(--trae-skin-popover-hover) !important;
+  border: 1px solid var(--trae-skin-border-subtle) !important;
+}
+
+/* Settings：外壳、侧栏、内容卡和控件均由 components.settings 驱动。 */
+body.trae-skin-v2 .solo-lite-settings-overlay {
+  background: var(--trae-skin-settings-overlay) !important;
+}
+body.trae-skin-v2 .solo-lite-settings-content {
+  color: var(--trae-skin-text-primary) !important;
+  background: var(--trae-skin-settings-panel) !important;
+  border: 1px solid var(--trae-skin-border-default) !important;
+  border-radius: var(--trae-skin-radius-large) !important;
+  box-shadow: var(--trae-skin-shadow-floating) !important;
+}
+body.trae-skin-v2 .solo-lite-settings-content .icube-settings-sidebar-container {
+  color: var(--trae-skin-text-primary) !important;
+  background: var(--trae-skin-settings-sidebar) !important;
+  border-right: 1px solid var(--trae-skin-border-subtle) !important;
+}
+body.trae-skin-v2 .solo-lite-settings-content .icube-settings-content {
+  color: var(--trae-skin-text-primary) !important;
+  background: var(--trae-skin-settings-panel) !important;
+}
+body.trae-skin-v2 .solo-lite-settings-content .icu-settings-title,
+body.trae-skin-v2 .solo-lite-settings-content .icu-settings-title-content,
+body.trae-skin-v2 .solo-lite-settings-content .icb-setting-item-label,
+body.trae-skin-v2 .solo-lite-settings-content .user-name,
+body.trae-skin-v2 .solo-lite-settings-content .user-name-text {
+  color: var(--trae-skin-text-primary) !important;
+}
+body.trae-skin-v2 .solo-lite-settings-content .icb-setting-item-description,
+body.trae-skin-v2 .solo-lite-settings-content .user-description,
+body.trae-skin-v2 .solo-lite-settings-content .bytedance {
+  color: var(--trae-skin-text-secondary) !important;
+}
+body.trae-skin-v2 .solo-lite-settings-content .settings-sidebar-menu-item {
+  color: var(--trae-skin-text-secondary) !important;
+  background: transparent !important;
+}
+body.trae-skin-v2 .solo-lite-settings-content .settings-sidebar-menu-item .text,
+body.trae-skin-v2 .solo-lite-settings-content .settings-sidebar-menu-item .prefix {
+  color: inherit !important;
+}
+body.trae-skin-v2 .solo-lite-settings-content .settings-sidebar-menu-item:hover {
+  color: var(--trae-skin-text-primary) !important;
+  background: var(--trae-skin-popover-hover) !important;
+}
+body.trae-skin-v2 .solo-lite-settings-content .settings-sidebar-menu-item.active {
+  color: var(--trae-skin-accent) !important;
+  background: var(--trae-skin-settings-active) !important;
+}
+body.trae-skin-v2 .solo-lite-settings-content .menu-divider {
+  background: var(--trae-skin-border-subtle) !important;
+}
+body.trae-skin-v2 .solo-lite-settings-content .icb-settings-container {
+  color: var(--trae-skin-text-primary) !important;
+  background: var(--trae-skin-settings-card) !important;
+  border-color: var(--trae-skin-border-subtle) !important;
+}
+body.trae-skin-v2 .solo-lite-settings-content .icube-settings-theme-menu-trigger,
+body.trae-skin-v2 .solo-lite-settings-content .icube-setting-language-trigger,
+body.trae-skin-v2 .solo-lite-settings-content .icd-btn,
+body.trae-skin-v2 .solo-lite-settings-content .icd-btn-v2,
+body.trae-skin-v2 .solo-lite-settings-content input,
+body.trae-skin-v2 .solo-lite-settings-content textarea,
+body.trae-skin-v2 .solo-lite-settings-content select {
+  color: var(--trae-skin-text-primary) !important;
+  background: var(--trae-skin-settings-control) !important;
+  border-color: var(--trae-skin-border-default) !important;
+}
+body.trae-skin-v2 .solo-lite-settings-content .icube-settings-theme-menu-trigger *,
+body.trae-skin-v2 .solo-lite-settings-content .icube-setting-language-trigger *,
+body.trae-skin-v2 .solo-lite-settings-content .icd-btn *,
+body.trae-skin-v2 .solo-lite-settings-content .icd-btn-v2 * {
+  color: inherit !important;
+}
+body.trae-skin-v2 [role="listbox"] {
+  color: var(--trae-skin-text-primary) !important;
+  background: var(--trae-skin-popover) !important;
+  border-color: var(--trae-skin-border-default) !important;
+  box-shadow: var(--trae-skin-shadow-floating) !important;
+}
+body.trae-skin-v2 [role="option"]:hover {
+  background: var(--trae-skin-popover-hover) !important;
+}
+body.trae-skin-v2 [role="option"][aria-selected="true"] {
+  color: var(--trae-skin-accent) !important;
+  background: var(--trae-skin-popover-selected) !important;
+}
+
+/* V3 components.landing.banner — system-plate */
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"]:has(.messageInputContainer[data-mode="work"]) {
+  --trae-skin-banner-current-code: var(--trae-skin-banner-code-work);
+  --trae-skin-banner-current-label: var(--trae-skin-banner-label-work);
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"]:has(.messageInputContainer[data-mode="code"]) {
+  --trae-skin-banner-current-code: var(--trae-skin-banner-code-code);
+  --trae-skin-banner-current-label: var(--trae-skin-banner-label-code);
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"]:has(.messageInputContainer[data-mode="design"]) {
+  --trae-skin-banner-current-code: var(--trae-skin-banner-code-design);
+  --trae-skin-banner-current-label: var(--trae-skin-banner-label-design);
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper {
+  margin-bottom: 30px !important;
+  padding: 0 24px !important;
+  box-sizing: border-box !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"] {
+  position: relative !important;
+  align-items: stretch !important;
+  box-sizing: border-box !important;
+  width: min(var(--trae-skin-banner-max-width), calc(100% - 24px)) !important;
+  max-width: var(--trae-skin-banner-max-width) !important;
+  padding: 30px 30px 22px !important;
+  color: var(--trae-skin-banner-text) !important;
+  background:
+    linear-gradient(90deg, var(--trae-skin-banner-border) 0 62%, transparent 62% 65%, var(--trae-skin-banner-accent) 65% 100%) top / 100% 2px no-repeat,
+    linear-gradient(90deg, var(--trae-skin-banner-accent) 0 22%, transparent 22% 25%, var(--trae-skin-banner-border) 25% 100%) bottom / 100% 2px no-repeat,
+    var(--trae-skin-banner-surface) !important;
+  border: 1px solid var(--trae-skin-banner-border) !important;
+  border-radius: 0 !important;
+  clip-path: polygon(
+    0 var(--trae-skin-banner-corner-cut),
+    var(--trae-skin-banner-corner-cut) 0,
+    calc(100% - var(--trae-skin-banner-corner-cut)) 0,
+    100% var(--trae-skin-banner-corner-cut),
+    100% calc(100% - var(--trae-skin-banner-corner-cut)),
+    calc(100% - var(--trae-skin-banner-corner-cut)) 100%,
+    var(--trae-skin-banner-corner-cut) 100%,
+    0 calc(100% - var(--trae-skin-banner-corner-cut))
+  ) !important;
+  box-shadow: var(--trae-skin-banner-shadow) !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"]::before {
+  content: var(--trae-skin-banner-current-code) "  /  " var(--trae-skin-banner-current-label);
+  position: absolute;
+  top: 9px;
+  left: 30px;
+  color: var(--trae-skin-banner-muted);
+  font: 700 9px/1 var(--trae-skin-font-code);
+  letter-spacing: 0.16em;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"]::after {
+  content: "●  " var(--trae-skin-banner-status);
+  position: absolute;
+  top: 8px;
+  right: 30px;
+  color: var(--trae-skin-banner-status-color);
+  font: 700 9px/1 var(--trae-skin-font-code);
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 9px color-mix(in srgb, var(--trae-skin-banner-status-color) 55%, transparent);
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="animationContainer-"] {
+  align-items: stretch !important;
+  width: 100% !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="mainTextContainer-"] {
+  justify-content: flex-start !important;
+  width: 100% !important;
+  column-gap: 16px !important;
+  font-family: var(--trae-skin-font-heading) !important;
+  font-size: 30px !important;
+  font-weight: var(--trae-skin-heading-weight) !important;
+  letter-spacing: var(--trae-skin-heading-spacing) !important;
+  line-height: 1.1 !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="mainTextContainer-"] > [class*="icon-"] {
+  display: inline-grid !important;
+  flex: 0 0 var(--trae-skin-banner-icon-size) !important;
+  width: var(--trae-skin-banner-icon-size) !important;
+  height: var(--trae-skin-banner-icon-size) !important;
+  place-items: center !important;
+  color: var(--trae-skin-banner-accent) !important;
+  background: color-mix(in srgb, var(--trae-skin-banner-border) 24%, transparent) !important;
+  border: 1px solid var(--trae-skin-banner-border) !important;
+  clip-path: polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%) !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="mainTextContainer-"] > [class*="icon-"] svg {
+  width: 62% !important;
+  height: 62% !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="workText-"],
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="codeText-"],
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="designText-"] {
+  color: var(--trae-skin-banner-text) !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="withTraeText-"] {
+  align-self: flex-end !important;
+  margin-bottom: 4px !important;
+  color: var(--trae-skin-banner-muted) !important;
+  font: 600 11px/1 var(--trae-skin-font-code) !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+}
+
+/* V3 components.navigation.modeTabs — launch-rail */
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn {
+  box-sizing: border-box !important;
+  height: var(--trae-skin-mode-tabs-height) !important;
+  padding: 3px !important;
+  gap: var(--trae-skin-mode-tabs-gap) !important;
+  background: var(--trae-skin-mode-tabs-track) !important;
+  border: 1px solid var(--trae-skin-mode-tabs-border) !important;
+  border-radius: 0 !important;
+  clip-path: polygon(
+    0 var(--trae-skin-mode-tabs-corner-cut),
+    var(--trae-skin-mode-tabs-corner-cut) 0,
+    calc(100% - var(--trae-skin-mode-tabs-corner-cut)) 0,
+    100% var(--trae-skin-mode-tabs-corner-cut),
+    100% 100%, 0 100%
+  ) !important;
+  box-shadow: var(--trae-skin-mode-tabs-shadow) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"] {
+  top: 3px !important;
+  left: 3px !important;
+  width: var(--trae-skin-mode-tabs-tab-width) !important;
+  height: calc(var(--trae-skin-mode-tabs-height) - 8px) !important;
+  background:
+    linear-gradient(110deg, var(--trae-skin-mode-tabs-indicator) 0 78%, var(--trae-skin-mode-tabs-accent) 78% 100%) !important;
+  border: 1px solid color-mix(in srgb, var(--trae-skin-mode-tabs-accent) 52%, var(--trae-skin-mode-tabs-border)) !important;
+  border-radius: 0 !important;
+  clip-path: polygon(0 7px, 7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%) !important;
+  box-shadow: inset 3px 0 var(--trae-skin-mode-tabs-accent) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn:has(> span:nth-of-type(2) button[aria-selected="true"]) [class*="indicator-"] {
+  left: calc(3px + var(--trae-skin-mode-tabs-tab-width) + var(--trae-skin-mode-tabs-gap)) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn:has(> span:nth-of-type(3) button[aria-selected="true"]) [class*="indicator-"] {
+  left: calc(3px + var(--trae-skin-mode-tabs-tab-width) + var(--trae-skin-mode-tabs-gap) + var(--trae-skin-mode-tabs-tab-width) + var(--trae-skin-mode-tabs-gap)) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn > span {
+  flex: 0 0 var(--trae-skin-mode-tabs-tab-width) !important;
+  width: var(--trae-skin-mode-tabs-tab-width) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"] {
+  box-sizing: border-box !important;
+  flex: 0 0 var(--trae-skin-mode-tabs-tab-width) !important;
+  width: var(--trae-skin-mode-tabs-tab-width) !important;
+  height: calc(var(--trae-skin-mode-tabs-height) - 8px) !important;
+  padding: 2px 7px !important;
+  color: var(--trae-skin-mode-tabs-inactive-text) !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  font: 600 12px/1 var(--trae-skin-font-ui) !important;
+  letter-spacing: 0.01em !important;
+  transition: color 150ms ease, transform 150ms ease, background 150ms ease !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"]:hover:not([aria-selected="true"]) {
+  color: var(--trae-skin-mode-tabs-active-text) !important;
+  background: var(--trae-skin-mode-tabs-hover) !important;
+  transform: translateY(-1px) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"][aria-selected="true"] {
+  color: var(--trae-skin-mode-tabs-active-text) !important;
+  background: transparent !important;
+  text-shadow: 0 0 8px color-mix(in srgb, var(--trae-skin-mode-tabs-accent) 48%, transparent) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tab-icons="always"] .mode-switcher-btn [class*="tabIcon-"] {
+  width: 16px !important;
+  margin-right: 5px !important;
+  opacity: 0.68 !important;
+  transform: none !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tab-icons="always"] .mode-switcher-btn button[aria-selected="true"] [class*="tabIcon-"] {
+  color: var(--trae-skin-mode-tabs-accent) !important;
+  opacity: 1 !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tab-icons="never"] .mode-switcher-btn [class*="tabIcon-"] {
+  display: none !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tab-codes="true"] .mode-switcher-btn button[role="tab"]::after {
+  margin-left: 5px;
+  color: var(--trae-skin-mode-tabs-accent);
+  font: 700 7px/1 var(--trae-skin-font-code);
+  letter-spacing: 0.08em;
+  opacity: 0.72;
+}
+body.trae-skin-v3[data-trae-skin-mode-tab-codes="true"] .mode-switcher-btn > span:nth-of-type(1) button[role="tab"]::after { content: var(--trae-skin-mode-tabs-code-work); }
+body.trae-skin-v3[data-trae-skin-mode-tab-codes="true"] .mode-switcher-btn > span:nth-of-type(2) button[role="tab"]::after { content: var(--trae-skin-mode-tabs-code-code); }
+body.trae-skin-v3[data-trae-skin-mode-tab-codes="true"] .mode-switcher-btn > span:nth-of-type(3) button[role="tab"]::after { content: var(--trae-skin-mode-tabs-code-design); }
+
+body.trae-skin-v2 [data-sonner-toast] {
+  color: var(--trae-skin-text-primary) !important;
+  background: var(--trae-skin-menu) !important;
+  border-color: var(--trae-skin-border-default) !important;
+  border-radius: var(--trae-skin-radius-medium) !important;
+  box-shadow: var(--trae-skin-shadow-floating) !important;
+}
+body.trae-skin-v2 code {
+  color: var(--trae-skin-text-secondary) !important;
+  background: var(--trae-skin-chat-code) !important;
+  border-color: var(--trae-skin-border-subtle) !important;
+  font-family: var(--trae-skin-font-code) !important;
+}
+body.trae-skin-v2 .markdown-renderer strong {
+  color: var(--trae-skin-text-primary) !important;
+}
+body.trae-skin-v2 .markdown-renderer a {
+  color: var(--trae-skin-info) !important;
+}
+body.trae-skin-v2 h1,
+body.trae-skin-v2 h2,
+body.trae-skin-v2 h3 {
+  font-family: var(--trae-skin-font-heading) !important;
+  font-weight: var(--trae-skin-heading-weight) !important;
+  letter-spacing: var(--trae-skin-heading-spacing) !important;
+}
+body.trae-skin-v2 * {
+  scrollbar-color: var(--trae-skin-scrollbar-thumb) var(--trae-skin-scrollbar-track);
+  scrollbar-width: thin;
+}
+body.trae-skin-v2 *::-webkit-scrollbar {
+  width: var(--trae-skin-scrollbar-width);
+  height: var(--trae-skin-scrollbar-width);
+}
+body.trae-skin-v2 *::-webkit-scrollbar-track {
+  background: var(--trae-skin-scrollbar-track);
+}
+body.trae-skin-v2 *::-webkit-scrollbar-thumb {
+  background: var(--trae-skin-scrollbar-thumb);
+  border-radius: var(--trae-skin-radius-pill);
+}
+body.trae-skin-v2 *::-webkit-scrollbar-thumb:hover {
+  background: var(--trae-skin-scrollbar-hover);
+}
+
+/* MAX 特效：只由明确开启 effects.mode=max 的主题使用 */
+@keyframes trae-skin-scan {
+  from { background-position: 0 0, 0 0, 0 0; }
+  to { background-position: 0 16px, 64px 0, 0 64px; }
+}
+body.trae-skin-effects-max::after {
+  animation: trae-skin-scan 5s linear infinite;
+}
+body.trae-skin-effects-max .task-list-panel {
+  box-shadow:
+    inset -1px 0 var(--trae-skin-info),
+    inset 0 3px var(--trae-skin-accent),
+    var(--trae-skin-neon-glow) !important;
+}
+body.trae-skin-effects-max .solo-lite-chat-panel-container,
+body.trae-skin-effects-max .panel-container > .panel-content,
+body.trae-skin-effects-max .solo-lite-main-area {
+  box-shadow:
+    inset 0 1px var(--trae-skin-info),
+    inset 0 -1px var(--trae-skin-magenta),
+    var(--trae-skin-neon-glow) !important;
+}
+body.trae-skin-effects-max button[role="tab"][aria-selected="true"] {
+  color: var(--trae-skin-accent-on) !important;
+  background: var(--trae-skin-accent) !important;
+  border-color: var(--trae-skin-info) !important;
+  border-radius: 0 !important;
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
+  box-shadow: 0 0 18px var(--trae-skin-accent) !important;
+}
+body.trae-skin-effects-max .user-message__text-box,
+body.trae-skin-effects-max .core-finish-card,
+body.trae-skin-effects-max [class*="messageInputContainer"] {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+body.trae-skin-effects-max .core-finish-card,
+body.trae-skin-effects-max .core-finish-card__code-card {
+  border-left: 3px solid var(--trae-skin-accent) !important;
+}
+body.trae-skin-effects-max h1,
+body.trae-skin-effects-max h2,
+body.trae-skin-effects-max h3 {
+  color: var(--trae-skin-accent) !important;
+  text-shadow:
+    1px 0 var(--trae-skin-info),
+    -1px 0 var(--trae-skin-magenta),
+    0 0 16px #f4e90073;
+}
+
+body.trae-skin-blur-disabled .task-list-panel,
+body.trae-skin-blur-disabled .solo-lite-chat-panel-container,
+body.trae-skin-blur-disabled .solo-lite-main-area,
+body.trae-skin-blur-disabled .panel-container,
+body.trae-skin-blur-disabled .panel-container > .panel-content,
+body.trae-skin-blur-disabled .monaco-workbench .part.sidebar,
+body.trae-skin-blur-disabled .monaco-workbench .part.activitybar,
+body.trae-skin-blur-disabled .monaco-workbench .part.panel,
+body.trae-skin-blur-disabled .monaco-workbench .part.statusbar,
+body.trae-skin-blur-disabled .monaco-workbench .part.titlebar {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  body.trae-skin-effects-max::after { animation: none; }
+}

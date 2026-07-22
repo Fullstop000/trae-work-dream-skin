@@ -1,24 +1,25 @@
 #!/usr/bin/env node
-// TRAE Work Dream Skin — CDP 注入器
+// TRAE Work Skin — CDP 注入器
 // 通过本机回环 CDP (127.0.0.1) 把 skin.js 注入运行中的 Electron 页面。
 // 用法:
 //   node injector.mjs --once --port 19527            一次性注入所有页面 target
 //   node injector.mjs --watch --port 19527           常驻守护:新 target/导航/被清除时自动重注
 //   node injector.mjs --list --port 19527            列出 CDP target
 //   node injector.mjs --eval '<js>' --port 19527     在第一个页面 target 里执行表达式并打印结果
+//   node injector.mjs --manager-status --port 19527  在全部页面 target 中检查 Theme Manager
 //   node injector.mjs --shot out.png --port 19527    对第一个页面 target 截图
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
-const VERSION = "0.3.6";
+const VERSION = "0.4.0";
 
 function parseArgs(argv) {
   const args = {
     mode: "once",
     port: 0,
-    themesDir: path.join(ROOT, "themes"),
+    themesDir: process.env.TWSKIN_THEMES_DIR || path.join(ROOT, "themes"),
     defaultTheme: null,
     applyId: null,
     evalExpr: null,
@@ -33,6 +34,7 @@ function parseArgs(argv) {
       case "--current": args.mode = "current"; break;
       case "--apply": args.mode = "apply"; args.applyId = argv[++i]; break;
       case "--eval": args.mode = "eval"; args.evalExpr = argv[++i]; break;
+      case "--manager-status": args.mode = "manager-status"; break;
       case "--shot": args.mode = "shot"; args.shotPath = argv[++i]; break;
       case "--port": args.port = Number(argv[++i]); break;
       case "--themes": args.themesDir = argv[++i]; break;
@@ -51,8 +53,10 @@ function log(...parts) {
   console.log(`${new Date().toISOString()}`, ...parts);
 }
 
-const THEME_CONF = path.join(ROOT, "run", "theme.conf");
-const PID_FILE = path.join(ROOT, "run", "injector.pid");
+const STATE_DIR = process.env.TWSKIN_STATE_DIR || path.join(ROOT, "run");
+const THEME_CONF = path.join(STATE_DIR, "theme.conf");
+const PID_FILE = path.join(STATE_DIR, "injector.pid");
+const MAX_THEME_CSS_BYTES = 1024 * 1024;
 
 function buildCatalog(themesDir) {
   const catalog = [];
@@ -72,6 +76,15 @@ function buildCatalog(themesDir) {
       .map((f) => path.join(dir, f))
       .find((f) => fs.existsSync(f));
     if (!bgFile) continue;
+    const customCssFile = path.join(dir, "theme.css");
+    let customCss = "";
+    if (fs.existsSync(customCssFile)) {
+      const size = fs.statSync(customCssFile).size;
+      if (size > MAX_THEME_CSS_BYTES) {
+        throw new Error(`theme.css exceeds 1 MB: ${customCssFile}`);
+      }
+      customCss = fs.readFileSync(customCssFile, "utf8");
+    }
     const assets = {};
     for (const [name, filenames] of Object.entries({
       leftSidebar: ["left-sidebar.png", "left-sidebar.jpg", "left-sidebar.jpeg"],
@@ -131,6 +144,7 @@ function buildCatalog(themesDir) {
       settings,
       art: dataUri(bgFile),
       assets,
+      customCss,
     });
   }
   return catalog;
@@ -147,16 +161,20 @@ function resolveDefaultTheme(catalog, requested) {
   return catalog[0]?.id ?? "";
 }
 
-function buildPayload(args) {
+export function buildPayload(args) {
   const skin = fs.readFileSync(path.join(ROOT, "skin.js"), "utf8");
   const tokenMap = fs.readFileSync(path.join(ROOT, "token-map.mjs"), "utf8");
   const componentMap = fs.readFileSync(path.join(ROOT, "component-map.mjs"), "utf8");
+  const baseCss = fs.readFileSync(path.join(ROOT, "styles/base.css"), "utf8");
+  const managerCss = fs.readFileSync(path.join(ROOT, "styles/manager.css"), "utf8");
   const catalog = buildCatalog(args.themesDir);
   if (catalog.length === 0) throw new Error(`no themes found in ${args.themesDir}`);
   // 函数式替换，避免替换文本里的 $ 序列被当成特殊模式
   return skin
     .replaceAll("__TOKEN_MAP__", () => tokenMap)
     .replaceAll("__COMPONENT_MAP__", () => componentMap)
+    .replaceAll("__BASE_CSS__", () => JSON.stringify(baseCss))
+    .replaceAll("__MANAGER_CSS__", () => JSON.stringify(managerCss))
     .replaceAll("__CATALOG__", () => JSON.stringify(catalog))
     .replaceAll("__DEFAULT_THEME__", () => JSON.stringify(resolveDefaultTheme(catalog, args.defaultTheme)))
     .replaceAll("__VERSION__", () => JSON.stringify(VERSION));
@@ -286,6 +304,31 @@ async function cmdEval(args) {
   } finally {
     session.close();
   }
+}
+
+async function cmdManagerStatus(args) {
+  const targets = await listPageTargets(args.port, args.timeoutMs);
+  const expression = `(() => {
+    const api = window.__TRAE_DREAM_SKIN_GALLERY__;
+    const button = document.getElementById("trae-dream-skin-button");
+    return { ready: Boolean(api && button), version: api?.version || null };
+  })()`;
+  for (const target of targets) {
+    const session = await CdpSession.connect(target.webSocketDebuggerUrl, args.timeoutMs);
+    try {
+      const result = await session.send("Runtime.evaluate", { expression, returnByValue: true }, 4000);
+      const status = result.result?.value;
+      if (status?.ready) {
+        console.log(JSON.stringify({ ready: true, version: status.version || null }));
+        return;
+      }
+    } catch {
+      // A transient or privileged target must not hide a healthy manager in another page.
+    } finally {
+      session.close();
+    }
+  }
+  console.log(JSON.stringify({ ready: false, version: null }));
 }
 
 async function cmdShot(args) {
@@ -523,13 +566,16 @@ async function cmdWatch(args, payload) {
   setInterval(tick, 2000);
 }
 
-const args = parseArgs(process.argv.slice(2));
-switch (args.mode) {
-  case "list": await cmdList(args); break;
-  case "eval": await cmdEval(args); break;
-  case "shot": await cmdShot(args); break;
-  case "apply": await cmdApply(args, buildPayload(args)); break;
-  case "current": await cmdCurrent(args); break;
-  case "once": await cmdOnce(args, buildPayload(args)); break;
-  case "watch": await cmdWatch(args, buildPayload(args)); break;
+if (path.resolve(process.argv[1] || "") === fileURLToPath(import.meta.url)) {
+  const args = parseArgs(process.argv.slice(2));
+  switch (args.mode) {
+    case "list": await cmdList(args); break;
+    case "eval": await cmdEval(args); break;
+    case "manager-status": await cmdManagerStatus(args); break;
+    case "shot": await cmdShot(args); break;
+    case "apply": await cmdApply(args, buildPayload(args)); break;
+    case "current": await cmdCurrent(args); break;
+    case "once": await cmdOnce(args, buildPayload(args)); break;
+    case "watch": await cmdWatch(args, buildPayload(args)); break;
+  }
 }

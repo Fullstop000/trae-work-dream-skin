@@ -1,6 +1,7 @@
 run/
 dist/
+node_modules/
 .DS_Store
-scripts/release.sh
-scripts/release.env
-scripts/release.env.example
+packages/cli/runtime/manifest.json
+packages/cli/*.tgz
+packages/cli/coverage/

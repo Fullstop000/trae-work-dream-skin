@@ -1,5 +1,5 @@
 #!/bin/bash
-# TRAE Work Dream Skin — 一键还原
+# TRAE Work Skin — 一键还原
 # 停掉注入守护进程，不带调试参数正常重启 App（注入的 CSS 随页面生命周期消失）
 set -euo pipefail
 
@@ -8,7 +8,7 @@ while [ -L "$SRC" ]; do SRC="$(/usr/bin/readlink "$SRC")"; done
 DIR="$(cd "$(dirname "$SRC")" && pwd -P)"
 APP_BUNDLE="${APP_BUNDLE:-/Applications/TRAE SOLO CN.app}"
 APP_BUNDLE_ID="${APP_BUNDLE_ID:-cn.trae.solo.app}"
-RUN_DIR="$DIR/run"
+RUN_DIR="${TWSKIN_STATE_DIR:-$DIR/run}"
 
 if [ -f "$RUN_DIR/injector.pid" ]; then
   pid="$(/bin/cat "$RUN_DIR/injector.pid")"

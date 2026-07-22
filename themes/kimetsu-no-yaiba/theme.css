@@ -1,0 +1,708 @@
+/* 鬼灭之刃「大正传书局」：和洋折衷的印刷、木作与鬼杀队传令。 */
+body.trae-skin-theme-kimetsu-no-yaiba {
+  --kimetsu-ink: #090808;
+  --kimetsu-paper: #d8ccb8;
+  --kimetsu-paper-deep: #b9aa8e;
+  --kimetsu-red: #b62b26;
+  --kimetsu-gold: #a98b50;
+  --kimetsu-jade: #31564b;
+  --kimetsu-walnut: #241712;
+  --kimetsu-walnut-deep: #120d0a;
+  --kimetsu-sun: #f0c56c;
+  --kimetsu-flame: #e05a3f;
+}
+
+/* 跨栏构图适配：插画只由固定的窗口背景绘制，面板开合不再重排背景。 */
+body.trae-skin-theme-kimetsu-no-yaiba .solo-lite-chat-panel-container {
+  background-color: transparent !important;
+  background-image:
+    linear-gradient(90deg, rgba(9, 8, 8, 0.96) 0, rgba(9, 8, 8, 0.84) 92px, transparent 210px),
+    linear-gradient(var(--trae-skin-chat-surface), var(--trae-skin-chat-surface)) !important;
+  background-position: left center, center !important;
+  background-size: 100% 100%, cover !important;
+  background-repeat: no-repeat !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .panel-container > .panel-content {
+  background-color: transparent !important;
+  background-image:
+    linear-gradient(90deg, rgba(9, 8, 8, 0.96) 0, rgba(9, 8, 8, 0.84) 92px, transparent 210px),
+    linear-gradient(var(--trae-skin-landing-surface), var(--trae-skin-landing-surface)) !important;
+  background-position: left center, center !important;
+  background-size: 100% 100%, cover !important;
+  background-repeat: no-repeat !important;
+}
+
+/* 右侧任务栏透明覆盖在同一张固定背景上。 */
+body.trae-skin-theme-kimetsu-no-yaiba .solo-lite-main-area {
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Banner：大正洋馆的彩玻璃门楣 + 鬼杀队任务账簿。 */
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper {
+  margin-bottom: 32px !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"] {
+  padding: 46px 34px 27px !important;
+  overflow: hidden !important;
+  color: var(--kimetsu-paper) !important;
+  background:
+    linear-gradient(180deg, rgba(9, 7, 6, 0.92) 0 1px, transparent 1px 8px, rgba(9, 7, 6, 0.92) 8px 10px) top / 100% 10px no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 38px, rgba(10, 8, 7, 0.78) 38px 40px) top / 100% 10px no-repeat,
+    linear-gradient(90deg,
+      var(--kimetsu-jade) 0 18%,
+      var(--kimetsu-gold) 18% 34%,
+      #6f7a62 34% 50%,
+      var(--kimetsu-paper-deep) 50% 68%,
+      #425f56 68% 84%,
+      var(--kimetsu-red) 84% 100%) top / 100% 10px no-repeat,
+    repeating-linear-gradient(91deg, rgba(216, 204, 184, 0.018) 0 1px, transparent 1px 28px),
+    linear-gradient(104deg, rgba(49, 86, 75, 0.13), transparent 29%),
+    linear-gradient(180deg, rgba(38, 25, 19, 0.97), rgba(17, 12, 10, 0.98)) !important;
+  border: 1px solid rgba(159, 128, 74, 0.84) !important;
+  border-radius: 2px !important;
+  clip-path: none !important;
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, 0.58),
+    inset 0 0 0 4px rgba(8, 6, 5, 0.72),
+    inset 0 0 0 5px rgba(159, 128, 74, 0.22),
+    inset 0 -20px rgba(7, 5, 4, 0.12) !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"]::before {
+  content: "大正拾年　｜　" var(--trae-skin-banner-current-code) "・" var(--trae-skin-banner-current-label);
+  top: 19px;
+  left: 34px;
+  color: rgba(216, 204, 184, 0.76);
+  font-family: var(--trae-skin-font-heading);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"]::after {
+  content: "鎹鴉伝書　｜　鬼殺隊";
+  top: 18px;
+  right: 34px;
+  color: #c5a86e;
+  font-family: var(--trae-skin-font-heading);
+  letter-spacing: 0.1em;
+  text-shadow: none;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="mainTextContainer-"] {
+  min-height: 55px !important;
+  column-gap: 20px !important;
+  font-family: var(--trae-skin-font-heading) !important;
+  font-size: 34px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.16em !important;
+  text-shadow: 1px 2px 0 rgba(6, 4, 3, 0.72) !important;
+  transform-origin: 20% 50%;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="mainTextContainer-"] > [class*="icon-"] {
+  width: 52px !important;
+  height: 52px !important;
+  flex-basis: 52px !important;
+  color: var(--kimetsu-red) !important;
+  background:
+    radial-gradient(circle, #e4d9c2 0 51%, #bba987 52% 58%, #37231a 59% 62%, #d5c6a8 63%) !important;
+  border: 1px solid #bca36e !important;
+  border-radius: 50% !important;
+  clip-path: none !important;
+  box-shadow:
+    0 0 0 3px rgba(10, 7, 6, 0.7),
+    0 0 0 4px rgba(159, 128, 74, 0.58),
+    inset 0 2px 5px rgba(255, 246, 221, 0.22) !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="withTraeText-"] {
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+  margin-bottom: 5px !important;
+  color: #ab9d87 !important;
+  font-family: var(--trae-skin-font-heading) !important;
+  font-size: 10px !important;
+  letter-spacing: 0.17em !important;
+  text-transform: none !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba:has(.messageInputContainer[data-mode="work"]) .welcomeTitleWrapper [class*="mainTextContainer-"] {
+  animation: kimetsu-ledger-turn-work 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+body.trae-skin-theme-kimetsu-no-yaiba:has(.messageInputContainer[data-mode="code"]) .welcomeTitleWrapper [class*="mainTextContainer-"] {
+  animation: kimetsu-ledger-turn-code 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+body.trae-skin-theme-kimetsu-no-yaiba:has(.messageInputContainer[data-mode="design"]) .welcomeTitleWrapper [class*="mainTextContainer-"] {
+  animation: kimetsu-ledger-turn-design 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes kimetsu-ledger-turn-work {
+  from { opacity: 0.35; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes kimetsu-ledger-turn-code {
+  from { opacity: 0.35; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes kimetsu-ledger-turn-design {
+  from { opacity: 0.35; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 输入框：鎹鸦便笺置于深木书案；朱红只留给印章式发送键。 */
+body.trae-skin-theme-kimetsu-no-yaiba .messageInputContainer {
+  position: relative !important;
+  isolation: isolate !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .messageInputEditorWrapper {
+  position: relative !important;
+  box-sizing: border-box !important;
+  padding: 5px 5px 4px !important;
+  border: 1px solid rgba(159, 128, 74, 0.8) !important;
+  border-radius: 4px 4px 10px 10px !important;
+  clip-path: none !important;
+  background:
+    linear-gradient(90deg, #503326, #1d1410 24%, #2b1b15 75%, #4c3225) padding-box,
+    linear-gradient(90deg, var(--kimetsu-jade), var(--kimetsu-gold) 44%, var(--kimetsu-red) 70%, var(--kimetsu-gold)) border-box !important;
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.52),
+    inset 0 0 0 2px rgba(8, 6, 5, 0.7),
+    inset 0 1px rgba(224, 202, 161, 0.18) !important;
+  filter: none !important;
+  transition: border-color 180ms ease, box-shadow 180ms ease !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .messageInputEditorWrapper::before {
+  content: "鎹鴉便箋　｜　大正・伝書";
+  position: absolute;
+  z-index: 5;
+  top: 11px;
+  left: 26px;
+  color: rgba(216, 204, 184, 0.74);
+  font: 700 9px/1 var(--trae-skin-font-heading);
+  letter-spacing: 0.15em;
+  pointer-events: none;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .messageInputEditorWrapper::after {
+  content: "伝";
+  position: absolute;
+  z-index: 5;
+  top: 9px;
+  right: 25px;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  color: rgba(182, 43, 38, 0.86);
+  font: 800 10px/1 var(--trae-skin-font-heading);
+  letter-spacing: 0;
+  border: 1px solid rgba(182, 43, 38, 0.62);
+  background: rgba(17, 12, 10, 0.54);
+  pointer-events: none;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .messageInputEditorWrapper:has(.chat-input-v2-input-box-editable:focus) {
+  border-color: rgba(213, 185, 124, 0.92) !important;
+  box-shadow:
+    0 18px 38px rgba(0, 0, 0, 0.58),
+    inset 0 0 0 2px rgba(8, 6, 5, 0.72),
+    0 0 0 1px rgba(49, 86, 75, 0.24),
+    0 0 18px rgba(159, 128, 74, 0.12) !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .messageInputEditorWrapper:has(.chat-input-v2-input-box-editable:focus)::after {
+  content: "記";
+  color: #d7b06a;
+  border-color: rgba(213, 185, 124, 0.72);
+}
+body.trae-skin-theme-kimetsu-no-yaiba .messageInputChatInput {
+  overflow: hidden !important;
+  border: 1px solid rgba(9, 7, 6, 0.88) !important;
+  border-radius: 2px 2px 7px 7px !important;
+  clip-path: none !important;
+  background:
+    repeating-linear-gradient(7deg, rgba(216, 204, 184, 0.018) 0 1px, transparent 1px 7px),
+    radial-gradient(circle at 84% 16%, rgba(49, 86, 75, 0.11), transparent 26%),
+    linear-gradient(106deg, rgba(41, 75, 66, 0.11), transparent 30%),
+    rgba(15, 11, 9, 0.985) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(216, 204, 184, 0.045),
+    inset 0 12px 24px rgba(0, 0, 0, 0.12) !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-editor-part {
+  position: relative !important;
+  padding: 32px 18px 0 24px !important;
+  background:
+    linear-gradient(90deg, rgba(169, 54, 47, 0.08), transparent 15%),
+    repeating-linear-gradient(0deg, transparent 0 23px, rgba(216, 204, 184, 0.022) 23px 24px) !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-editor-part::before {
+  content: "";
+  position: absolute;
+  top: 37px;
+  bottom: 45px;
+  left: 8px;
+  width: 8px;
+  border-radius: 0;
+  background:
+    linear-gradient(45deg, transparent 38%, rgba(169, 139, 80, 0.9) 40% 58%, transparent 60%) 0 0 / 8px 14px repeat-y,
+    linear-gradient(-45deg, transparent 38%, rgba(182, 43, 38, 0.78) 40% 58%, transparent 60%) 0 0 / 8px 14px repeat-y;
+  box-shadow: none;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-input-box-wrapper {
+  min-height: 52px !important;
+  padding: 3px 4px 7px !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-input-box-editable,
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-input-box-editable p {
+  color: var(--kimetsu-paper) !important;
+  caret-color: #d9b268 !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-placeholder {
+  max-width: calc(100% - 38px) !important;
+  color: #827667 !important;
+  font-size: 12px !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-editor-part-lower-content {
+  min-height: 44px !important;
+  margin: 0 -18px 0 -24px !important;
+  padding: 8px 12px 8px 20px !important;
+  border-top: 3px double rgba(159, 128, 74, 0.42) !important;
+  background:
+    repeating-linear-gradient(90deg, rgba(216, 204, 184, 0.018) 0 1px, transparent 1px 18px),
+    linear-gradient(90deg, rgba(49, 86, 75, 0.18), rgba(24, 16, 13, 0.94) 30%, rgba(182, 43, 38, 0.08)) !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .messageInputToolbarIconBtn,
+body.trae-skin-theme-kimetsu-no-yaiba .rtcVoicePluginButton,
+body.trae-skin-theme-kimetsu-no-yaiba .voiceCallButton {
+  width: 29px !important;
+  height: 29px !important;
+  color: #bcae98 !important;
+  background: linear-gradient(180deg, rgba(51, 34, 27, 0.92), rgba(25, 18, 15, 0.94)) !important;
+  border: 1px solid rgba(159, 128, 74, 0.48) !important;
+  border-radius: 3px !important;
+  clip-path: none !important;
+  box-shadow: inset 0 1px rgba(230, 210, 174, 0.06) !important;
+  transition: color 150ms ease, border-color 150ms ease, background 150ms ease, transform 150ms ease !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .messageInputToolbarIconBtn:hover,
+body.trae-skin-theme-kimetsu-no-yaiba .rtcVoicePluginButton:hover,
+body.trae-skin-theme-kimetsu-no-yaiba .voiceCallButton:hover {
+  color: #ecddc3 !important;
+  border-color: rgba(196, 166, 105, 0.82) !important;
+  background: linear-gradient(180deg, rgba(65, 48, 37, 0.96), rgba(33, 24, 19, 0.96)) !important;
+  transform: translateY(-1px) !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .core-model-select-trigger {
+  min-height: 29px !important;
+  padding: 0 11px !important;
+  color: #c7b99f !important;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 7px, rgba(216, 204, 184, 0.018) 7px 8px),
+    rgba(30, 21, 17, 0.92) !important;
+  border: 1px solid rgba(159, 128, 74, 0.5) !important;
+  border-radius: 3px !important;
+  clip-path: none !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .core-model-select-trigger:hover,
+body.trae-skin-theme-kimetsu-no-yaiba .core-model-select-trigger[aria-expanded="true"] {
+  color: #f0e1c7 !important;
+  border-color: rgba(196, 166, 105, 0.82) !important;
+  background-color: rgba(55, 38, 30, 0.96) !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .core-model-select-trigger-arrow {
+  color: #b89857 !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-send-button {
+  position: relative !important;
+  flex: 0 0 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  margin-left: 10px !important;
+  padding: 0 !important;
+  color: #f9ead0 !important;
+  font-size: 0 !important;
+  background:
+    radial-gradient(circle, transparent 0 42%, rgba(255, 229, 188, 0.28) 43% 46%, transparent 47%),
+    radial-gradient(circle at 38% 34%, #bd4b40, var(--kimetsu-red) 58%, #6f211d 100%) !important;
+  border: 1px solid #d17868 !important;
+  border-radius: 50% !important;
+  clip-path: none !important;
+  box-shadow:
+    inset 0 0 0 3px rgba(81, 21, 18, 0.48),
+    inset 0 2px 3px rgba(255, 213, 182, 0.18),
+    0 3px 0 #4c1b17,
+    0 7px 14px rgba(0, 0, 0, 0.32) !important;
+  overflow: hidden !important;
+  transition: transform 150ms ease, filter 150ms ease, box-shadow 150ms ease !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-send-button > span,
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-send-button > svg {
+  opacity: 0 !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-send-button::before {
+  content: "送";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #f7e8ce;
+  font: 800 15px/1 var(--trae-skin-font-heading);
+  letter-spacing: 0;
+  transform: rotate(-5deg);
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-send-button::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgba(255, 229, 188, 0.42);
+  border-radius: 50%;
+  transform: none;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-send-button:hover:not(.disabled) {
+  filter: brightness(1.08) saturate(1.04) !important;
+  transform: translateY(-1px) rotate(-2deg) scale(1.035) !important;
+  box-shadow:
+    inset 0 0 0 3px rgba(81, 21, 18, 0.4),
+    inset 0 2px 3px rgba(255, 213, 182, 0.2),
+    0 4px 0 #4c1b17,
+    0 9px 16px rgba(0, 0, 0, 0.36) !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-send-button:active:not(.disabled) {
+  transform: translateY(2px) rotate(0) scale(0.97) !important;
+  box-shadow:
+    inset 0 0 0 3px rgba(81, 21, 18, 0.5),
+    0 1px 0 #4c1b17 !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-send-button.disabled {
+  background:
+    radial-gradient(circle, transparent 0 42%, rgba(216, 204, 184, 0.13) 43% 46%, transparent 47%),
+    radial-gradient(circle, #4b4033, #2d251f 68%, #1d1815) !important;
+  border-color: rgba(159, 128, 74, 0.48) !important;
+  box-shadow:
+    inset 0 0 0 3px rgba(8, 6, 5, 0.38),
+    0 2px 0 #17110e !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-send-button.disabled::before {
+  content: "待";
+  color: #8f826f;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .chat-input-v2-send-button.disabled::after {
+  inset: 5px;
+  width: auto;
+  height: auto;
+  top: 5px;
+  right: 5px;
+  border: 1px solid rgba(159, 128, 74, 0.24);
+  border-radius: 50%;
+  background: transparent;
+  opacity: 1;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .messageInputEditorWrapper:has(.chat-input-v2-send-button:not(.disabled))::after {
+  content: "送";
+  color: #d6bd84;
+  border-color: rgba(182, 43, 38, 0.7);
+  background: rgba(72, 24, 20, 0.56);
+}
+
+/* Tab：障子门沿木轨滑动；暖光掠过用于表达模式切换。 */
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn {
+  height: 43px !important;
+  padding: 4px !important;
+  gap: var(--trae-skin-mode-tabs-gap) !important;
+  overflow: hidden !important;
+  background:
+    repeating-linear-gradient(92deg, rgba(216, 204, 184, 0.025) 0 1px, transparent 1px 24px),
+    linear-gradient(180deg, #2b1c16, #15100d) !important;
+  border: 1px solid rgba(159, 128, 74, 0.62) !important;
+  border-radius: 3px !important;
+  clip-path: none !important;
+  box-shadow:
+    0 9px 24px rgba(0, 0, 0, 0.44),
+    inset 0 0 0 2px rgba(8, 6, 5, 0.6),
+    inset 0 -2px rgba(159, 128, 74, 0.24) !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"] {
+  top: 4px !important;
+  left: 4px !important;
+  width: var(--trae-skin-mode-tabs-tab-width) !important;
+  height: calc(var(--trae-skin-mode-tabs-height) - 7px) !important;
+  overflow: hidden !important;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 8px, rgba(62, 46, 35, 0.12) 8px 9px),
+    repeating-linear-gradient(90deg, transparent 0 28px, rgba(62, 46, 35, 0.14) 28px 29px),
+    linear-gradient(106deg, #dacdb4, #bba98a) !important;
+  border: 1px solid #a98b56 !important;
+  border-radius: 2px !important;
+  clip-path: none !important;
+  box-shadow:
+    inset 0 0 0 2px rgba(247, 232, 199, 0.17),
+    0 2px 8px rgba(0, 0, 0, 0.28) !important;
+  transform: translate3d(0, 0, 0);
+  transition: transform 340ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+  will-change: transform;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"]::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(76, 55, 41, 0.3);
+  background:
+    linear-gradient(90deg, transparent 32%, rgba(65, 47, 35, 0.18) 32% 34%, transparent 34% 66%, rgba(65, 47, 35, 0.18) 66% 68%, transparent 68%),
+    linear-gradient(180deg, transparent 48%, rgba(65, 47, 35, 0.16) 48% 52%, transparent 52%);
+  pointer-events: none;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"]::after {
+  content: "";
+  position: absolute;
+  top: -12%;
+  bottom: -12%;
+  left: -42%;
+  width: 34%;
+  background: linear-gradient(90deg, transparent, rgba(255, 239, 196, 0.58), transparent);
+  transform: translate3d(-120%, 0, 0) skewX(-12deg);
+  pointer-events: none;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn:has(> span:nth-of-type(2) button[aria-selected="true"]) [class*="indicator-"] {
+  left: 4px !important;
+  transform: translate3d(calc(var(--trae-skin-mode-tabs-tab-width) + var(--trae-skin-mode-tabs-gap)), 0, 0);
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn:has(> span:nth-of-type(3) button[aria-selected="true"]) [class*="indicator-"] {
+  left: 4px !important;
+  transform: translate3d(calc((var(--trae-skin-mode-tabs-tab-width) + var(--trae-skin-mode-tabs-gap)) * 2), 0, 0);
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn:has(> span:nth-of-type(1) button[aria-selected="true"]) [class*="indicator-"]::after {
+  animation: kimetsu-shoji-light-work 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn:has(> span:nth-of-type(2) button[aria-selected="true"]) [class*="indicator-"]::after {
+  animation: kimetsu-shoji-light-code 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn:has(> span:nth-of-type(3) button[aria-selected="true"]) [class*="indicator-"]::after {
+  animation: kimetsu-shoji-light-design 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"] {
+  position: relative !important;
+  z-index: 1 !important;
+  color: #b8aa95 !important;
+  background: transparent !important;
+  border-radius: 2px !important;
+  font-family: var(--trae-skin-font-heading) !important;
+  letter-spacing: 0.04em !important;
+  text-shadow: none !important;
+  transition: color 180ms ease, transform 180ms ease, background 180ms ease !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"]:hover:not([aria-selected="true"]) {
+  color: #eadcc2 !important;
+  background: rgba(49, 86, 75, 0.16) !important;
+  transform: none !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"][aria-selected="true"] {
+  color: #2d241c !important;
+  font-weight: 700 !important;
+  text-shadow: none !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tab-icons="always"] .mode-switcher-btn button[aria-selected="true"] [class*="tabIcon-"] {
+  color: var(--kimetsu-jade) !important;
+  filter: none !important;
+  transform: scale(1.05) !important;
+  transition: color 180ms ease, transform 180ms ease !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tab-codes="true"] .mode-switcher-btn button[role="tab"]::after {
+  min-width: 12px;
+  height: 12px;
+  margin-left: 5px;
+  display: inline-grid;
+  place-items: center;
+  color: #c8b99e;
+  font: 700 7px/1 var(--trae-skin-font-heading);
+  border: 1px solid rgba(169, 54, 47, 0.52);
+  border-radius: 50%;
+  opacity: 0.76;
+}
+body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-mode-tab-codes="true"] .mode-switcher-btn button[aria-selected="true"]::after {
+  color: #f8e7c8;
+  background: var(--kimetsu-red);
+  border-color: #87302a;
+  opacity: 1;
+}
+@keyframes kimetsu-shoji-light-work {
+  from { transform: translate3d(-120%, 0, 0) skewX(-12deg); opacity: 0; }
+  35% { opacity: 1; }
+  to { transform: translate3d(430%, 0, 0) skewX(-12deg); opacity: 0; }
+}
+@keyframes kimetsu-shoji-light-code {
+  from { transform: translate3d(-120%, 0, 0) skewX(-12deg); opacity: 0; }
+  35% { opacity: 1; }
+  to { transform: translate3d(430%, 0, 0) skewX(-12deg); opacity: 0; }
+}
+@keyframes kimetsu-shoji-light-design {
+  from { transform: translate3d(-120%, 0, 0) skewX(-12deg); opacity: 0; }
+  35% { opacity: 1; }
+  to { transform: translate3d(430%, 0, 0) skewX(-12deg); opacity: 0; }
+}
+
+/* 用户消息「花札封签」：耳饰成为气泡结构件，悬停时挂签摆动、呼吸火线掠过。 */
+body.trae-skin-theme-kimetsu-no-yaiba .user-message__text-box {
+  position: relative !important;
+  isolation: isolate !important;
+  overflow: visible !important;
+  background:
+    linear-gradient(90deg, transparent calc(100% - 58px), rgba(49, 86, 75, 0.16) calc(100% - 58px)) padding-box,
+    repeating-linear-gradient(135deg, rgba(216, 204, 184, 0.035) 0 1px, transparent 1px 7px) padding-box,
+    radial-gradient(circle at 92% -16px, rgba(240, 197, 108, 0.19) 0 28px, transparent 29px) padding-box,
+    linear-gradient(112deg, rgba(49, 86, 75, 0.11), transparent 34%) padding-box,
+    linear-gradient(180deg, rgba(47, 19, 17, 0.96), rgba(33, 13, 12, 0.94)) padding-box,
+    conic-gradient(
+      from 225deg at 91% 0%,
+      rgba(169, 139, 80, 0.52) 0 196deg,
+      var(--kimetsu-red) 196deg 232deg,
+      var(--kimetsu-flame) 232deg 246deg,
+      var(--kimetsu-sun) 246deg 258deg,
+      rgba(169, 139, 80, 0.72) 258deg 360deg
+    ) border-box !important;
+  border: 1px solid transparent !important;
+  border-radius: 2px !important;
+  box-shadow:
+    inset 4px 0 rgba(182, 43, 38, 0.76),
+    inset 5px 0 rgba(240, 197, 108, 0.2),
+    0 10px 28px rgba(0, 0, 0, 0.34) !important;
+  transition: box-shadow 220ms ease, filter 220ms ease !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .user-message__text-box .user-message__text-inner {
+  min-height: 46px !important;
+  padding-right: 48px !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .user-message__text-box::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: -12px;
+  right: 11px;
+  width: 24px;
+  height: 36px;
+  box-sizing: border-box;
+  border: 1px solid rgba(42, 31, 24, 0.92);
+  border-radius: 1px;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 50% 2px,
+      #211713 0 1.4px,
+      rgba(169, 139, 80, 0.86) 1.8px 2.8px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 50% 25%,
+      #fff2cf 0 1.4px,
+      #ce3d2d 1.8px 4.8px,
+      rgba(92, 24, 20, 0.9) 5.2px 6px,
+      transparent 6.3px
+    ),
+    repeating-conic-gradient(
+      from 168deg at 50% 29%,
+      rgba(27, 21, 18, 0.94) 0 5deg,
+      transparent 5deg 18deg
+    ),
+    linear-gradient(158deg, transparent 0 68%, rgba(78, 68, 58, 0.76) 69% 77%, transparent 78%),
+    linear-gradient(180deg, #f2e7cf 0 70%, #b9aa91 70% 77%, #e6d8bd 77% 100%);
+  box-shadow:
+    0 0 0 1px rgba(169, 139, 80, 0.58),
+    inset 0 0 0 1px rgba(255, 247, 226, 0.34),
+    0 7px 12px rgba(0, 0, 0, 0.46);
+  clip-path: polygon(4px 0, 20px 0, 24px 4px, 24px 32px, 20px 36px, 4px 36px, 0 32px, 0 4px);
+  filter: drop-shadow(0 0 4px rgba(224, 90, 63, 0.2));
+  transform: rotate(-4deg);
+  transform-origin: 50% -4px;
+  transition: filter 180ms ease;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .user-message__text-box::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  right: 42px;
+  bottom: -2px;
+  left: 8px;
+  height: 4px;
+  pointer-events: none;
+  opacity: 0.5;
+  background: linear-gradient(
+    90deg,
+    transparent 0 4%,
+    rgba(182, 43, 38, 0.24) 15%,
+    var(--kimetsu-red) 38%,
+    var(--kimetsu-flame) 56%,
+    #fff0bd 64%,
+    var(--kimetsu-sun) 69%,
+    rgba(182, 43, 38, 0.58) 80%,
+    transparent 100%
+  );
+  background-size: 220% 100%;
+  filter: drop-shadow(0 0 3px rgba(224, 90, 63, 0.42));
+  clip-path: polygon(0 40%, 87% 0, 100% 50%, 87% 100%, 0 60%);
+}
+body.trae-skin-theme-kimetsu-no-yaiba .user-message__text-box:hover {
+  filter: brightness(1.04) !important;
+  box-shadow:
+    inset 4px 0 rgba(182, 43, 38, 0.92),
+    inset 5px 0 rgba(240, 197, 108, 0.32),
+    0 12px 30px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(240, 197, 108, 0.3),
+    0 0 20px rgba(182, 43, 38, 0.16) !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .user-message__text-box:hover::before {
+  filter: drop-shadow(0 0 8px rgba(224, 90, 63, 0.62));
+  animation: kimetsu-hanafuda-swing 880ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .user-message__text-box:hover::after {
+  animation: kimetsu-hinokami-breath 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes kimetsu-hinokami-breath {
+  0% { opacity: 0; background-position: 100% 0; clip-path: inset(0 100% 0 0); }
+  34% { opacity: 1; }
+  100% { opacity: 0.68; background-position: 0 0; clip-path: inset(0 0 0 0); }
+}
+@keyframes kimetsu-hanafuda-swing {
+  0% { transform: rotate(-4deg); }
+  26% { transform: rotate(16deg) translateY(1px); }
+  49% { transform: rotate(-10deg); }
+  69% { transform: rotate(7deg); }
+  85% { transform: rotate(-3deg); }
+  100% { transform: rotate(0deg); }
+}
+/* 将漫画印刷语言继续延伸到卡片、选择态和行内代码。 */
+body.trae-skin-theme-kimetsu-no-yaiba .core-finish-card__code-card,
+body.trae-skin-theme-kimetsu-no-yaiba [class*="recommendationCard"],
+body.trae-skin-theme-kimetsu-no-yaiba [class*="card-QNuQ2F"] {
+  background: rgba(21, 16, 15, 0.9) !important;
+  border-color: rgba(169, 139, 80, 0.34) !important;
+  border-radius: 2px !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .task-list-panel [class*="selected"],
+body.trae-skin-theme-kimetsu-no-yaiba .task-list-panel [aria-selected="true"] {
+  color: #fff1dc !important;
+  background: linear-gradient(90deg, rgba(104, 29, 26, 0.76), rgba(35, 23, 19, 0.58)) !important;
+  box-shadow: inset 3px 0 var(--kimetsu-red), inset 4px 0 var(--kimetsu-gold) !important;
+}
+body.trae-skin-theme-kimetsu-no-yaiba .solo-lite-chat-panel-container h2::after,
+body.trae-skin-theme-kimetsu-no-yaiba .solo-lite-chat-panel-container h3::after {
+  content: "";
+  display: inline-block;
+  width: 32px;
+  height: 3px;
+  margin-left: 9px;
+  vertical-align: middle;
+  background: linear-gradient(90deg, var(--kimetsu-red) 0 70%, transparent 70% 78%, var(--kimetsu-gold) 78% 100%);
+}
+body.trae-skin-theme-kimetsu-no-yaiba .solo-lite-chat-panel-container :not(pre) > code {
+  color: #e2d5c1 !important;
+  background: rgba(73, 34, 29, 0.52) !important;
+  border-bottom: 1px solid rgba(182, 43, 38, 0.54) !important;
+  border-radius: 0 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.trae-skin-theme-kimetsu-no-yaiba .welcomeTitleWrapper [class*="mainTextContainer-"],
+  body.trae-skin-theme-kimetsu-no-yaiba .mode-switcher-btn [class*="indicator-"]::after,
+  body.trae-skin-theme-kimetsu-no-yaiba .user-message__text-box:hover::before,
+  body.trae-skin-theme-kimetsu-no-yaiba .user-message__text-box:hover::after {
+    animation: none !important;
+  }
+  body.trae-skin-theme-kimetsu-no-yaiba .mode-switcher-btn [class*="indicator-"],
+  body.trae-skin-theme-kimetsu-no-yaiba .messageInputEditorWrapper,
+  body.trae-skin-theme-kimetsu-no-yaiba .user-message__text-box::before {
+    transition: none !important;
+  }
+}

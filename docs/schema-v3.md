@@ -23,6 +23,7 @@ TRAE Work 的令牌架构（详见 `fixtures/`）：
 ```
 themes/<id>/
 ├── theme.json        # 协议文件
+├── theme.css         # 可选：主题独有组件造型与动效，切换时动态注入
 ├── background.*      # 主背景图（svg/png/jpg）
 ├── icons/*.svg       # 可选：图标 glyph 替换素材
 ├── left-sidebar.*    # 可选：左侧栏装饰图
@@ -201,8 +202,11 @@ themes/<id>/
 5. **图标 glyph 替换**：CSS mask 方案（`background: currentColor` + mask），颜色自动跟随 `--icon-icon-*`；
    93% 的 App 内联 SVG 带 `trae-icon-*` 语义类名（抽查 107 个），漏网的用 `selector` 逃生舱。
 
-## 四、硬编码登记表（逃生舱）
+## 四、主题专属 CSS 与硬编码登记表（逃生舱）
 
-握手 + 扇出之后仍漏色的真·硬编码组件，集中登记在 `skin.js` 静态样式区（选择器用 `[class*="module__semantic"]`
-属性子串抵御哈希后缀漂移）。原则：**补丁集中在引擎一处，不写进 theme.json**；TRAE 升级后只改一行。
-新增条目先跑对比度审计确认确为硬编码再登记。
+只属于单套主题的组件造型与动效写入该主题的 `theme.css`，并以
+`body.trae-skin-theme-<id>` 限定作用域。注入器把它与主题目录一同打包，切换主题时动态替换
+`trae-dream-skin-theme-style`，恢复默认时完整移除。`theme.json` 仍只保存声明式角色与组件配置。
+
+握手 + 扇出之后仍影响所有主题的真·硬编码组件，才集中登记在 `skin.js` 静态样式区（选择器用
+`[class*="module__semantic"]` 属性子串抵御哈希后缀漂移）。新增条目先跑对比度审计确认确为硬编码再登记。

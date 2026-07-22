@@ -1,5 +1,5 @@
 #!/bin/bash
-# TRAE Work Dream Skin — 启动脚本
+# TRAE Work Skin — 启动脚本
 # 退出目标 App → 带 CDP 调试参数重启 → 启动注入守护进程
 set -euo pipefail
 
@@ -11,9 +11,10 @@ APP_BUNDLE="${APP_BUNDLE:-/Applications/TRAE SOLO CN.app}"
 APP_BUNDLE_ID="${APP_BUNDLE_ID:-cn.trae.solo.app}"
 APP_PROC_MATCH="${APP_PROC_MATCH:-TRAE SOLO CN}"
 NODE_BIN="${NODE_BIN:-node}"
-RUN_DIR="$DIR/run"
+RUN_DIR="${TWSKIN_STATE_DIR:-$DIR/run}"
+THEMES_DIR="${TWSKIN_THEMES_DIR:-$DIR/themes}"
 
-fail() { printf 'dream-skin: %s\n' "$*" >&2; exit 1; }
+fail() { printf 'twskin: %s\n' "$*" >&2; exit 1; }
 
 [ -d "$APP_BUNDLE" ] || fail "app not found: $APP_BUNDLE"
 mkdir -p "$RUN_DIR"
@@ -76,6 +77,7 @@ if [ -f "$RUN_DIR/injector.pid" ]; then
   [ -n "$old_pid" ] && /bin/kill "$old_pid" >/dev/null 2>&1 || true
 fi
 /usr/bin/nohup "$NODE_BIN" "$DIR/injector.mjs" --watch --port "$PORT" \
+  --themes "$THEMES_DIR" \
   >>"$RUN_DIR/injector.log" 2>&1 &
 echo "$!" > "$RUN_DIR/injector.pid"
 echo "$PORT" > "$RUN_DIR/port"
