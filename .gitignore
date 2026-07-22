@@ -1,3 +1,6 @@
 run/
 dist/
 .DS_Store
+scripts/release.sh
+scripts/release.env
+scripts/release.env.example

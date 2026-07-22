@@ -76,7 +76,45 @@ themes/<id>/
     "chat":     { "userBubble": "…", "userBubbleBorder": "…", "assistantMessage": "…",
                   "assistantMessageBorder": "…", "assistantMessageShadow": "none", "code": "…", "card": "…" },
     "popover":  { "background": "…", "itemHover": "…", "itemSelected": "…" },
-    "settings": { "overlay": "…", "panel": "…", "sidebar": "…", "card": "…", "control": "…", "active": "…" }
+    "settings": { "overlay": "…", "panel": "…", "sidebar": "…", "card": "…", "control": "…", "active": "…" },
+    "landing": {
+      "banner": {
+        "variant": "system-plate", // default | system-plate
+        "colors": {
+          "surface": "#151217ee", "border": "#9f62c0", "accent": "#b6f52c",
+          "text": "#f0ebec", "muted": "#8b8084", "status": "#b6f52c"
+        },
+        "metrics": { "cornerCutPx": 14, "maxWidthPx": 620, "iconSizePx": 48 },
+        "effects": { "shadow": "0 16px 40px #00000070" },
+        "content": {
+          "statusText": "ONLINE",
+          "modes": {
+            "work": { "code": "01", "label": "OPERATIONS" },
+            "code": { "code": "02", "label": "SYSTEMS" },
+            "design": { "code": "03", "label": "SYNTHESIS" }
+          }
+        }
+      }
+    },
+    "navigation": {
+      "modeTabs": {
+        "variant": "launch-rail", // default | launch-rail
+        "colors": {
+          "track": "#1b111f", "border": "#9f62c080", "indicator": "#59346c",
+          "accent": "#b6f52c", "activeText": "#dfff91", "inactiveText": "#c5b7ca",
+          "hover": "#382142"
+        },
+        "metrics": { "heightPx": 42, "tabWidthPx": 92, "gapPx": 3, "cornerCutPx": 8 },
+        "effects": { "shadow": "0 8px 24px #00000066" },
+        "content": {
+          "iconPolicy": "always", // active | always | never
+          "showModeCode": true,
+          "modes": {
+            "work": { "code": "01" }, "code": { "code": "02" }, "design": { "code": "03" }
+          }
+        }
+      }
+    }
   },
 
   "effects": {                    // 特效
@@ -101,6 +139,40 @@ themes/<id>/
   }
 }
 ```
+
+### Landing banner 与模式 Tab
+
+- `components.landing.banner` 控制 Work / Code / Design 初始页共用的欢迎标识。`default` 完全保留 App 原生外观；`system-plate` 提供结构化模式牌、图标舱、模式编号与状态标识。
+- `components.navigation.modeTabs` 控制左栏顶部的 Work / Code / Design 切换器。`default` 保留原生 segmented control；`launch-rail` 提供机械轨道、移动指示片和模式编号。
+- `content.modes.*.code/label` 只改变装饰性文本；App 原始标签和 ARIA 语义保持不变。
+- 模式集与顺序 `work → code → design` 是当前协议常量；宿主改变顺序时由 `skin.js` 适配层修复，不要求主题迁移。
+- 未声明组件或未知 `variant` 均回退原生 `default`；旧引擎可忽略这些字段，主题其余部分继续生效，不提供 `minEngine` 式整主题阻断。
+- `colors` 的主题显式值只接受 `#RGB`、`#RRGGBB`、`#RRGGBBAA`、数值型 `rgb()/rgba()` 或 `transparent`。非法值回退到角色颜色；主题不能传入 `url()`、`var()` 或 `color-mix()`。
+- `effects.shadow` 是受限的声明式 `box-shadow` 值：支持 `none`、可选前置 `inset`、2–4 个 `px/rem/em` 长度与可选末尾安全颜色；拒绝 `url/var/attr/expression`、分号、花括号和注释。
+- 主题只声明语义参数；DOM 选择器和兼容 TRAE 哈希类名的规则集中维护在 `skin.js`，避免主题目录携带任意 CSS。
+
+### 尺寸与文本限制
+
+| 槽位 | 字段 | 范围/上限 | 消费变体 |
+|---|---|---:|---|
+| Banner | `metrics.cornerCutPx` | 0–40 px | `system-plate` |
+| Banner | `metrics.maxWidthPx` | 320–960 px | `system-plate` |
+| Banner | `metrics.iconSizePx` | 24–80 px | `system-plate` |
+| Banner | `content.statusText` | 20 字符 | `system-plate` |
+| Banner | `content.modes.*.code/label` | 各 24 字符 | `system-plate` |
+| Mode tabs | `metrics.heightPx` | 32–56 px | `launch-rail` |
+| Mode tabs | `metrics.tabWidthPx` | 64–120 px | `launch-rail` |
+| Mode tabs | `metrics.gapPx` | 0–12 px | `launch-rail` |
+| Mode tabs | `metrics.cornerCutPx` | 0–18 px | `launch-rail` |
+| Mode tabs | `content.modes.*.code` | 24 字符 | `launch-rail` |
+
+数字越界时钳制到最近边界；文本会清洗控制字符并截断。未被当前 `variant` 消费的字段无视觉效果。
+
+### 协议债务登记
+
+- 旧槽位 `components.chat/popover/settings`、`elevation.*` 与通用长度值仍沿用 V3 早期的属性值入口，后续应迁入统一的组件映射与安全校验层。
+- 当前对比度数学不合成半透明背景；`color-mix()` 等无法纯函数解析的派生色会明确报告为 `contrastUnverifiable`，不会伪装成已通过。
+- Mode tabs 的 DOM 适配目前依赖协议固定顺序；宿主若提供稳定的 `data-mode/aria-label`，再迁移到身份属性绑定。
 
 ## 三、引擎行为保证
 

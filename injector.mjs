@@ -150,11 +150,13 @@ function resolveDefaultTheme(catalog, requested) {
 function buildPayload(args) {
   const skin = fs.readFileSync(path.join(ROOT, "skin.js"), "utf8");
   const tokenMap = fs.readFileSync(path.join(ROOT, "token-map.mjs"), "utf8");
+  const componentMap = fs.readFileSync(path.join(ROOT, "component-map.mjs"), "utf8");
   const catalog = buildCatalog(args.themesDir);
   if (catalog.length === 0) throw new Error(`no themes found in ${args.themesDir}`);
   // 函数式替换，避免替换文本里的 $ 序列被当成特殊模式
   return skin
     .replaceAll("__TOKEN_MAP__", () => tokenMap)
+    .replaceAll("__COMPONENT_MAP__", () => componentMap)
     .replaceAll("__CATALOG__", () => JSON.stringify(catalog))
     .replaceAll("__DEFAULT_THEME__", () => JSON.stringify(resolveDefaultTheme(catalog, args.defaultTheme)))
     .replaceAll("__VERSION__", () => JSON.stringify(VERSION));

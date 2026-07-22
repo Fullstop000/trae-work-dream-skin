@@ -42,13 +42,14 @@ bash trae-work-dream-skin-install.command   # 与双击等价
 ## 开发
 
 ```bash
-node --test "tests/*.test.mjs"     # token-map 单测
+node --test "tests/*.test.mjs"     # token/component 映射单测
 bash scripts/build-installer.sh    # 重建安装器到 dist/
 ```
 
 - `injector.mjs` — CDP 客户端（`--watch` 常驻注入 / `--once` 热刷新 / `--apply` 切主题 / `--eval` `--shot` 调试）
 - `skin.js` — 页面载荷：背景层、毛玻璃面板、画廊 UI、主题引擎、外观握手、图标 mask
 - `token-map.mjs` — 主题角色 → TRAE 设计令牌全命名空间扇出（纯函数）
+- `component-map.mjs` — V3 landing banner / mode tabs 等组件槽位规范化（纯函数）
 - `fixtures/` — 设计令牌普查存档（映射表的数据依据）
 
 ## 安全边界

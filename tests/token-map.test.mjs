@@ -122,3 +122,15 @@ test("luminance/contrastRatio 基本正确性", () => {
   assert.equal(TM.pickOnColor("#f4e900"), "#000000");
   assert.equal(TM.pickOnColor("#0b1018"), "#ffffff");
 });
+
+test("auditPairs 区分失败与不可解析配对", () => {
+  const result = TM.auditPairs([
+    { fg: "good.text", fgValue: "#ffffff", bg: "good.bg", bgValue: "#000000", minRatio: 4 },
+    { fg: "bad.text", fgValue: "#777777", bg: "bad.bg", bgValue: "#777777", minRatio: 4 },
+    { fg: "mixed.text", fgValue: "#ffffff", bg: "mixed.bg", bgValue: "color-mix(in srgb, #000 80%, white)", minRatio: 4 },
+  ]);
+  assert.equal(result.failures.length, 1);
+  assert.equal(result.failures[0].fg, "bad.text");
+  assert.equal(result.unverifiable.length, 1);
+  assert.equal(result.unverifiable[0].bg, "mixed.bg");
+});

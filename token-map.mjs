@@ -285,7 +285,29 @@
     return out;
   }
 
-  // 对比度审计：输入一组 {fg, bg} 角色对，返回不达标项
+  // 通用对比度审计：调用方声明语义配对与阈值；无法解析的派生色必须显式报告，不能假装通过。
+  function auditPairs(pairs) {
+    const failures = [];
+    const unverifiable = [];
+    for (const pair of pairs || []) {
+      const ratio = contrastRatio(pair.fgValue, pair.bgValue);
+      const entry = {
+        fg: pair.fg,
+        fgValue: pair.fgValue,
+        bg: pair.bg,
+        bgValue: pair.bgValue,
+        minRatio: pair.minRatio ?? 4,
+      };
+      if (ratio == null) {
+        unverifiable.push(entry);
+      } else if (ratio < entry.minRatio) {
+        failures.push({ ...entry, ratio: +ratio.toFixed(2) });
+      }
+    }
+    return { failures, unverifiable };
+  }
+
+  // 角色对比度审计
   function auditContrast(tokens, opts) {
     const r = deriveRoles(tokens, opts);
     const pairs = [
@@ -311,7 +333,7 @@
 
   return {
     parseColor, luminance, contrastRatio, pickOnColor, withAlpha, mix,
-    deriveRoles, buildVarMap, auditContrast,
+    deriveRoles, buildVarMap, auditContrast, auditPairs,
     NS_BG, NS_TEXT, NS_ICON, NS_BORDER,
     ICUBE_BG, ICUBE_TEXT, ICUBE_ICON, ICUBE_BORDER, ICUBE_STATUS_KINDS, ICUBE_STATUS_PARTS,
     RAS_BG, RAS_TEXT, RAS_ICON, RAS_BORDER, RAMP_STOPS,

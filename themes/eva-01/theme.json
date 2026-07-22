@@ -140,6 +140,67 @@
       "card": "#1d181feb",
       "control": "#0b0a0cf0",
       "active": "#b6f52c21"
+    },
+    "landing": {
+      "banner": {
+        "variant": "system-plate",
+        "colors": {
+          "surface": "#120d17ed",
+          "border": "#9f62c0b8",
+          "accent": "#b6f52c",
+          "text": "#f0ebec",
+          "muted": "#a58fac",
+          "status": "#b6f52c"
+        },
+        "metrics": {
+          "cornerCutPx": 15,
+          "maxWidthPx": 620,
+          "iconSizePx": 50
+        },
+        "effects": {
+          "shadow": "0 18px 46px #00000085, inset 0 1px #ffffff0a"
+        },
+        "content": {
+          "statusText": "ONLINE",
+          "modes": {
+            "work": { "code": "01", "label": "OPERATIONS" },
+            "code": { "code": "02", "label": "SYSTEMS" },
+            "design": { "code": "03", "label": "SYNTHESIS" }
+          }
+        }
+      }
+    },
+    "navigation": {
+      "modeTabs": {
+        "variant": "launch-rail",
+        "colors": {
+          "track": "#170f1bea",
+          "border": "#9f62c080",
+          "indicator": "#523063",
+          "accent": "#b6f52c",
+          "activeText": "#e3ff9f",
+          "inactiveText": "#c1b2c5",
+          "hover": "#382142d9"
+        },
+        "metrics": {
+          "heightPx": 42,
+          "tabWidthPx": 92,
+          "gapPx": 3,
+          "cornerCutPx": 8
+        },
+        "effects": {
+          "shadow": "0 10px 28px #00000075, inset 0 1px #ffffff0a"
+        },
+        "content": {
+          "iconPolicy": "always",
+          "showModeCode": true,
+          "modes": {
+            "work": { "code": "01" },
+            "code": { "code": "02" },
+            "design": { "code": "03" }
+          }
+        }
+      }
     }
   },
   "workbench": {

@@ -3,7 +3,9 @@
 // 幂等：重复执行先移除旧节点再重新挂载；主题选择存 localStorage，重启/导航后保持。
 (() => {
   __TOKEN_MAP__
+  __COMPONENT_MAP__
   const TOKEN_MAP = self.DREAM_SKIN_TOKEN_MAP;
+  const COMPONENT_MAP = self.DREAM_SKIN_COMPONENT_MAP;
   const CATALOG = __CATALOG__;
   const DEFAULT_THEME = __DEFAULT_THEME__;
   const VERSION = __VERSION__;
@@ -49,6 +51,12 @@
         document.body.classList.remove(className);
       }
     }
+    for (const key of [
+      "traeSkinLandingBanner",
+      "traeSkinModeTabs",
+      "traeSkinModeTabIcons",
+      "traeSkinModeTabCodes",
+    ]) delete document.body.dataset[key];
   }
 
   let disabled = false;
@@ -465,6 +473,200 @@ body.trae-skin-v2 [role="option"][aria-selected="true"] {
   color: var(--trae-skin-accent) !important;
   background: var(--trae-skin-popover-selected) !important;
 }
+
+/* V3 components.landing.banner — system-plate */
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"]:has(.messageInputContainer[data-mode="work"]) {
+  --trae-skin-banner-current-code: var(--trae-skin-banner-code-work);
+  --trae-skin-banner-current-label: var(--trae-skin-banner-label-work);
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"]:has(.messageInputContainer[data-mode="code"]) {
+  --trae-skin-banner-current-code: var(--trae-skin-banner-code-code);
+  --trae-skin-banner-current-label: var(--trae-skin-banner-label-code);
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"]:has(.messageInputContainer[data-mode="design"]) {
+  --trae-skin-banner-current-code: var(--trae-skin-banner-code-design);
+  --trae-skin-banner-current-label: var(--trae-skin-banner-label-design);
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper {
+  margin-bottom: 30px !important;
+  padding: 0 24px !important;
+  box-sizing: border-box !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"] {
+  position: relative !important;
+  align-items: stretch !important;
+  box-sizing: border-box !important;
+  width: min(var(--trae-skin-banner-max-width), calc(100% - 24px)) !important;
+  max-width: var(--trae-skin-banner-max-width) !important;
+  padding: 30px 30px 22px !important;
+  color: var(--trae-skin-banner-text) !important;
+  background:
+    linear-gradient(90deg, var(--trae-skin-banner-border) 0 62%, transparent 62% 65%, var(--trae-skin-banner-accent) 65% 100%) top / 100% 2px no-repeat,
+    linear-gradient(90deg, var(--trae-skin-banner-accent) 0 22%, transparent 22% 25%, var(--trae-skin-banner-border) 25% 100%) bottom / 100% 2px no-repeat,
+    var(--trae-skin-banner-surface) !important;
+  border: 1px solid var(--trae-skin-banner-border) !important;
+  border-radius: 0 !important;
+  clip-path: polygon(
+    0 var(--trae-skin-banner-corner-cut),
+    var(--trae-skin-banner-corner-cut) 0,
+    calc(100% - var(--trae-skin-banner-corner-cut)) 0,
+    100% var(--trae-skin-banner-corner-cut),
+    100% calc(100% - var(--trae-skin-banner-corner-cut)),
+    calc(100% - var(--trae-skin-banner-corner-cut)) 100%,
+    var(--trae-skin-banner-corner-cut) 100%,
+    0 calc(100% - var(--trae-skin-banner-corner-cut))
+  ) !important;
+  box-shadow: var(--trae-skin-banner-shadow) !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"]::before {
+  content: var(--trae-skin-banner-current-code) "  /  " var(--trae-skin-banner-current-label);
+  position: absolute;
+  top: 9px;
+  left: 30px;
+  color: var(--trae-skin-banner-muted);
+  font: 700 9px/1 var(--trae-skin-font-code);
+  letter-spacing: 0.16em;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"]::after {
+  content: "●  " var(--trae-skin-banner-status);
+  position: absolute;
+  top: 8px;
+  right: 30px;
+  color: var(--trae-skin-banner-status-color);
+  font: 700 9px/1 var(--trae-skin-font-code);
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 9px color-mix(in srgb, var(--trae-skin-banner-status-color) 55%, transparent);
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="animationContainer-"] {
+  align-items: stretch !important;
+  width: 100% !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="mainTextContainer-"] {
+  justify-content: flex-start !important;
+  width: 100% !important;
+  column-gap: 16px !important;
+  font-family: var(--trae-skin-font-heading) !important;
+  font-size: 30px !important;
+  font-weight: var(--trae-skin-heading-weight) !important;
+  letter-spacing: var(--trae-skin-heading-spacing) !important;
+  line-height: 1.1 !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="mainTextContainer-"] > [class*="icon-"] {
+  display: inline-grid !important;
+  flex: 0 0 var(--trae-skin-banner-icon-size) !important;
+  width: var(--trae-skin-banner-icon-size) !important;
+  height: var(--trae-skin-banner-icon-size) !important;
+  place-items: center !important;
+  color: var(--trae-skin-banner-accent) !important;
+  background: color-mix(in srgb, var(--trae-skin-banner-border) 24%, transparent) !important;
+  border: 1px solid var(--trae-skin-banner-border) !important;
+  clip-path: polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%) !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="mainTextContainer-"] > [class*="icon-"] svg {
+  width: 62% !important;
+  height: 62% !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="workText-"],
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="codeText-"],
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="designText-"] {
+  color: var(--trae-skin-banner-text) !important;
+}
+body.trae-skin-v3[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="withTraeText-"] {
+  align-self: flex-end !important;
+  margin-bottom: 4px !important;
+  color: var(--trae-skin-banner-muted) !important;
+  font: 600 11px/1 var(--trae-skin-font-code) !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+}
+
+/* V3 components.navigation.modeTabs — launch-rail */
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn {
+  box-sizing: border-box !important;
+  height: var(--trae-skin-mode-tabs-height) !important;
+  padding: 3px !important;
+  gap: var(--trae-skin-mode-tabs-gap) !important;
+  background: var(--trae-skin-mode-tabs-track) !important;
+  border: 1px solid var(--trae-skin-mode-tabs-border) !important;
+  border-radius: 0 !important;
+  clip-path: polygon(
+    0 var(--trae-skin-mode-tabs-corner-cut),
+    var(--trae-skin-mode-tabs-corner-cut) 0,
+    calc(100% - var(--trae-skin-mode-tabs-corner-cut)) 0,
+    100% var(--trae-skin-mode-tabs-corner-cut),
+    100% 100%, 0 100%
+  ) !important;
+  box-shadow: var(--trae-skin-mode-tabs-shadow) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"] {
+  top: 3px !important;
+  left: 3px !important;
+  width: var(--trae-skin-mode-tabs-tab-width) !important;
+  height: calc(var(--trae-skin-mode-tabs-height) - 8px) !important;
+  background:
+    linear-gradient(110deg, var(--trae-skin-mode-tabs-indicator) 0 78%, var(--trae-skin-mode-tabs-accent) 78% 100%) !important;
+  border: 1px solid color-mix(in srgb, var(--trae-skin-mode-tabs-accent) 52%, var(--trae-skin-mode-tabs-border)) !important;
+  border-radius: 0 !important;
+  clip-path: polygon(0 7px, 7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%) !important;
+  box-shadow: inset 3px 0 var(--trae-skin-mode-tabs-accent) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn:has(> span:nth-of-type(2) button[aria-selected="true"]) [class*="indicator-"] {
+  left: calc(3px + var(--trae-skin-mode-tabs-tab-width) + var(--trae-skin-mode-tabs-gap)) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn:has(> span:nth-of-type(3) button[aria-selected="true"]) [class*="indicator-"] {
+  left: calc(3px + var(--trae-skin-mode-tabs-tab-width) + var(--trae-skin-mode-tabs-gap) + var(--trae-skin-mode-tabs-tab-width) + var(--trae-skin-mode-tabs-gap)) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn > span {
+  flex: 0 0 var(--trae-skin-mode-tabs-tab-width) !important;
+  width: var(--trae-skin-mode-tabs-tab-width) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"] {
+  box-sizing: border-box !important;
+  flex: 0 0 var(--trae-skin-mode-tabs-tab-width) !important;
+  width: var(--trae-skin-mode-tabs-tab-width) !important;
+  height: calc(var(--trae-skin-mode-tabs-height) - 8px) !important;
+  padding: 2px 7px !important;
+  color: var(--trae-skin-mode-tabs-inactive-text) !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  font: 600 12px/1 var(--trae-skin-font-ui) !important;
+  letter-spacing: 0.01em !important;
+  transition: color 150ms ease, transform 150ms ease, background 150ms ease !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"]:hover:not([aria-selected="true"]) {
+  color: var(--trae-skin-mode-tabs-active-text) !important;
+  background: var(--trae-skin-mode-tabs-hover) !important;
+  transform: translateY(-1px) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"][aria-selected="true"] {
+  color: var(--trae-skin-mode-tabs-active-text) !important;
+  background: transparent !important;
+  text-shadow: 0 0 8px color-mix(in srgb, var(--trae-skin-mode-tabs-accent) 48%, transparent) !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tab-icons="always"] .mode-switcher-btn [class*="tabIcon-"] {
+  width: 16px !important;
+  margin-right: 5px !important;
+  opacity: 0.68 !important;
+  transform: none !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tab-icons="always"] .mode-switcher-btn button[aria-selected="true"] [class*="tabIcon-"] {
+  color: var(--trae-skin-mode-tabs-accent) !important;
+  opacity: 1 !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tab-icons="never"] .mode-switcher-btn [class*="tabIcon-"] {
+  display: none !important;
+}
+body.trae-skin-v3[data-trae-skin-mode-tab-codes="true"] .mode-switcher-btn button[role="tab"]::after {
+  margin-left: 5px;
+  color: var(--trae-skin-mode-tabs-accent);
+  font: 700 7px/1 var(--trae-skin-font-code);
+  letter-spacing: 0.08em;
+  opacity: 0.72;
+}
+body.trae-skin-v3[data-trae-skin-mode-tab-codes="true"] .mode-switcher-btn > span:nth-of-type(1) button[role="tab"]::after { content: var(--trae-skin-mode-tabs-code-work); }
+body.trae-skin-v3[data-trae-skin-mode-tab-codes="true"] .mode-switcher-btn > span:nth-of-type(2) button[role="tab"]::after { content: var(--trae-skin-mode-tabs-code-code); }
+body.trae-skin-v3[data-trae-skin-mode-tab-codes="true"] .mode-switcher-btn > span:nth-of-type(3) button[role="tab"]::after { content: var(--trae-skin-mode-tabs-code-design); }
+
 body.trae-skin-theme-xianzhou-luofu .task-list-panel svg,
 body.trae-skin-theme-xianzhou-luofu .solo-lite-main-area svg {
   filter: drop-shadow(0 0 4px #6fc8bd52);
@@ -731,12 +933,6 @@ body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container td {
 body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container tr:hover td {
   background: rgba(182, 245, 44, 0.06) !important;
 }
-body.trae-skin-theme-eva-01 button[role="tab"][aria-selected="true"] {
-  color: var(--trae-skin-accent) !important;
-  background: linear-gradient(90deg, rgba(105, 59, 133, 0.38), rgba(182, 245, 44, 0.08)) !important;
-  border-bottom-color: rgba(182, 245, 44, 0.72) !important;
-}
-
 /* EVA-01 输入控制台：紫色承载结构，绿色只标识可操作状态 */
 body.trae-skin-theme-eva-01 .messageInputContainer {
   --eva-console-purple: #9f62c0;
@@ -875,35 +1071,98 @@ body.trae-skin-theme-eva-01 .core-model-select-trigger-arrow {
 }
 body.trae-skin-theme-eva-01 .chat-input-v2-send-button {
   position: relative !important;
-  width: 34px !important;
-  height: 34px !important;
-  margin-left: 4px !important;
-  border: 1px solid rgba(182, 245, 44, 0.82) !important;
+  flex: 0 0 86px !important;
+  width: 86px !important;
+  height: 36px !important;
+  margin-left: 8px !important;
+  padding: 0 !important;
+  border: 1px solid #b6f52c !important;
   border-radius: 0 !important;
-  color: #111606 !important;
-  background: var(--eva-console-green) !important;
-  clip-path: polygon(0 9px, 9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%) !important;
-  box-shadow: inset 0 0 0 2px rgba(11, 9, 13, 0.28), 0 0 14px rgba(182, 245, 44, 0.2) !important;
+  color: #101505 !important;
+  font-size: 0 !important;
+  background:
+    linear-gradient(110deg, #b6f52c 0 70%, #6e3d83 70% 100%) !important;
+  clip-path: polygon(0 11px, 11px 0, 100% 0, 100% 25px, 75px 36px, 0 36px) !important;
+  box-shadow:
+    inset 0 0 0 2px rgba(11, 9, 13, 0.3),
+    inset -25px 0 rgba(22, 11, 28, 0.18),
+    0 0 16px rgba(182, 245, 44, 0.24) !important;
+  overflow: hidden !important;
+  transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 150ms ease, filter 150ms ease !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-send-button > span,
+body.trae-skin-theme-eva-01 .chat-input-v2-send-button > svg {
+  opacity: 0 !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-send-button::before {
+  content: "LAUNCH";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #101505;
+  font: 800 10px/1 "JetBrains Mono", "SFMono-Regular", monospace;
+  letter-spacing: 0.12em;
+  text-shadow: 0 1px rgba(255, 255, 255, 0.24);
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-send-button::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 13px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #d8ff7b;
+  border-right: 2px solid #d8ff7b;
+  transform: rotate(-45deg);
+  filter: drop-shadow(0 0 4px rgba(182, 245, 44, 0.7));
 }
 body.trae-skin-theme-eva-01 .chat-input-v2-send-button:hover:not(.disabled) {
-  background: #cbff5c !important;
-  transform: translateY(-1px) !important;
-  box-shadow: inset 0 0 0 2px rgba(11, 9, 13, 0.24), 0 0 20px rgba(182, 245, 44, 0.38) !important;
+  filter: brightness(1.08) saturate(1.08) !important;
+  transform: translateY(-2px) !important;
+  box-shadow:
+    inset 0 0 0 2px rgba(11, 9, 13, 0.22),
+    inset -25px 0 rgba(22, 11, 28, 0.12),
+    0 7px 0 rgba(59, 31, 70, 0.85),
+    0 0 24px rgba(182, 245, 44, 0.42) !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-send-button:active:not(.disabled) {
+  transform: translateY(2px) scale(0.985) !important;
+  box-shadow: inset 0 0 0 2px rgba(11, 9, 13, 0.3), 0 1px 0 rgba(59, 31, 70, 0.9) !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-send-button:focus-visible {
+  outline: 0 !important;
+  box-shadow: 0 0 0 2px #0b090d, 0 0 0 4px #b6f52c, 0 0 22px rgba(182, 245, 44, 0.38) !important;
 }
 body.trae-skin-theme-eva-01 .chat-input-v2-send-button.disabled {
-  color: rgba(213, 227, 186, 0.52) !important;
-  border-color: rgba(159, 98, 192, 0.4) !important;
-  background: linear-gradient(135deg, rgba(79, 45, 93, 0.9), rgba(37, 26, 41, 0.94)) !important;
-  box-shadow: inset 0 0 0 1px rgba(182, 245, 44, 0.08) !important;
+  border-color: rgba(159, 98, 192, 0.62) !important;
+  background:
+    repeating-linear-gradient(135deg, transparent 0 7px, rgba(159, 98, 192, 0.06) 7px 8px),
+    #211628 !important;
+  box-shadow: inset 0 0 0 2px rgba(8, 7, 9, 0.4), inset -25px 0 rgba(159, 98, 192, 0.12) !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-send-button.disabled::before {
+  content: "STANDBY";
+  color: #b9a7bf;
+  text-shadow: none;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-send-button.disabled::after {
+  right: 15px;
+  top: 16px;
+  width: 4px;
+  height: 4px;
+  border: 0;
+  border-radius: 50%;
+  background: #b6f52c;
+  box-shadow: 0 0 7px rgba(182, 245, 44, 0.65);
+  transform: none;
+  opacity: 0.58;
+}
+body.trae-skin-theme-eva-01 .messageInputEditorWrapper:has(.chat-input-v2-send-button:not(.disabled))::after {
+  content: "ARMED";
 }
 
-/* 把紫绿语言延伸到导航、任务和正文交互，避免只集中在背景 */
-body.trae-skin-theme-eva-01 .tab-pLFRtu.active,
-body.trae-skin-theme-eva-01 .tab-pLFRtu[aria-selected="true"] {
-  color: var(--eva-console-green, #b6f52c) !important;
-  background: rgba(52, 31, 61, 0.88) !important;
-  box-shadow: inset 3px 0 #9f62c0, inset 0 -2px #b6f52c !important;
-}
+/* 把紫绿语言延伸到任务和正文交互，模式 Tab 由 V3 components.navigation.modeTabs 驱动 */
 body.trae-skin-theme-eva-01 .task-list-panel [class*="selected"],
 body.trae-skin-theme-eva-01 .task-list-panel [aria-selected="true"] {
   color: #f0ebec !important;
@@ -1272,6 +1531,7 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     if (value == null || value === "") return fallback;
     return typeof value === "number" ? `${value}px` : String(value);
   };
+  const asCssString = (value, fallback = "") => JSON.stringify(String(value ?? fallback));
   const withAlpha = (color, opacity) => {
     const alpha = asNumber(opacity, 1, 0, 1);
     const match = /^#([0-9a-f]{6})$/i.exec(String(color || ""));
@@ -1303,6 +1563,14 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
         document.documentElement.style.removeProperty(name);
       }
       window.__TRAE_DREAM_SKIN_HTML_VARS__ = null;
+    }
+    if (document.body) {
+      for (const key of [
+        "traeSkinLandingBanner",
+        "traeSkinModeTabs",
+        "traeSkinModeTabIcons",
+        "traeSkinModeTabCodes",
+      ]) delete document.body.dataset[key];
     }
   };
   const setSurface = (name, config, fallbackColor, fallbackOpacity, fallbackBlur) => {
@@ -1466,6 +1734,9 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     const popoverC = components.popover || {};
     const settingsC = components.settings || {};
     const decorations = settings.decorations || {};
+    const componentRoles = COMPONENT_MAP.deriveComponents(components, { accent, surface, text, border, state });
+    const bannerC = componentRoles.banner;
+    const modeTabsC = componentRoles.modeTabs;
 
     document.body.classList.toggle("trae-skin-effects-max", effects.mode === "max");
 
@@ -1552,6 +1823,43 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     setVar("--trae-skin-settings-control", settingsC.control || surface.input);
     setVar("--trae-skin-settings-active", settingsC.active || accent.subtle);
 
+    document.body.dataset.traeSkinLandingBanner = bannerC.variant;
+    document.body.dataset.traeSkinModeTabs = modeTabsC.variant;
+    document.body.dataset.traeSkinModeTabIcons = modeTabsC.content.iconPolicy;
+    document.body.dataset.traeSkinModeTabCodes = String(modeTabsC.content.showModeCode);
+    setVar("--trae-skin-banner-surface", bannerC.colors.surface);
+    setVar("--trae-skin-banner-border", bannerC.colors.border);
+    setVar("--trae-skin-banner-accent", bannerC.colors.accent);
+    setVar("--trae-skin-banner-text", bannerC.colors.text);
+    setVar("--trae-skin-banner-muted", bannerC.colors.muted);
+    setVar("--trae-skin-banner-status-color", bannerC.colors.status);
+    setVar("--trae-skin-banner-shadow", bannerC.effects.shadow);
+    setVar("--trae-skin-banner-corner-cut", `${bannerC.metrics.cornerCutPx}px`);
+    setVar("--trae-skin-banner-max-width", `${bannerC.metrics.maxWidthPx}px`);
+    setVar("--trae-skin-banner-icon-size", `${bannerC.metrics.iconSizePx}px`);
+    setVar("--trae-skin-banner-code-work", asCssString(bannerC.content.modes.work.code));
+    setVar("--trae-skin-banner-code-code", asCssString(bannerC.content.modes.code.code));
+    setVar("--trae-skin-banner-code-design", asCssString(bannerC.content.modes.design.code));
+    setVar("--trae-skin-banner-label-work", asCssString(bannerC.content.modes.work.label));
+    setVar("--trae-skin-banner-label-code", asCssString(bannerC.content.modes.code.label));
+    setVar("--trae-skin-banner-label-design", asCssString(bannerC.content.modes.design.label));
+    setVar("--trae-skin-banner-status", asCssString(bannerC.content.statusText));
+    setVar("--trae-skin-mode-tabs-track", modeTabsC.colors.track);
+    setVar("--trae-skin-mode-tabs-border", modeTabsC.colors.border);
+    setVar("--trae-skin-mode-tabs-indicator", modeTabsC.colors.indicator);
+    setVar("--trae-skin-mode-tabs-accent", modeTabsC.colors.accent);
+    setVar("--trae-skin-mode-tabs-active-text", modeTabsC.colors.activeText);
+    setVar("--trae-skin-mode-tabs-inactive-text", modeTabsC.colors.inactiveText);
+    setVar("--trae-skin-mode-tabs-hover", modeTabsC.colors.hover);
+    setVar("--trae-skin-mode-tabs-shadow", modeTabsC.effects.shadow);
+    setVar("--trae-skin-mode-tabs-height", `${modeTabsC.metrics.heightPx}px`);
+    setVar("--trae-skin-mode-tabs-tab-width", `${modeTabsC.metrics.tabWidthPx}px`);
+    setVar("--trae-skin-mode-tabs-gap", `${modeTabsC.metrics.gapPx}px`);
+    setVar("--trae-skin-mode-tabs-corner-cut", `${modeTabsC.metrics.cornerCutPx}px`);
+    setVar("--trae-skin-mode-tabs-code-work", asCssString(modeTabsC.content.modes.work.code));
+    setVar("--trae-skin-mode-tabs-code-code", asCssString(modeTabsC.content.modes.code.code));
+    setVar("--trae-skin-mode-tabs-code-design", asCssString(modeTabsC.content.modes.design.code));
+
     // 侧栏/右栏装饰图（与 v2 extensions.decorations 同语义，v3 移到顶层 decorations）
     const setDecorationV3 = (name, asset, config, fallbackColor) => {
       if (!asset || !config) return;
@@ -1566,6 +1874,7 @@ body.trae-skin-v2 #${PANEL_ID} .ds-switch[aria-checked="true"]::after {
     setVar("--trae-skin-workbench-sidebar", withAlpha(surface.secondary, workbenchOpacity.sidebar ?? 0.72));
     setVar("--trae-skin-workbench-editor", withAlpha(surface.base, workbenchOpacity.editor ?? 0.76));
     setVar("--trae-skin-workbench-panel", withAlpha(surface.secondary, workbenchOpacity.panel ?? 0.72));
+    return componentRoles;
   };
 
   // ---------- v3：图标 glyph 替换（CSS mask，颜色跟随 currentColor） ----------
@@ -1633,15 +1942,26 @@ ${selector} {
     (document.head || document.documentElement).appendChild(scopeStyle);
 
     const roles = TOKEN_MAP.deriveRoles(tokens, { appearance });
-    setTraeSkinVarsV3(roles, settings, theme);
+    const componentRoles = setTraeSkinVarsV3(roles, settings, theme);
     const iconCount = applyIconOverrides(settings);
 
     document.body.classList.add("trae-skin-v2", "trae-skin-v3");
     document.body.classList.toggle("trae-skin-appearance-dark", appearance === "dark");
 
-    const warnings = TOKEN_MAP.auditContrast(tokens, { appearance });
+    const componentAudit = TOKEN_MAP.auditPairs(COMPONENT_MAP.getContrastPairs(componentRoles));
+    const warnings = [
+      ...TOKEN_MAP.auditContrast(tokens, { appearance }),
+      ...componentAudit.failures,
+    ];
     if (warnings.length) console.warn("[dream-skin] contrast warnings:", JSON.stringify(warnings));
-    return { contrastWarnings: warnings.length, iconOverrides: iconCount };
+    if (componentAudit.unverifiable.length) {
+      console.warn("[dream-skin] contrast unverifiable:", JSON.stringify(componentAudit.unverifiable));
+    }
+    return {
+      contrastWarnings: warnings.length,
+      contrastUnverifiable: componentAudit.unverifiable.length,
+      iconOverrides: iconCount,
+    };
   };
 
   const apply = (id) => {
