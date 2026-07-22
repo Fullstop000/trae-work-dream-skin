@@ -3,7 +3,9 @@
 # 停掉注入守护进程，不带调试参数正常重启 App（注入的 CSS 随页面生命周期消失）
 set -euo pipefail
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+SRC="${BASH_SOURCE[0]}"
+while [ -L "$SRC" ]; do SRC="$(/usr/bin/readlink "$SRC")"; done
+DIR="$(cd "$(dirname "$SRC")" && pwd -P)"
 APP_BUNDLE="${APP_BUNDLE:-/Applications/TRAE SOLO CN.app}"
 APP_BUNDLE_ID="${APP_BUNDLE_ID:-cn.trae.solo.app}"
 RUN_DIR="$DIR/run"

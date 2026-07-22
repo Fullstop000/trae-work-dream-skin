@@ -67,6 +67,30 @@ say "→ 已安装到 $INSTALL_DIR"
 /bin/chmod +x "$LAUNCHER"
 say "→ 桌面启动器: $LAUNCHER"
 
+# 4.5 twds 短命令（PATH 上的符号链接）
+TWDS_LINK=""
+for bindir in /usr/local/bin /opt/homebrew/bin "$HOME/.local/bin"; do
+  if [ "$bindir" = "$HOME/.local/bin" ]; then
+    /bin/mkdir -p "$bindir"
+    TWDS_LINK="$bindir/twds"
+    break
+  fi
+  if [ -d "$bindir" ] && [ -w "$bindir" ]; then
+    TWDS_LINK="$bindir/twds"
+    break
+  fi
+done
+if [ -n "$TWDS_LINK" ]; then
+  /bin/ln -sf "$INSTALL_DIR/dream-skin.command" "$TWDS_LINK"
+  say "→ 短命令已就绪: twds（${TWDS_LINK}）"
+  if [ "$TWDS_LINK" = "$HOME/.local/bin/twds" ]; then
+    case ":$PATH:" in
+      *":$HOME/.local/bin:"*) ;;
+      *) say "  提示：~/.local/bin 不在 PATH 中，请在 ~/.zshrc 加一行 export PATH=\"\$HOME/.local/bin:\$PATH\"" ;;
+    esac
+  fi
+fi
+
 # 5. 首次启用（退出并带皮肤重启 App）
 if [ "$LAUNCH_AFTER" = "true" ] && [ "$AUTO_YES" != "true" ]; then
   printf '现在启用皮肤吗？将会退出并重启 TRAE Work CN。[Y/n] '

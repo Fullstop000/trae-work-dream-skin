@@ -3,7 +3,9 @@
 # 退出目标 App → 带 CDP 调试参数重启 → 启动注入守护进程
 set -euo pipefail
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+SRC="${BASH_SOURCE[0]}"
+while [ -L "$SRC" ]; do SRC="$(/usr/bin/readlink "$SRC")"; done
+DIR="$(cd "$(dirname "$SRC")" && pwd -P)"
 PORT="${PORT:-19527}"
 APP_BUNDLE="${APP_BUNDLE:-/Applications/TRAE SOLO CN.app}"
 APP_BUNDLE_ID="${APP_BUNDLE_ID:-cn.trae.solo.app}"

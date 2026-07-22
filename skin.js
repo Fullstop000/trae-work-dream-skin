@@ -645,6 +645,293 @@ body.trae-skin-theme-eva-01-light.trae-skin-effects-max h3 {
   color: #271d30 !important;
   text-shadow: none !important;
 }
+
+/* EVA 初号机 · 终局警报：张力留在边缘，正文区域保持安静 */
+body.trae-skin-theme-eva-01 .task-list-panel,
+body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container,
+body.trae-skin-theme-eva-01 .solo-lite-main-area,
+body.trae-skin-theme-eva-01 .panel-container > .panel-content {
+  border-color: rgba(157, 98, 189, 0.26) !important;
+}
+body.trae-skin-theme-eva-01 .task-list-panel {
+  backdrop-filter: blur(4px) saturate(1.08) !important;
+  -webkit-backdrop-filter: blur(4px) saturate(1.08) !important;
+}
+body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container {
+  backdrop-filter: blur(3px) saturate(1.08) !important;
+  -webkit-backdrop-filter: blur(3px) saturate(1.08) !important;
+}
+body.trae-skin-theme-eva-01 .solo-lite-main-area,
+body.trae-skin-theme-eva-01 .panel-container > .panel-content {
+  backdrop-filter: blur(18px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.12) !important;
+}
+body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container {
+  background: rgba(13, 11, 15, 0.54) !important;
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 -1px rgba(182, 245, 44, 0.13) !important;
+}
+body.trae-skin-theme-eva-01 .user-message__text-box {
+  color: var(--trae-skin-text-primary) !important;
+  background: rgba(42, 24, 48, 0.86) !important;
+  border: 1px solid rgba(135, 85, 163, 0.5) !important;
+  backdrop-filter: blur(12px) saturate(1.1) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(1.1) !important;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.36), inset 0 1px rgba(255, 255, 255, 0.05) !important;
+}
+body.trae-skin-theme-eva-01 .core-finish-card {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+body.trae-skin-theme-eva-01 .core-finish-card__code-card,
+body.trae-skin-theme-eva-01 [class*="recommendationCard"],
+body.trae-skin-theme-eva-01 [class*="card-QNuQ2F"] {
+  background: rgba(21, 18, 23, 0.82) !important;
+  border: 1px solid rgba(139, 91, 109, 0.28) !important;
+  backdrop-filter: blur(14px) saturate(1.08) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(1.08) !important;
+}
+body.trae-skin-theme-eva-01 [class*="messageInputContainer"],
+body.trae-skin-theme-eva-01 [class*="message-input"] {
+  background: rgba(11, 10, 12, 0.84) !important;
+  border: 1px solid rgba(182, 245, 44, 0.3) !important;
+  backdrop-filter: blur(16px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.12) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.48), inset 0 1px rgba(255, 255, 255, 0.05) !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-input-box-editable,
+body.trae-skin-theme-eva-01 .chat-input-v2-input-box-editable p {
+  color: var(--trae-skin-text-primary) !important;
+  caret-color: var(--trae-skin-accent) !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-placeholder {
+  color: var(--trae-skin-text-disabled) !important;
+}
+body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container table {
+  overflow: hidden !important;
+  border: 1px solid rgba(139, 91, 109, 0.3) !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  background: rgba(15, 13, 17, 0.8) !important;
+  backdrop-filter: blur(12px) saturate(1.08) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(1.08) !important;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.3) !important;
+}
+body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container th {
+  color: var(--trae-skin-text-primary) !important;
+  background: rgba(106, 61, 132, 0.34) !important;
+  border-color: rgba(157, 98, 189, 0.3) !important;
+}
+body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container td {
+  background: rgba(10, 9, 11, 0.18) !important;
+  border-color: rgba(139, 91, 109, 0.2) !important;
+}
+body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container tr:hover td {
+  background: rgba(182, 245, 44, 0.06) !important;
+}
+body.trae-skin-theme-eva-01 button[role="tab"][aria-selected="true"] {
+  color: var(--trae-skin-accent) !important;
+  background: linear-gradient(90deg, rgba(105, 59, 133, 0.38), rgba(182, 245, 44, 0.08)) !important;
+  border-bottom-color: rgba(182, 245, 44, 0.72) !important;
+}
+
+/* EVA-01 输入控制台：紫色承载结构，绿色只标识可操作状态 */
+body.trae-skin-theme-eva-01 .messageInputContainer {
+  --eva-console-purple: #9f62c0;
+  --eva-console-purple-deep: #3a2048;
+  --eva-console-green: #b6f52c;
+  --eva-console-black: #0b090d;
+  position: relative !important;
+  isolation: isolate !important;
+}
+body.trae-skin-theme-eva-01 .messageInputEditorWrapper {
+  position: relative !important;
+  box-sizing: border-box !important;
+  padding: 2px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background:
+    linear-gradient(90deg,
+      var(--eva-console-purple) 0 22%,
+      rgba(159, 98, 192, 0.2) 22% 66%,
+      var(--eva-console-green) 66% 100%) !important;
+  clip-path: polygon(0 15px, 15px 0, calc(100% - 48px) 0, calc(100% - 36px) 12px, 100% 12px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 30px 100%, 18px calc(100% - 12px), 0 calc(100% - 12px)) !important;
+  filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.52)) !important;
+  transition: filter 180ms ease, background 180ms ease !important;
+}
+body.trae-skin-theme-eva-01 .messageInputEditorWrapper::before {
+  content: "EVA-01  /  ENTRY LINK";
+  position: absolute;
+  z-index: 5;
+  top: 4px;
+  left: 24px;
+  color: rgba(229, 206, 239, 0.82);
+  font: 650 9px/1 "JetBrains Mono", "SFMono-Regular", monospace;
+  letter-spacing: 0.15em;
+  pointer-events: none;
+}
+body.trae-skin-theme-eva-01 .messageInputEditorWrapper::after {
+  content: "SYNC";
+  position: absolute;
+  z-index: 5;
+  top: 3px;
+  right: 48px;
+  padding-left: 13px;
+  color: var(--eva-console-green);
+  font: 700 9px/1.2 "JetBrains Mono", "SFMono-Regular", monospace;
+  letter-spacing: 0.12em;
+  background: radial-gradient(circle at 4px 50%, var(--eva-console-green) 0 2px, transparent 2.5px);
+  text-shadow: 0 0 10px rgba(182, 245, 44, 0.5);
+  pointer-events: none;
+}
+body.trae-skin-theme-eva-01 .messageInputEditorWrapper:has(.chat-input-v2-input-box-editable:focus) {
+  background: linear-gradient(90deg, var(--eva-console-purple) 0 52%, var(--eva-console-green) 52% 100%) !important;
+  filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.56)) drop-shadow(0 0 10px rgba(182, 245, 44, 0.14)) !important;
+}
+body.trae-skin-theme-eva-01 .messageInputChatInput {
+  overflow: hidden !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: linear-gradient(112deg, rgba(22, 13, 27, 0.98), rgba(10, 9, 12, 0.96) 62%, rgba(27, 18, 31, 0.98)) !important;
+  clip-path: polygon(0 14px, 14px 0, calc(100% - 47px) 0, calc(100% - 35px) 12px, 100% 12px, 100% calc(100% - 13px), calc(100% - 13px) 100%, 29px 100%, 17px calc(100% - 12px), 0 calc(100% - 12px)) !important;
+  box-shadow: inset 0 0 0 1px rgba(226, 202, 239, 0.05) !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-editor-part {
+  position: relative !important;
+  padding: 24px 16px 0 20px !important;
+  background:
+    linear-gradient(90deg, rgba(108, 60, 134, 0.26), transparent 18%),
+    repeating-linear-gradient(135deg, transparent 0 12px, rgba(159, 98, 192, 0.025) 12px 13px) !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-editor-part::before {
+  content: "";
+  position: absolute;
+  top: 30px;
+  bottom: 44px;
+  left: 8px;
+  width: 4px;
+  background: linear-gradient(to bottom, var(--eva-console-purple) 0 68%, transparent 68% 76%, var(--eva-console-green) 76% 100%);
+  box-shadow: 0 0 12px rgba(159, 98, 192, 0.28);
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-input-box-wrapper {
+  min-height: 52px !important;
+  padding: 3px 4px 6px !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-placeholder {
+  max-width: calc(100% - 38px) !important;
+  color: #918493 !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-editor-part-lower-content {
+  min-height: 42px !important;
+  margin: 0 -16px 0 -20px !important;
+  padding: 7px 12px 7px 18px !important;
+  border-top: 1px solid rgba(159, 98, 192, 0.32) !important;
+  background:
+    linear-gradient(90deg, rgba(79, 39, 96, 0.46), rgba(14, 11, 16, 0.84) 38%, rgba(30, 25, 22, 0.82)) !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.025) !important;
+}
+body.trae-skin-theme-eva-01 .messageInputToolbarIconBtn,
+body.trae-skin-theme-eva-01 .rtcVoicePluginButton,
+body.trae-skin-theme-eva-01 .voiceCallButton {
+  position: relative !important;
+  width: 28px !important;
+  height: 28px !important;
+  border: 1px solid rgba(159, 98, 192, 0.28) !important;
+  border-radius: 0 !important;
+  color: #cbbbd0 !important;
+  background: rgba(40, 25, 47, 0.56) !important;
+  clip-path: polygon(0 6px, 6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%) !important;
+  transition: color 150ms ease, background 150ms ease, border-color 150ms ease, transform 150ms ease !important;
+}
+body.trae-skin-theme-eva-01 .messageInputToolbarIconBtn:hover,
+body.trae-skin-theme-eva-01 .rtcVoicePluginButton:hover,
+body.trae-skin-theme-eva-01 .voiceCallButton:hover {
+  color: var(--eva-console-green) !important;
+  border-color: rgba(182, 245, 44, 0.62) !important;
+  background: rgba(76, 44, 91, 0.78) !important;
+  transform: translateY(-1px) !important;
+}
+body.trae-skin-theme-eva-01 .core-model-select-trigger {
+  min-height: 28px !important;
+  padding: 0 10px !important;
+  border: 1px solid rgba(159, 98, 192, 0.34) !important;
+  border-radius: 0 !important;
+  color: #d8cadc !important;
+  background: rgba(31, 21, 36, 0.72) !important;
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%) !important;
+}
+body.trae-skin-theme-eva-01 .core-model-select-trigger:hover,
+body.trae-skin-theme-eva-01 .core-model-select-trigger[aria-expanded="true"] {
+  color: var(--eva-console-green) !important;
+  border-color: rgba(182, 245, 44, 0.54) !important;
+  background: rgba(61, 36, 70, 0.86) !important;
+}
+body.trae-skin-theme-eva-01 .core-model-select-trigger-arrow {
+  color: var(--eva-console-purple) !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-send-button {
+  position: relative !important;
+  width: 34px !important;
+  height: 34px !important;
+  margin-left: 4px !important;
+  border: 1px solid rgba(182, 245, 44, 0.82) !important;
+  border-radius: 0 !important;
+  color: #111606 !important;
+  background: var(--eva-console-green) !important;
+  clip-path: polygon(0 9px, 9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%) !important;
+  box-shadow: inset 0 0 0 2px rgba(11, 9, 13, 0.28), 0 0 14px rgba(182, 245, 44, 0.2) !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-send-button:hover:not(.disabled) {
+  background: #cbff5c !important;
+  transform: translateY(-1px) !important;
+  box-shadow: inset 0 0 0 2px rgba(11, 9, 13, 0.24), 0 0 20px rgba(182, 245, 44, 0.38) !important;
+}
+body.trae-skin-theme-eva-01 .chat-input-v2-send-button.disabled {
+  color: rgba(213, 227, 186, 0.52) !important;
+  border-color: rgba(159, 98, 192, 0.4) !important;
+  background: linear-gradient(135deg, rgba(79, 45, 93, 0.9), rgba(37, 26, 41, 0.94)) !important;
+  box-shadow: inset 0 0 0 1px rgba(182, 245, 44, 0.08) !important;
+}
+
+/* 把紫绿语言延伸到导航、任务和正文交互，避免只集中在背景 */
+body.trae-skin-theme-eva-01 .tab-pLFRtu.active,
+body.trae-skin-theme-eva-01 .tab-pLFRtu[aria-selected="true"] {
+  color: var(--eva-console-green, #b6f52c) !important;
+  background: rgba(52, 31, 61, 0.88) !important;
+  box-shadow: inset 3px 0 #9f62c0, inset 0 -2px #b6f52c !important;
+}
+body.trae-skin-theme-eva-01 .task-list-panel [class*="selected"],
+body.trae-skin-theme-eva-01 .task-list-panel [aria-selected="true"] {
+  color: #f0ebec !important;
+  background: linear-gradient(90deg, rgba(111, 61, 135, 0.7), rgba(54, 30, 64, 0.5)) !important;
+  box-shadow: inset 3px 0 #b6f52c !important;
+}
+body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container a,
+body.trae-skin-theme-eva-01 .core-model-select-trigger-arrow,
+body.trae-skin-theme-eva-01 [class*="message-action"] button:hover {
+  color: #b6f52c !important;
+}
+body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container h2::after,
+body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container h3::after {
+  content: "";
+  display: inline-block;
+  width: 26px;
+  height: 3px;
+  margin-left: 9px;
+  vertical-align: middle;
+  background: linear-gradient(90deg, #9f62c0 0 68%, transparent 68% 76%, #b6f52c 76% 100%);
+  box-shadow: 0 0 8px rgba(159, 98, 192, 0.18);
+}
+body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container :not(pre) > code {
+  color: #e2d3e8 !important;
+  background: rgba(82, 47, 96, 0.48) !important;
+  border-bottom: 1px solid rgba(182, 245, 44, 0.42) !important;
+  border-radius: 0 !important;
+}
 body.trae-skin-blur-disabled .task-list-panel,
 body.trae-skin-blur-disabled .solo-lite-chat-panel-container,
 body.trae-skin-blur-disabled .solo-lite-main-area,

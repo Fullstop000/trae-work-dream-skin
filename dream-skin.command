@@ -10,7 +10,9 @@
 # 还原官方外观：./restore.sh
 set -euo pipefail
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+SRC="${BASH_SOURCE[0]}"
+while [ -L "$SRC" ]; do SRC="$(/usr/bin/readlink "$SRC")"; done
+DIR="$(cd "$(dirname "$SRC")" && pwd -P)"
 cd "$DIR"
 RUN_DIR="$DIR/run"
 PORT="$(cat "$RUN_DIR/port" 2>/dev/null || echo 19527)"

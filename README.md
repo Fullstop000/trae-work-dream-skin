@@ -13,7 +13,7 @@ bash trae-work-dream-skin-install.command   # 与双击等价
 ```
 
 安装器自动完成：环境检测（TRAE Work CN + Node.js 18+）→ 安装到 `~/.trae-work-dream-skin` →
-创建桌面启动器「TRAE Dream Skin.command」→ 询问是否启用（重启 App 生效）。
+创建桌面启动器和 `twds` 短命令（PATH 符号链接）→ 询问是否启用（重启 App 生效）。
 重新运行安装器即升级，主题选择保留。
 
 ## 使用
@@ -24,10 +24,10 @@ bash trae-work-dream-skin-install.command   # 与双击等价
 
 | 操作 | 命令 |
 |---|---|
-| 启用 / 刷新 | `~/.trae-work-dream-skin/dream-skin.command` |
-| 切换主题 | `dream-skin.command theme <id>` |
-| 主题列表 | `dream-skin.command themes` |
-| 图片设为自定义主题 | `dream-skin.command /path/to/图片.jpg` |
+| 启用 / 刷新 | `twds` |
+| 切换主题 | `twds theme <id>` |
+| 主题列表 | `twds themes` |
+| 图片设为自定义主题 | `twds /path/to/图片.jpg` |
 | 还原官方外观 | `~/.trae-work-dream-skin/restore.sh` |
 
 ## 主题
