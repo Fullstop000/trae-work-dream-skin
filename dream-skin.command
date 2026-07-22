@@ -44,6 +44,9 @@ list_themes() {
 }
 
 case "${1:-}" in
+  restore)
+    exec "$DIR/restore.sh"
+    ;;
   themes)
     list_themes
     ;;

@@ -28,7 +28,7 @@ bash trae-work-dream-skin-install.command   # 与双击等价
 | 切换主题 | `twds theme <id>` |
 | 主题列表 | `twds themes` |
 | 图片设为自定义主题 | `twds /path/to/图片.jpg` |
-| 还原官方外观 | `~/.trae-work-dream-skin/restore.sh` |
+| 还原官方外观 | `twds restore` |
 
 ## 主题
 
