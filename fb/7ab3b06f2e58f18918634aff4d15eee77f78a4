@@ -1,0 +1,21 @@
+dream-skin.command
+  s_5291ab27127984::t_57812414e11a66 47-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "fb7ab3b06f2e58f18918634aff4d15eee77f78a4",
+  "prompts": {},
+  "sessions": {
+    "s_5291ab27127984": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7f84-876a-7610-9b06-9cdfefaa1fab",
+        "model": "unknown"
+      },
+      "human_author": "Fullstop000 <fullstop1005@gmail.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
