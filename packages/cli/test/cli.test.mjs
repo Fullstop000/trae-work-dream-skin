@@ -34,13 +34,13 @@ function run(args, env = {}) {
 test("package metadata defines a public macOS CLI with an explicit payload", () => {
   const metadata = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, "package.json"), "utf8"));
   assert.equal(metadata.name, "twskin");
-  assert.equal(metadata.bin.twskin, "./dist/bin/twskin.js");
+  assert.equal(metadata.bin.twskin, "dist/bin/twskin.js");
   assert.deepEqual(Object.keys(metadata.bin), ["twskin"]);
   assert.equal(fs.existsSync(path.join(PACKAGE_ROOT, "dist/bin/twds.js")), false);
   assert.equal(metadata.engines.node, ">=22.0.0");
   assert.deepEqual(metadata.os, ["darwin"]);
   assert.equal(metadata.publishConfig.access, "public");
-  assert.equal(metadata.publishConfig.provenance, true);
+  assert.equal(metadata.publishConfig.provenance, undefined);
   assert.ok(metadata.files.includes("runtime/"));
   const context = createContext({
     ...process.env,

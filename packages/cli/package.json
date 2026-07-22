@@ -4,7 +4,7 @@
   "description": "An unofficial community theme manager and CLI for TRAE Work on macOS.",
   "type": "module",
   "bin": {
-    "twskin": "./dist/bin/twskin.js"
+    "twskin": "dist/bin/twskin.js"
   },
   "exports": {
     ".": {
@@ -60,8 +60,7 @@
   },
   "homepage": "https://github.com/Fullstop000/trae-work-dream-skin#readme",
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "dependencies": {
     "@clack/prompts": "^1.7.0"

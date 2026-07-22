@@ -27,7 +27,7 @@ function walk(directory) {
 }
 
 if (pkg.name !== "twskin") fail("unexpected package name");
-if (pkg.bin?.twskin !== "./dist/bin/twskin.js") fail("twskin bin mapping is missing");
+if (pkg.bin?.twskin !== "dist/bin/twskin.js") fail("twskin bin mapping is missing");
 if (!pkg.dependencies?.["@clack/prompts"]) fail("@clack/prompts runtime dependency is missing");
 if (pkg.files?.includes("src/") || pkg.files?.includes("bin/")) fail("TypeScript source or legacy bin directory leaked into the publish payload");
 if (pkg.engines?.node !== ">=22.0.0") fail("Node engine must track supported LTS releases");
