@@ -1,0 +1,21 @@
+skin.js
+  s_5291ab27127984::t_268dc93bf2dca9 878-883,885-922,925-939,942-966
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "ff86566ba4cf4b67bcc29500c873284c5d202860",
+  "prompts": {},
+  "sessions": {
+    "s_5291ab27127984": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7f84-876a-7610-9b06-9cdfefaa1fab",
+        "model": "unknown"
+      },
+      "human_author": "Fullstop000 <fullstop1005@gmail.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
