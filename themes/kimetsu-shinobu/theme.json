@@ -1,0 +1,233 @@
+{
+  "schemaVersion": 3,
+  "id": "kimetsu-shinobu",
+  "name": "鬼灭之刃 · 蝶影药庭",
+  "desc": "蝴蝶忍、虫之呼吸、紫藤毒理与蝶翼羽织交织的蟲柱主题",
+  "category": "动漫",
+  "appearance": "dark",
+  "background": {
+    "color": "#090a14",
+    "position": "center center",
+    "size": "cover",
+    "repeat": "no-repeat",
+    "blur": 0,
+    "brightness": 0.98,
+    "saturation": 1.04,
+    "overlay": {
+      "color": "#090913",
+      "opacity": 0.04
+    }
+  },
+  "surfaces": {
+    "colors": {
+      "left": "#0c0d18",
+      "chat": "#0e0f1b",
+      "main": "#11101d",
+      "landing": "#100f1c"
+    },
+    "opacity": {
+      "left": 0.68,
+      "chat": 0.82,
+      "main": 0.68,
+      "landing": 0.38
+    },
+    "blurPx": {
+      "left": 10,
+      "chat": 12,
+      "main": 8,
+      "landing": 10
+    },
+    "saturation": 1.1,
+    "gap": "#070711b8",
+    "divider": "#a983d44a"
+  },
+  "tokens": {
+    "accent": {
+      "base": "#b38bdd",
+      "hover": "#caa8ec",
+      "active": "#8f69bd",
+      "subtle": "#b38bdd2e",
+      "onAccent": "#120d1b",
+      "disabled": "#6f5a83"
+    },
+    "surface": {
+      "base": "#0a0b15",
+      "secondary": "#11111f",
+      "tertiary": "#1a1830",
+      "card": "#151426",
+      "cardHover": "#221d39",
+      "input": "#0c0c19",
+      "menu": "#121222",
+      "tooltip": "#1a1830",
+      "invert": "#eee9f2"
+    },
+    "text": {
+      "primary": "#eeeaf2",
+      "secondary": "#c9c0d4",
+      "tertiary": "#9d90ae",
+      "disabled": "#796f89"
+    },
+    "icons": {
+      "primary": "#ece6f2",
+      "secondary": "#b992df",
+      "tertiary": "#86b8ac",
+      "disabled": "#6f657e"
+    },
+    "border": {
+      "subtle": "#b38bdd30",
+      "default": "#a983d45c",
+      "strong": "#c7a9e29e",
+      "contrast": "#9ed0c3"
+    },
+    "state": {
+      "success": "#8cc9b7",
+      "warning": "#d8b678",
+      "error": "#e0798f",
+      "info": "#9dbfe0"
+    }
+  },
+  "typography": {
+    "ui": {
+      "family": "-apple-system, BlinkMacSystemFont, \"PingFang SC\", \"Hiragino Sans GB\", sans-serif"
+    },
+    "heading": {
+      "family": "\"Songti SC\", \"STSong\", \"Hiragino Mincho ProN\", serif",
+      "weight": 650,
+      "letterSpacing": "0.08em"
+    },
+    "code": {
+      "family": "\"JetBrains Mono\", \"SFMono-Regular\", monospace"
+    }
+  },
+  "shape": {
+    "radius": {
+      "small": 4,
+      "medium": 10,
+      "large": 18,
+      "pill": 999
+    },
+    "borderWidth": 1
+  },
+  "elevation": {
+    "card": "0 12px 32px #03030a80, inset 0 1px 0 #eeeafa0b",
+    "floating": "0 24px 64px #03030acc, 0 0 0 1px #b38bdd45",
+    "focusRing": "0 0 0 2px #090a14, 0 0 0 4px #b38bdd, 0 0 20px #b38bdd4d"
+  },
+  "scrollbar": {
+    "track": "#090a1480",
+    "thumb": "#77618f7a",
+    "thumbHover": "#b38bddb8",
+    "width": 7
+  },
+  "components": {
+    "chat": {
+      "userBubble": "#241b35ed",
+      "userBubbleBorder": "#b38bdd78",
+      "assistantMessage": "transparent",
+      "assistantMessageBorder": "transparent",
+      "assistantMessageShadow": "none",
+      "code": "#090a16ed",
+      "card": "#151426e8"
+    },
+    "popover": {
+      "background": "#121222f7",
+      "itemHover": "#b38bdd24",
+      "itemSelected": "#8cc9b72b"
+    },
+    "settings": {
+      "overlay": "#03030ad6",
+      "panel": "#111120fa",
+      "sidebar": "#0e0f1bf5",
+      "card": "#1a1830eb",
+      "control": "#0c0c19f2",
+      "active": "#b38bdd29"
+    },
+    "landing": {
+      "banner": {
+        "variant": "system-plate",
+        "colors": {
+          "surface": "#12101fee",
+          "border": "#b69bd696",
+          "accent": "#b38bdd",
+          "text": "#f2edf6",
+          "muted": "#ad9fba",
+          "status": "#9ed0c3"
+        },
+        "metrics": {
+          "cornerCutPx": 18,
+          "maxWidthPx": 560,
+          "iconSizePx": 54
+        },
+        "effects": {
+          "shadow": "none"
+        },
+        "content": {
+          "statusText": "蟲柱・藤毒調合中",
+          "modes": {
+            "work": { "code": "蝶ノ舞", "label": "蝶影任務" },
+            "code": { "code": "複眼六角", "label": "毒理調合" },
+            "design": { "code": "百足蛇腹", "label": "型谱绘制" }
+          }
+        }
+      }
+    },
+    "navigation": {
+      "modeTabs": {
+        "variant": "launch-rail",
+        "colors": {
+          "track": "#0c0c18ee",
+          "border": "#a983d46b",
+          "indicator": "#2c203f",
+          "accent": "#9ed0c3",
+          "activeText": "#f4eff8",
+          "inactiveText": "#b8adC4",
+          "hover": "#1d1830e8"
+        },
+        "metrics": {
+          "heightPx": 42,
+          "tabWidthPx": 94,
+          "gapPx": 4,
+          "cornerCutPx": 0
+        },
+        "effects": {
+          "shadow": "0 12px 32px #03030a8f, inset 0 1px #eeeafa08"
+        },
+        "content": {
+          "iconPolicy": "always",
+          "showModeCode": false,
+          "modes": {
+            "work": { "code": "蝶" },
+            "code": { "code": "蜂" },
+            "design": { "code": "蜻" }
+          }
+        }
+      }
+    }
+  },
+  "workbench": {
+    "opacity": {
+      "sidebar": 0.82,
+      "editor": 0.84,
+      "panel": 0.86
+    }
+  },
+  "effects": {
+    "mode": "standard",
+    "panelBlurEnabled": true,
+    "scanlineColor": "transparent",
+    "gridColor": "#b38bdd08",
+    "magenta": "#b38bdd",
+    "glow": "0 0 14px #b38bdd3d"
+  },
+  "decorations": {
+    "leftSidebar": {
+      "asset": "leftSidebar",
+      "position": "center top",
+      "size": "cover",
+      "overlay": {
+        "color": "#090a15",
+        "opacity": 0.25
+      }
+    }
+  }
+}
