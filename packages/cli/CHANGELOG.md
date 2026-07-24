@@ -5,6 +5,10 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+### Removed
+
+- Remove the misspelled `twskin unisntall` compatibility alias.
+
 ### Fixed
 
 - Return the restore control from `取消 / 确认恢复` to `恢复默认` after the user

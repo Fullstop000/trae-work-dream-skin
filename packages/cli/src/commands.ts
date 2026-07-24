@@ -83,9 +83,6 @@ Usage:
   twskin uninstall [--yes]     恢复外观并卸载 TRAE Work Skin
   twskin version               显示版本
   twskin help                  显示帮助
-
-Compatibility:
-  twskin unisntall             uninstall 的拼写兼容别名
 `;
 }
 

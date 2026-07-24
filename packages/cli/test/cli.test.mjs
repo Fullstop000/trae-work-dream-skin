@@ -101,7 +101,7 @@ test("an invalid theme is atomic and returns a stable machine error", () => {
   assert.equal(afterValue, before);
 });
 
-test("unknown commands, extra arguments and typo compatibility follow the contract", () => {
+test("unknown commands and extra arguments follow the contract", () => {
   const unknown = run(["wat"]);
   assert.equal(unknown.status, 2);
   assert.match(unknown.stderr, /未知命令/);
@@ -110,9 +110,9 @@ test("unknown commands, extra arguments and typo compatibility follow the contra
   assert.equal(extra.status, 2);
   assert.match(extra.stderr, /参数过多/);
 
-  const typoHelp = run(["unisntall", "--help"]);
-  assert.equal(typoHelp.status, 0);
-  assert.match(typoHelp.stdout, /twskin uninstall/);
+  const typo = run(["unisntall", "--json"]);
+  assert.equal(typo.status, 2);
+  assert.equal(JSON.parse(typo.stdout).error.code, "UNKNOWN_COMMAND");
 });
 
 test("doctor --json emits one valid error document when TRAE is missing", () => {

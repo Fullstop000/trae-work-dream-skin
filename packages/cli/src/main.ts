@@ -41,7 +41,7 @@ export async function run(argv: readonly string[] = process.argv.slice(2), envir
   try {
     parsed = parseArgs(argv);
     if (parsed.options.help) parsed.command = "help";
-    const knownCommands = new Set(["start", "status", "themes", "theme", "doctor", "restore", "uninstall", "unisntall", "version", "help"]);
+    const knownCommands = new Set(["start", "status", "themes", "theme", "doctor", "restore", "uninstall", "version", "help"]);
     if (!knownCommands.has(parsed.command)) throw new CliError("UNKNOWN_COMMAND", 2, `未知命令：${parsed.command}`, "运行 twskin help 查看用法。");
     const [first, ...rest] = parsed.args;
     if (parsed.command !== "theme" && parsed.command !== "help" && parsed.args.length) {
@@ -65,8 +65,7 @@ export async function run(argv: readonly string[] = process.argv.slice(2), envir
         break;
       case "doctor": await doctorCommand(context, parsed.options); break;
       case "restore": await restoreCommand(context, parsed.options); break;
-      case "uninstall":
-      case "unisntall": await uninstallCommand(context, parsed.options); break;
+      case "uninstall": await uninstallCommand(context, parsed.options); break;
       case "version": emit({ command: "version", version: context.packageVersion }, `twskin ${context.packageVersion}`, parsed.options.json); break;
       case "help": console.log(helpText(context).trimEnd()); break;
     }
