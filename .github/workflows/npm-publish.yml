@@ -1,11 +1,15 @@
 name: Publish CLI to npm
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Git tag to publish to npm
+        required: true
+        type: string
 
 permissions:
-  contents: write
+  contents: read
   id-token: write
 
 jobs:
@@ -14,6 +18,8 @@ jobs:
     environment: npm
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag }}
       - uses: actions/setup-node@v6
         with:
           node-version: 24
@@ -22,14 +28,11 @@ jobs:
       - run: npm ci --ignore-scripts
         working-directory: packages/cli
       - name: Verify release tag matches package version
-        run: test "${GITHUB_REF_NAME#v}" = "$(node -p "JSON.parse(require('fs').readFileSync('package.json')).version")"
-        working-directory: packages/cli
-      - name: Build official theme pack
-        run: npm run build:themes
-        working-directory: packages/cli
-      - name: Upload official theme pack to GitHub Release
-        run: gh release upload "$GITHUB_REF_NAME" dist/twskin-themes-"$GITHUB_REF_NAME".tar.gz dist/twskin-themes-"$GITHUB_REF_NAME".sha256 --clobber
         env:
-          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: test "${RELEASE_TAG#v}" = "$(node -p "JSON.parse(require('fs').readFileSync('package.json')).version")"
+        working-directory: packages/cli
+      - run: npm run build
+        working-directory: packages/cli
       - run: npm publish --access public --provenance
         working-directory: packages/cli
