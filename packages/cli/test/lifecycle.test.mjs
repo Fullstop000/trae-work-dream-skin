@@ -29,6 +29,7 @@ before(() => {
   fs.writeFileSync(path.join(RUNTIME, "themes/aurora/background.svg"), "<svg xmlns=\"http://www.w3.org/2000/svg\"/>");
   fs.writeFileSync(path.join(RUNTIME, "injector.mjs"), `
     if (process.argv.includes("--manager-status")) console.log(JSON.stringify({ ready: true, version: "0.5.2" }));
+    else if (process.argv.includes("--stop")) console.log(JSON.stringify({ ok: true, targets: 1, restoredTargets: 1 }));
     else if (process.argv.includes("--watch")) setInterval(() => {}, 1000);
   `);
   writeExecutable(path.join(RUNTIME, "restore.sh"), `#!/bin/bash
@@ -128,6 +129,17 @@ test("start repairs the manager once, then reports it as already running", async
     assert.equal(repeatedOutput.watcherPid, watcherPid);
     assert.equal(Number(fs.readFileSync(path.join(DATA, "run/injector.pid"), "utf8")), watcherPid);
     process.kill(watcherPid, 0);
+
+    const stopped = await runAsync(["stop", "--json"], { PORT: String(port) });
+    assert.equal(stopped.status, 0, stopped.stderr);
+    const stoppedOutput = JSON.parse(stopped.stdout);
+    assert.equal(stoppedOutput.command, "stop");
+    assert.equal(stoppedOutput.watcherStopped, true);
+    assert.equal(stoppedOutput.cdpReachable, true);
+    assert.equal(stoppedOutput.targets, 1);
+    assert.equal(stoppedOutput.restoredTargets, 1);
+    assert.equal(fs.existsSync(path.join(DATA, "run/injector.pid")), false);
+    watcherPid = null;
   } finally {
     await new Promise((resolve) => server.close(resolve));
   }

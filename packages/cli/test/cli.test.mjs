@@ -55,6 +55,7 @@ test("help and version expose the stable public command surface", () => {
   const help = run(["help"]);
   assert.equal(help.status, 0);
   assert.match(help.stdout, /twskin start \[--yes\]/);
+  assert.match(help.stdout, /twskin stop/);
   assert.match(help.stdout, /twskin uninstall/);
   assert.match(help.stdout, /twskin theme download \[id\]/);
   assert.match(help.stdout, /twskin theme load <directory>/);

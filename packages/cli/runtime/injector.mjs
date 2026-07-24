@@ -5,6 +5,7 @@
 //   node injector.mjs --once --port 19527            一次性注入所有页面 target
 //   node injector.mjs --watch --port 19527           常驻守护:新 target/导航/被清除时自动重注
 //   node injector.mjs --list --port 19527            列出 CDP target
+//   node injector.mjs --stop --port 19527            恢复原生外观并移除页面控制
 //   node injector.mjs --eval '<js>' --port 19527     在第一个页面 target 里执行表达式并打印结果
 //   node injector.mjs --manager-status --port 19527  在全部页面 target 中检查 Theme Manager
 //   node injector.mjs --shot out.png --port 19527    对第一个页面 target 截图
@@ -35,6 +36,7 @@ function parseArgs(argv) {
       case "--list": args.mode = "list"; break;
       case "--current": args.mode = "current"; break;
       case "--apply": args.mode = "apply"; args.applyId = argv[++i]; break;
+      case "--stop": args.mode = "stop"; break;
       case "--eval": args.mode = "eval"; args.evalExpr = argv[++i]; break;
       case "--manager-status": args.mode = "manager-status"; break;
       case "--shot": args.mode = "shot"; args.shotPath = argv[++i]; break;
@@ -308,6 +310,126 @@ async function cmdEval(args) {
   }
 }
 
+async function cmdStop(args) {
+  const targets = await listPageTargets(args.port, args.timeoutMs);
+  const expression = `(() => {
+    const prefix = "trae-dream-skin:";
+    const disabledKey = prefix + "disabled";
+    const saved = [];
+    try {
+      for (let index = 0; index < localStorage.length; index += 1) {
+        const key = localStorage.key(index);
+        if (key && key.startsWith(prefix) && key !== disabledKey) {
+          saved.push([key, localStorage.getItem(key)]);
+        }
+      }
+    } catch {}
+
+    try {
+      window.__TRAE_DREAM_SKIN_GALLERY__?.restoreNative?.();
+    } catch {}
+
+    try {
+      for (const [key, value] of saved) {
+        if (value !== null) localStorage.setItem(key, value);
+      }
+      localStorage.setItem(disabledKey, "true");
+    } catch {}
+
+    for (const observerKey of [
+      "__TRAE_DREAM_SKIN_OBS__",
+      "__TRAE_DREAM_SKIN_APPEARANCE_OBS__",
+    ]) {
+      try {
+        window[observerKey]?.disconnect?.();
+      } catch {}
+      window[observerKey] = null;
+    }
+
+    if (Array.isArray(window.__TRAE_DREAM_SKIN_HTML_VARS__)) {
+      for (const name of window.__TRAE_DREAM_SKIN_HTML_VARS__) {
+        document.documentElement.style.removeProperty(name);
+      }
+      window.__TRAE_DREAM_SKIN_HTML_VARS__ = null;
+    }
+    document.documentElement.style.removeProperty("--trae-skin-art");
+
+    const originalAppearance = window.__TRAE_DREAM_SKIN_ORIG_APPEARANCE__;
+    if (originalAppearance) {
+      if (originalAppearance.dataTheme == null) {
+        document.documentElement.removeAttribute("data-theme");
+      } else {
+        document.documentElement.setAttribute("data-theme", originalAppearance.dataTheme);
+      }
+    }
+    window.__TRAE_DREAM_SKIN_ORIG_APPEARANCE__ = null;
+
+    if (document.body) {
+      const semanticPrefixes = ["--bg-bg-", "--text-text-", "--icon-icon-", "--border-border-"];
+      for (const name of [...document.body.style]) {
+        if (name.startsWith("--trae-skin-") || semanticPrefixes.some((prefix) => name.startsWith(prefix))) {
+          document.body.style.removeProperty(name);
+        }
+      }
+      for (const className of [...document.body.classList]) {
+        if (className.startsWith("trae-skin-theme-")) document.body.classList.remove(className);
+      }
+      document.body.classList.remove(
+        "trae-skin-v2",
+        "trae-skin-v3",
+        "trae-skin-appearance-dark",
+        "trae-skin-effects-max",
+        "trae-skin-blur-disabled",
+      );
+      if (originalAppearance) {
+        document.body.classList.toggle("light", originalAppearance.light);
+        document.body.classList.toggle("vs-dark", originalAppearance.vsDark);
+      }
+      for (const key of [
+        "traeSkinLandingBanner",
+        "traeSkinModeTabs",
+        "traeSkinModeTabIcons",
+        "traeSkinModeTabCodes",
+      ]) delete document.body.dataset[key];
+    }
+
+    for (const id of [
+      "trae-dream-skin-style",
+      "trae-dream-skin-ui-style",
+      "trae-dream-skin-theme-style",
+      "trae-dream-skin-icons-style",
+      "trae-dream-skin-scope-style",
+      "trae-dream-skin-panel",
+      "trae-dream-skin-button",
+    ]) {
+      document.getElementById(id)?.remove();
+    }
+
+    window.__TRAE_DREAM_SKIN__ = null;
+    window.__TRAE_DREAM_SKIN_GALLERY__ = null;
+    return { ok: true };
+  })()`;
+
+  let restoredTargets = 0;
+  for (const target of targets) {
+    const session = await CdpSession.connect(target.webSocketDebuggerUrl, args.timeoutMs);
+    try {
+      const result = await session.send(
+        "Runtime.evaluate",
+        { expression, returnByValue: true, awaitPromise: true },
+        4000,
+      );
+      if (result.exceptionDetails) {
+        throw new Error(result.exceptionDetails.exception?.description || result.exceptionDetails.text);
+      }
+      if (result.result?.value?.ok) restoredTargets += 1;
+    } finally {
+      session.close();
+    }
+  }
+  console.log(JSON.stringify({ ok: true, targets: targets.length, restoredTargets }));
+}
+
 async function cmdManagerStatus(args) {
   const targets = await listPageTargets(args.port, args.timeoutMs);
   const expression = `(() => {
@@ -573,6 +695,7 @@ if (path.resolve(process.argv[1] || "") === fileURLToPath(import.meta.url)) {
   switch (args.mode) {
     case "list": await cmdList(args); break;
     case "eval": await cmdEval(args); break;
+    case "stop": await cmdStop(args); break;
     case "manager-status": await cmdManagerStatus(args); break;
     case "shot": await cmdShot(args); break;
     case "apply": await cmdApply(args, buildPayload(args)); break;

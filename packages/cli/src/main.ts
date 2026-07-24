@@ -6,6 +6,7 @@ import {
   loadThemeCommand,
   startCommand,
   statusCommand,
+  stopCommand,
   themeCommand,
   themesCommand,
   restoreCommand,
@@ -41,7 +42,7 @@ export async function run(argv: readonly string[] = process.argv.slice(2), envir
   try {
     parsed = parseArgs(argv);
     if (parsed.options.help) parsed.command = "help";
-    const knownCommands = new Set(["start", "status", "themes", "theme", "doctor", "restore", "uninstall", "version", "help"]);
+    const knownCommands = new Set(["start", "stop", "status", "themes", "theme", "doctor", "restore", "uninstall", "version", "help"]);
     if (!knownCommands.has(parsed.command)) throw new CliError("UNKNOWN_COMMAND", 2, `未知命令：${parsed.command}`, "运行 twskin help 查看用法。");
     const [first, ...rest] = parsed.args;
     if (parsed.command !== "theme" && parsed.command !== "help" && parsed.args.length) {
@@ -49,6 +50,7 @@ export async function run(argv: readonly string[] = process.argv.slice(2), envir
     }
     switch (parsed.command) {
       case "start": await startCommand(context, parsed.options); break;
+      case "stop": await stopCommand(context, parsed.options); break;
       case "status": await statusCommand(context, parsed.options); break;
       case "themes": themesCommand(context, parsed.options); break;
       case "theme":

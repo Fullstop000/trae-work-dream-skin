@@ -5,6 +5,11 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+### Added
+
+- Add `twskin stop` to stop the watcher and restore TRAE's native appearance
+  without quitting TRAE, while preserving the selected theme and its settings.
+
 ### Removed
 
 - Remove the misspelled `twskin unisntall` compatibility alias.

@@ -32,6 +32,7 @@ CLI package 的发布说明、贡献规范与主题分发决策位于 [`packages
 | 操作 | 命令 |
 |---|---|
 | 安装 / 启动 Theme Manager 与守护进程 | `twskin start` |
+| 停止 Skin 并恢复原生外观（不退出 TRAE） | `twskin stop` |
 | 查看运行状态 | `twskin status` |
 | 检查运行环境 | `twskin doctor` |
 | 切换主题 | `twskin theme <id>` |
@@ -43,7 +44,8 @@ CLI package 的发布说明、贡献规范与主题分发决策位于 [`packages
 | 查看版本 / 帮助 | `twskin version` / `twskin help` |
 
 `twskin theme <id>` 在 Theme Manager 运行时立即热切换；未运行时保存选择，
-下次执行 `twskin start` 时生效。`status`、`themes`、`doctor` 也支持 `--json`。
+下次执行 `twskin start` 时生效。`twskin stop` 会保留当前主题和调节值，之后
+再次执行 `twskin start` 即可恢复。`stop`、`status`、`themes`、`doctor` 也支持 `--json`。
 
 ## 主题
 

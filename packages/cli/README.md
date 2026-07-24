@@ -35,6 +35,7 @@ confirms that restart. Later starts use the local themes without downloading.
 
 ```text
 twskin start [--yes]         Initialize and start Theme Manager and its watcher
+twskin stop                  Stop Skin and restore native appearance without quitting TRAE
 twskin status [--json]       Show App, CDP, watcher and active-theme status
 twskin themes [--json]       List locally installed themes
 twskin theme <id>            Select a theme
@@ -48,7 +49,9 @@ twskin help                  Print command help
 ```
 
 `twskin theme <id>` applies immediately while Theme Manager is active. Otherwise
-the selection is saved and applied by the next `twskin start`.
+the selection is saved and applied by the next `twskin start`. `twskin stop`
+preserves the selected theme and its settings, so a later `twskin start` can
+restore them.
 
 ## Theme directory
 

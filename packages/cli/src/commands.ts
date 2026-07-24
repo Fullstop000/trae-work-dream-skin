@@ -73,6 +73,7 @@ export function helpText(context: CliContext): string {
 
 Usage:
   twskin start [--yes]         初始化并启动 Theme Manager 与守护进程
+  twskin stop                  停止 Skin 并恢复原生外观（不退出 TRAE）
   twskin status [--json]       查看 App、CDP、守护进程和当前主题
   twskin themes [--json]       列出本地主题
   twskin theme <id>            切换主题
@@ -254,6 +255,36 @@ export async function statusCommand(context: CliContext, options: CliOptions): P
     `当前主题 ${status.theme.id}${status.theme.valid ? "" : "（主题不存在）"}`,
   ].join("\n");
   emit({ command: "status", status }, human, options.json);
+}
+
+export async function stopCommand(context: CliContext, options: CliOptions): Promise<void> {
+  await withLock(context, "stop", async () => {
+    const port = readPort(context);
+    const cdpReachable = Boolean(await cdpVersion(port));
+    const watcherStopped = stopWatcher(context);
+    let targets = 0;
+    let restoredTargets = 0;
+
+    if (cdpReachable) {
+      const output = runInjector(context, ["--stop", "--port", String(port)]);
+      try {
+        const result = JSON.parse(output) as { targets?: unknown; restoredTargets?: unknown };
+        if (typeof result.targets === "number") targets = result.targets;
+        if (typeof result.restoredTargets === "number") restoredTargets = result.restoredTargets;
+      } catch {}
+    }
+
+    const human = cdpReachable
+      ? "TRAE Work Skin 已停止，TRAE Work 已恢复原生外观。"
+      : watcherStopped
+        ? "TRAE Work Skin 守护进程已停止；TRAE Work 当前未启用 CDP。"
+        : "TRAE Work Skin 已经处于停止状态。";
+    emit(
+      { command: "stop", watcherStopped, cdpReachable, targets, restoredTargets },
+      human,
+      options.json,
+    );
+  });
 }
 
 export function themesCommand(context: CliContext, options: CliOptions): void {
