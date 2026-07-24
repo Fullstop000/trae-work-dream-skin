@@ -5,6 +5,8 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-07-24
+
 ### Changed
 
 - Ask users to save their work and confirm before `twskin start` restarts a
