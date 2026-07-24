@@ -9,17 +9,19 @@
 //   node injector.mjs --manager-status --port 19527  在全部页面 target 中检查 Theme Manager
 //   node injector.mjs --shot out.png --port 19527    对第一个页面 target 截图
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
-const VERSION = "0.4.0";
+const VERSION = "0.5.0";
+const DATA_DIR = process.env.TWSKIN_DATA_DIR || path.join(os.homedir(), ".trae-work-skin");
 
 function parseArgs(argv) {
   const args = {
     mode: "once",
     port: 0,
-    themesDir: process.env.TWSKIN_THEMES_DIR || path.join(ROOT, "themes"),
+    themesDir: process.env.TWSKIN_THEMES_DIR || path.join(DATA_DIR, "themes"),
     defaultTheme: null,
     applyId: null,
     evalExpr: null,
@@ -53,7 +55,7 @@ function log(...parts) {
   console.log(`${new Date().toISOString()}`, ...parts);
 }
 
-const STATE_DIR = process.env.TWSKIN_STATE_DIR || path.join(ROOT, "run");
+const STATE_DIR = process.env.TWSKIN_STATE_DIR || path.join(DATA_DIR, "run");
 const THEME_CONF = path.join(STATE_DIR, "theme.conf");
 const PID_FILE = path.join(STATE_DIR, "injector.pid");
 const MAX_THEME_CSS_BYTES = 1024 * 1024;

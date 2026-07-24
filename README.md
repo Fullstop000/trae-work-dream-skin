@@ -48,7 +48,8 @@ CLI package 的发布说明、贡献规范与主题分发决策位于 [`packages
 
 极光 aurora · 日落 sunset · 深海 ocean · 雾林 forest · 樱夜 sakura · 墨 mono ·
 云海观星台 cloudsea · 暮沙驿站 duskdune · 月苔工坊 moonmoss · 黑曜机械师 obsidian ·
-霓虹城区 neon-district · 仙舟「罗浮」 xianzhou-luofu · 鬼灭之刃「墨刃日轮」 kimetsu-no-yaiba
+霓虹城区 neon-district · 仙舟「罗浮」 xianzhou-luofu · 鬼灭之刃「墨刃日轮」 kimetsu-no-yaiba ·
+鬼灭之刃「蝶影药庭」 kimetsu-shinobu
 
 主题按 `themes/<id>/` 组织（`theme.json` + `background.*` + 可选 `theme.css`、`icons/`、侧栏装饰图），
 分类 Tab 取自 `theme.json` 的 `category` 字段。主题协议（schema v3）：[docs/schema-v3.md](docs/schema-v3.md)。

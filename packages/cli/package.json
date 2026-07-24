@@ -1,6 +1,6 @@
 {
   "name": "twskin",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "An unofficial community theme manager and CLI for TRAE Work on macOS.",
   "type": "module",
   "bin": {

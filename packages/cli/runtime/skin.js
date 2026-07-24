@@ -14,6 +14,8 @@
   const LS_PREFIX = "trae-dream-skin:";
   const LS_KEY = `${LS_PREFIX}theme`;
   const BLUR_LS_PREFIX = `${LS_PREFIX}panel-blur:`;
+  const BRIGHTNESS_LS_PREFIX = `${LS_PREFIX}background-brightness:`;
+  const MAIN_OVERLAY_LS_PREFIX = `${LS_PREFIX}main-overlay-opacity:`;
   const DISABLED_KEY = `${LS_PREFIX}disabled`;
   const STYLE_ID = "trae-dream-skin-style";
   const UI_STYLE_ID = "trae-dream-skin-ui-style";
@@ -39,6 +41,8 @@
     }
     window.__TRAE_DREAM_SKIN_HTML_VARS__ = null;
   }
+  // 清理旧版/调试会话遗留在 <html> 上的背景，避免加载失败时串用旧资产。
+  document.documentElement.style.removeProperty("--trae-skin-art");
   window.__TRAE_DREAM_SKIN_APPEARANCE_OBS__?.disconnect?.();
   window.__TRAE_DREAM_SKIN_APPEARANCE_OBS__ = null;
   // 记录 App 原始外观（只在首次注入时记录一次，恢复默认时还原）
@@ -153,6 +157,7 @@
       }
       window.__TRAE_DREAM_SKIN_HTML_VARS__ = null;
     }
+    document.documentElement.style.removeProperty("--trae-skin-art");
     if (document.body) {
       for (const key of [
         "traeSkinLandingBanner",
@@ -206,6 +211,48 @@
     try {
       localStorage.setItem(`${BLUR_LS_PREFIX}${theme.id}`, String(Boolean(enabled)));
     } catch {}
+  };
+  const defaultBackgroundBrightness = (theme) => asNumber(
+    theme.settings?.background?.brightness,
+    1,
+    0,
+    2,
+  );
+  const backgroundBrightness = (theme) => {
+    const fallback = defaultBackgroundBrightness(theme);
+    try {
+      const saved = localStorage.getItem(`${BRIGHTNESS_LS_PREFIX}${theme.id}`);
+      return saved == null ? fallback : asNumber(saved, fallback, 0, 2);
+    } catch {
+      return fallback;
+    }
+  };
+  const saveBackgroundBrightness = (theme, value) => {
+    const next = asNumber(value, defaultBackgroundBrightness(theme), 0, 2);
+    try { localStorage.setItem(`${BRIGHTNESS_LS_PREFIX}${theme.id}`, String(next)); } catch {}
+    return next;
+  };
+  const resetBackgroundBrightness = (theme) => {
+    try { localStorage.removeItem(`${BRIGHTNESS_LS_PREFIX}${theme.id}`); } catch {}
+    return defaultBackgroundBrightness(theme);
+  };
+  const defaultMainOverlayOpacity = (theme) => asNumber(
+    theme.settings?.surfaces?.opacity?.chat ?? theme.settings?.surfaces?.opacity?.main,
+    0.68, 0, 1,
+  );
+  const mainOverlayOpacity = (theme) => {
+    try {
+      const saved = localStorage.getItem(`${MAIN_OVERLAY_LS_PREFIX}${theme.id}`);
+      return saved == null ? null : asNumber(saved, null, 0, 1);
+    } catch { return null; }
+  };
+  const saveMainOverlayOpacity = (theme, value) => {
+    const next = asNumber(value, defaultMainOverlayOpacity(theme), 0, 1);
+    try { localStorage.setItem(`${MAIN_OVERLAY_LS_PREFIX}${theme.id}`, String(next)); } catch {}
+    return next;
+  };
+  const resetMainOverlayOpacity = (theme) => {
+    try { localStorage.removeItem(`${MAIN_OVERLAY_LS_PREFIX}${theme.id}`); } catch {}
   };
   let ensureSelfHeal = () => {};
   let activeThemeClass = null;
@@ -265,10 +312,9 @@
   };
   let renderCurrentConfig = () => {};
   let renderBlurControl = () => {};
+  let renderBrightnessControl = () => {};
+  let renderMainOverlayControl = () => {};
 
-  // ---------- v3：外观握手 ----------
-  // 把 App 自己的主题开关（<html data-theme> + body .light/.vs-dark）翻到与皮肤一致，
-  // 让 App 的暗色样式表、icube 别名层、CSS module 颜色全部进入对应语境
   const setAppearance = (appearance) => {
     const root = document.documentElement;
     const wantDark = appearance === "dark";
@@ -281,7 +327,6 @@
     }
   };
 
-  // 用户在 App 设置里手动切主题时，v3 皮肤重断言自己的外观
   const ensureAppearanceObserver = () => {
     if (window.__TRAE_DREAM_SKIN_APPEARANCE_OBS__) return;
     const obs = new MutationObserver(() => {
@@ -302,7 +347,6 @@
     window.__TRAE_DREAM_SKIN_APPEARANCE_OBS__ = obs;
   };
 
-  // ---------- v3：--trae-skin-* 自有层（画廊 + 毛玻璃 + 特效），从角色推导 ----------
   const setTraeSkinVarsV3 = (roles, settings, theme) => {
     const { accent, surface, text, icons, border, state } = roles;
     const background = settings.background || {};
@@ -327,6 +371,8 @@
     const componentRoles = COMPONENT_MAP.deriveComponents(components, { accent, surface, text, border, state });
     const bannerC = componentRoles.banner;
     const modeTabsC = componentRoles.modeTabs;
+    const mainOverlay = mainOverlayOpacity(theme);
+    const centerOpacity = (fallback) => mainOverlay ?? fallback;
 
     document.body.classList.toggle("trae-skin-effects-max", effects.mode === "max");
 
@@ -335,7 +381,7 @@
     setVar("--trae-skin-background-size", background.size || "cover");
     setVar("--trae-skin-background-repeat", background.repeat || "no-repeat");
     setVar("--trae-skin-background-blur", asLength(background.blur, "0px"));
-    setVar("--trae-skin-background-brightness", asNumber(background.brightness, 1, 0, 2));
+    setVar("--trae-skin-background-brightness", backgroundBrightness(theme));
     setVar("--trae-skin-background-saturation", asNumber(background.saturation, 1, 0, 3));
     setVar("--trae-skin-background-scale", background.blur ? 1.035 : 1);
     setVar("--trae-skin-background-overlay", withAlpha(
@@ -344,14 +390,14 @@
     ));
 
     setSurface("left", { background: surfacesColors.left ?? surface.secondary, opacity: surfacesOpacity.left ?? 0.72, backdropBlur: surfacesBlur.left ?? 16, backdropSaturation: surfacesSaturation }, surface.secondary, 0.72, 16);
-    setSurface("chat", { background: surfacesColors.chat ?? surface.base, opacity: surfacesOpacity.chat ?? 0.72, backdropBlur: surfacesBlur.chat ?? 20, backdropSaturation: surfacesSaturation }, surface.base, 0.72, 20);
-    setSurface("main", { background: surfacesColors.main ?? surface.base, opacity: surfacesOpacity.main ?? 0.68, backdropBlur: surfacesBlur.main ?? 18, backdropSaturation: surfacesSaturation }, surface.base, 0.68, 18);
-    setSurface("landing", { background: surfacesColors.landing ?? surface.base, opacity: surfacesOpacity.landing ?? 0.68, backdropBlur: surfacesBlur.landing ?? 18, backdropSaturation: surfacesSaturation }, surface.base, 0.68, 18);
+    setSurface("chat", { background: surfacesColors.chat ?? surface.base, opacity: centerOpacity(surfacesOpacity.chat ?? 0.72), backdropBlur: surfacesBlur.chat ?? 20, backdropSaturation: surfacesSaturation }, surface.base, 0.72, 20);
+    setSurface("main", { background: surfacesColors.main ?? surface.base, opacity: centerOpacity(surfacesOpacity.main ?? 0.68), backdropBlur: surfacesBlur.main ?? 18, backdropSaturation: surfacesSaturation }, surface.base, 0.68, 18);
+    setSurface("landing", { background: surfacesColors.landing ?? surface.base, opacity: centerOpacity(surfacesOpacity.landing ?? 0.68), backdropBlur: surfacesBlur.landing ?? 18, backdropSaturation: surfacesSaturation }, surface.base, 0.68, 18);
+    setVar("--trae-skin-landing-overlay-opacity", centerOpacity(surfacesOpacity.landing ?? 0.68));
     setVar("--trae-skin-layout-gap", surfaces.gap || withAlpha(surface.secondary, 0.35));
     setVar("--trae-skin-divider", surfaces.divider || border.subtle);
-    // 静态样式里少数旧容器仍读这三个变量，统一从 chat 表面推导
-    setVar("--trae-skin-surface-light", surfacesOpacity.chat ?? 0.72);
-    setVar("--trae-skin-surface-dark", surfacesOpacity.chat ?? 0.72);
+    setVar("--trae-skin-surface-light", centerOpacity(surfacesOpacity.chat ?? 0.72));
+    setVar("--trae-skin-surface-dark", centerOpacity(surfacesOpacity.chat ?? 0.72));
     setVar("--trae-skin-blur", `${surfacesBlur.chat ?? 20}px`);
 
     setVar("--trae-skin-text-primary", text.primary);
@@ -462,7 +508,7 @@
     setDecorationV3("right", theme.assets?.rightPanel, decorations.rightPanel, surface.base);
 
     setVar("--trae-skin-workbench-sidebar", withAlpha(surface.secondary, workbenchOpacity.sidebar ?? 0.72));
-    setVar("--trae-skin-workbench-editor", withAlpha(surface.base, workbenchOpacity.editor ?? 0.76));
+    setVar("--trae-skin-workbench-editor", withAlpha(surface.base, centerOpacity(workbenchOpacity.editor ?? 0.76)));
     setVar("--trae-skin-workbench-panel", withAlpha(surface.secondary, workbenchOpacity.panel ?? 0.72));
     return componentRoles;
   };
@@ -572,6 +618,8 @@ ${selector} {
     document.body.classList.add(activeThemeClass);
     setVar("--trae-skin-art", `url("${theme.art}")`);
     const blurEnabled = panelBlurEnabled(theme);
+    const brightness = backgroundBrightness(theme);
+    const mainOverlay = mainOverlayOpacity(theme);
     document.body.classList.toggle("trae-skin-blur-disabled", !blurEnabled);
 
     const settings = theme.settings || {};
@@ -583,11 +631,15 @@ ${selector} {
     });
     renderCurrentConfig(theme);
     renderBlurControl(theme, blurEnabled);
+    renderBrightnessControl(theme, brightness);
+    renderMainOverlayControl(theme, mainOverlay);
     return {
       ok: true,
       id,
       schemaVersion: theme.settings?.schemaVersion || 1,
       panelBlurEnabled: blurEnabled,
+      backgroundBrightness: brightness,
+      mainOverlayOpacity: mainOverlay ?? defaultMainOverlayOpacity(theme),
       customCss: Boolean(theme.customCss),
       ...(v3Result || {}),
     };
@@ -657,6 +709,53 @@ ${selector} {
   blurSwitch.setAttribute("role", "switch");
   blurSwitch.setAttribute("aria-label", "面板模糊");
   blurRow.append(blurCopy, blurSwitch);
+  const brightnessRow = document.createElement("div");
+  brightnessRow.className = "ds-setting-row ds-setting-row-slider";
+  const brightnessHead = document.createElement("div");
+  brightnessHead.className = "ds-slider-head";
+  const brightnessCopy = document.createElement("div");
+  brightnessCopy.className = "ds-setting-copy";
+  const brightnessLabel = document.createElement("label");
+  brightnessLabel.className = "ds-setting-label";
+  brightnessLabel.htmlFor = "trae-dream-skin-brightness";
+  brightnessLabel.textContent = "背景亮度";
+  const brightnessDesc = document.createElement("div");
+  brightnessDesc.className = "ds-setting-desc";
+  brightnessDesc.textContent = "只调整壁纸，不改变面板与文字";
+  brightnessCopy.append(brightnessLabel, brightnessDesc);
+  const brightnessMeta = document.createElement("div");
+  brightnessMeta.className = "ds-slider-meta";
+  const brightnessValue = document.createElement("output");
+  brightnessValue.className = "ds-slider-value";
+  brightnessValue.setAttribute("for", "trae-dream-skin-brightness");
+  const brightnessReset = document.createElement("button");
+  brightnessReset.className = "ds-slider-reset";
+  brightnessReset.type = "button";
+  brightnessReset.textContent = "默认";
+  brightnessReset.title = "恢复当前主题的默认背景亮度";
+  brightnessMeta.append(brightnessValue, brightnessReset);
+  brightnessHead.append(brightnessCopy, brightnessMeta);
+  const brightnessRange = document.createElement("input");
+  brightnessRange.id = "trae-dream-skin-brightness";
+  brightnessRange.className = "ds-slider";
+  brightnessRange.type = "range";
+  brightnessRange.min = "0";
+  brightnessRange.max = "200";
+  brightnessRange.step = "1";
+  brightnessRange.setAttribute("aria-label", "背景亮度");
+  brightnessRow.append(brightnessHead, brightnessRange);
+  const mainOverlayRow = brightnessRow.cloneNode(true);
+  const mainOverlayRange = mainOverlayRow.querySelector("input");
+  const mainOverlayValue = mainOverlayRow.querySelector("output");
+  const mainOverlayReset = mainOverlayRow.querySelector("button");
+  const mainOverlayId = "trae-dream-skin-main-overlay";
+  mainOverlayRow.querySelector("label").htmlFor = mainOverlayId;
+  mainOverlayRow.querySelector("label").textContent = "主区域遮罩";
+  mainOverlayRow.querySelector(".ds-setting-desc").textContent = "调整中间工作区覆盖壁纸的透明度";
+  mainOverlayRange.id = mainOverlayId;
+  mainOverlayRange.max = "100";
+  mainOverlayRange.setAttribute("aria-label", "主区域遮罩透明度");
+  mainOverlayValue.setAttribute("for", mainOverlayId);
   const resetConfig = document.createElement("button");
   resetConfig.className = "ds-reset-config";
   resetConfig.type = "button";
@@ -670,7 +769,7 @@ ${selector} {
   resetActions.className = "ds-reset-actions";
   resetActions.append(resetCancel, resetConfig);
   configHead.append(configName, copyConfig);
-  configView.append(configHead, blurRow, configCode);
+  configView.append(configHead, brightnessRow, mainOverlayRow, blurRow, configCode);
   panelBody.append(galleryView, configView);
 
   // 分类 Tab（固定在头部下，不随列表滚动；选择持久化）
@@ -718,7 +817,8 @@ ${selector} {
   let configOpen = false;
   const showConfig = (open) => {
     configOpen = Boolean(open);
-    // 用 "" 清掉内联值，让样式表接管：gallery 是 grid，config 默认 none
+    // 配置视图只展示当前主题设置；返回画廊时再恢复分类栏和主题列表。
+    tabsBar.style.display = configOpen ? "none" : "";
     galleryView.style.display = configOpen ? "none" : "";
     configView.style.display = configOpen ? "block" : "";
     configToggle.textContent = configOpen ? "主题" : "配置";
@@ -739,6 +839,30 @@ ${selector} {
     if (!theme) return;
     blurSwitch.setAttribute("aria-checked", String(Boolean(enabled)));
     blurSwitch.title = enabled ? "关闭毛玻璃效果" : "启用毛玻璃效果";
+  };
+  renderBrightnessControl = (theme = findTheme(
+    (() => { try { return localStorage.getItem(LS_KEY); } catch { return null; } })(),
+  ), value = theme ? backgroundBrightness(theme) : 1) => {
+    if (!theme) return;
+    const percent = Math.round(asNumber(value, defaultBackgroundBrightness(theme), 0, 2) * 100);
+    brightnessRange.value = String(percent);
+    brightnessRange.style.setProperty("--ds-slider-fill", `${percent / 2}%`);
+    brightnessRange.setAttribute("aria-valuetext", `${percent}%`);
+    brightnessValue.value = `${percent}%`;
+    brightnessValue.textContent = `${percent}%`;
+    brightnessReset.disabled = Math.abs(value - defaultBackgroundBrightness(theme)) < 0.001;
+  };
+  renderMainOverlayControl = (theme = findTheme(
+    (() => { try { return localStorage.getItem(LS_KEY); } catch { return null; } })(),
+  ), saved = theme ? mainOverlayOpacity(theme) : null) => {
+    if (!theme) return;
+    const percent = Math.round((saved ?? defaultMainOverlayOpacity(theme)) * 100);
+    mainOverlayRange.value = String(percent);
+    mainOverlayRange.style.setProperty("--ds-slider-fill", `${percent}%`);
+    mainOverlayRange.setAttribute("aria-valuetext", `${percent}%`);
+    mainOverlayValue.value = `${percent}%`;
+    mainOverlayValue.textContent = `${percent}%`;
+    mainOverlayReset.disabled = saved == null;
   };
   configToggle.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -768,6 +892,40 @@ ${selector} {
     );
     if (!current) return;
     savePanelBlur(current, !panelBlurEnabled(current));
+    apply(current.id);
+  });
+  brightnessRange.addEventListener("input", (event) => {
+    event.stopPropagation();
+    const current = findTheme(
+      (() => { try { return localStorage.getItem(LS_KEY); } catch { return null; } })(),
+    );
+    if (!current) return;
+    const value = saveBackgroundBrightness(current, Number(brightnessRange.value) / 100);
+    setVar("--trae-skin-background-brightness", value);
+    renderBrightnessControl(current, value);
+  });
+  brightnessReset.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const current = findTheme(
+      (() => { try { return localStorage.getItem(LS_KEY); } catch { return null; } })(),
+    );
+    if (!current) return;
+    const value = resetBackgroundBrightness(current);
+    setVar("--trae-skin-background-brightness", value);
+    renderBrightnessControl(current, value);
+  });
+  mainOverlayRange.addEventListener("input", (event) => {
+    event.stopPropagation();
+    const current = findTheme((() => { try { return localStorage.getItem(LS_KEY); } catch { return null; } })());
+    if (!current) return;
+    saveMainOverlayOpacity(current, Number(mainOverlayRange.value) / 100);
+    apply(current.id);
+  });
+  mainOverlayReset.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const current = findTheme((() => { try { return localStorage.getItem(LS_KEY); } catch { return null; } })());
+    if (!current) return;
+    resetMainOverlayOpacity(current);
     apply(current.id);
   });
   let resetArmed = false;
@@ -917,6 +1075,27 @@ ${selector} {
         apply(current.id);
       }
       return panelBlurEnabled(current);
+    },
+    backgroundBrightness: (value) => {
+      const current = findTheme(
+        (() => { try { return localStorage.getItem(LS_KEY); } catch { return null; } })(),
+      );
+      if (!current) return null;
+      if (typeof value === "number") {
+        const next = saveBackgroundBrightness(current, value);
+        setVar("--trae-skin-background-brightness", next);
+        renderBrightnessControl(current, next);
+      }
+      return backgroundBrightness(current);
+    },
+    mainOverlayOpacity: (value) => {
+      const current = findTheme((() => { try { return localStorage.getItem(LS_KEY); } catch { return null; } })());
+      if (!current) return null;
+      if (typeof value === "number") {
+        saveMainOverlayOpacity(current, value);
+        apply(current.id);
+      }
+      return mainOverlayOpacity(current) ?? defaultMainOverlayOpacity(current);
     },
     restoreNative: restoreNativeTheme,
     showConfig: () => {

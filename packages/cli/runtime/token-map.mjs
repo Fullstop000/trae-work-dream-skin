@@ -93,6 +93,33 @@
   const RAS_TEXT = ["brand", "brand-design", "brand-hover", "brand-hover-design", "brand-hover-sub", "brand-sub", "default", "default-active", "default-hover", "disabled", "onaccent", "onbrand", "secondary", "secondary-active", "secondary-hover", "tertiary"];
   const RAS_ICON = ["brand", "brand-design", "brand-hover", "brand-hover-design", "brand-hover-sub", "brand-sub", "default", "default-active", "default-hover", "disabled", "onaccent", "onbrand", "secondary", "secondary-active", "secondary-hover", "tertiary"];
   const RAS_BORDER = ["brand", "brand-design", "brand-sub", "contrast", "neutral-l1", "neutral-l2", "neutral-l3"];
+  // VS Code 核心兼容层：TRAE 的 IM Channel 等非 Workbench 页面仍直接消费这些旧变量。
+  // 只桥接可由 V3 语义角色稳定表达的通用表面、文本、控件与状态色；尺寸/字体/ANSI 色保持宿主值。
+  const VSCODE_CORE = [
+    "--vscode-foreground", "--vscode-descriptionForeground", "--vscode-disabledForeground",
+    "--vscode-focusBorder", "--vscode-contrastBorder", "--vscode-contrastActiveBorder",
+    "--vscode-selection-background", "--vscode-errorForeground", "--vscode-icon-foreground",
+    "--vscode-sideBar-background", "--vscode-sideBar-foreground", "--vscode-sideBar-border",
+    "--vscode-widget-border",
+    "--vscode-editor-background", "--vscode-editor-foreground", "--vscode-editorCursor-foreground",
+    "--vscode-editorLineNumber-foreground", "--vscode-editorLineNumber-activeForeground",
+    "--vscode-editor-selectionBackground", "--vscode-editor-lineHighlightBorder",
+    "--vscode-editorWidget-background", "--vscode-editorWidget-foreground", "--vscode-editorWidget-border",
+    "--vscode-input-background", "--vscode-input-foreground", "--vscode-input-placeholderForeground", "--vscode-input-border",
+    "--vscode-checkbox-background", "--vscode-checkbox-foreground", "--vscode-checkbox-border",
+    "--vscode-button-background", "--vscode-button-foreground", "--vscode-button-hoverBackground",
+    "--vscode-button-activeBackground", "--vscode-button-border",
+    "--vscode-list-hoverBackground", "--vscode-list-hoverForeground",
+    "--vscode-list-activeSelectionBackground", "--vscode-list-activeSelectionForeground",
+    "--vscode-list-inactiveSelectionBackground", "--vscode-list-inactiveSelectionForeground",
+    "--vscode-panel-background", "--vscode-panel-border",
+    "--vscode-menu-background", "--vscode-menu-foreground", "--vscode-menu-border",
+    "--vscode-dropdown-background", "--vscode-dropdown-foreground", "--vscode-dropdown-border",
+    "--vscode-badge-background", "--vscode-badge-foreground",
+    "--vscode-terminal-background", "--vscode-terminal-foreground",
+    "--vscode-testing-iconPassed", "--vscode-testing-iconFailed", "--vscode-testing-iconErrored",
+    "--vscode-testing-iconQueued", "--vscode-testing-iconSkipped", "--vscode-testing-iconUnset",
+  ];
   // 品牌色阶停靠点：[suffix, accent 占比%, 混向]
   const RAMP_STOPS = [[50, 8, "white"], [100, 16, "white"], [200, 28, "white"], [300, 44, "white"], [400, 66, "white"], [500, 100, null], [600, 82, "black"], [700, 66, "black"], [800, 50, "black"], [900, 34, "black"], [950, 20, "black"]];
 
@@ -237,6 +264,70 @@
     for (const s of RAS_ICON) put(`--ras-icon-icon-${s}`, iconValue(s));
     for (const s of RAS_BORDER) put(`--ras-border-border-${s}`, borderValue(s));
 
+    // 旧版 VS Code 核心变量桥接。它们不属于 --vscode-icube-- 别名层，但仍被部分 TRAE 页面直接消费。
+    const vscodeCoreValues = {
+      "--vscode-foreground": text.primary,
+      "--vscode-descriptionForeground": text.secondary,
+      "--vscode-disabledForeground": text.disabled,
+      "--vscode-focusBorder": accent.base,
+      "--vscode-contrastBorder": border.contrast,
+      "--vscode-contrastActiveBorder": accent.base,
+      "--vscode-selection-background": accent.subtle,
+      "--vscode-errorForeground": state.error,
+      "--vscode-icon-foreground": icons.primary,
+      "--vscode-sideBar-background": surface.secondary,
+      "--vscode-sideBar-foreground": text.primary,
+      "--vscode-sideBar-border": border.default,
+      "--vscode-widget-border": border.subtle,
+      "--vscode-editor-background": surface.base,
+      "--vscode-editor-foreground": text.primary,
+      "--vscode-editorCursor-foreground": accent.base,
+      "--vscode-editorLineNumber-foreground": text.tertiary,
+      "--vscode-editorLineNumber-activeForeground": accent.base,
+      "--vscode-editor-selectionBackground": accent.subtle,
+      "--vscode-editor-lineHighlightBorder": border.subtle,
+      "--vscode-editorWidget-background": surface.menu,
+      "--vscode-editorWidget-foreground": text.primary,
+      "--vscode-editorWidget-border": border.default,
+      "--vscode-input-background": surface.input,
+      "--vscode-input-foreground": text.primary,
+      "--vscode-input-placeholderForeground": text.tertiary,
+      "--vscode-input-border": border.default,
+      "--vscode-checkbox-background": accent.base,
+      "--vscode-checkbox-foreground": accent.onAccent,
+      "--vscode-checkbox-border": border.default,
+      "--vscode-button-background": accent.base,
+      "--vscode-button-foreground": accent.onAccent,
+      "--vscode-button-hoverBackground": accent.hover,
+      "--vscode-button-activeBackground": accent.active,
+      "--vscode-button-border": border.default,
+      "--vscode-list-hoverBackground": withAlpha(state.info, 0.12),
+      "--vscode-list-hoverForeground": text.primary,
+      "--vscode-list-activeSelectionBackground": accent.subtle,
+      "--vscode-list-activeSelectionForeground": text.primary,
+      "--vscode-list-inactiveSelectionBackground": withAlpha(accent.base, 0.12),
+      "--vscode-list-inactiveSelectionForeground": text.primary,
+      "--vscode-panel-background": surface.secondary,
+      "--vscode-panel-border": border.default,
+      "--vscode-menu-background": surface.menu,
+      "--vscode-menu-foreground": text.primary,
+      "--vscode-menu-border": border.subtle,
+      "--vscode-dropdown-background": surface.input,
+      "--vscode-dropdown-foreground": text.primary,
+      "--vscode-dropdown-border": border.default,
+      "--vscode-badge-background": accent.base,
+      "--vscode-badge-foreground": accent.onAccent,
+      "--vscode-terminal-background": surface.base,
+      "--vscode-terminal-foreground": text.primary,
+      "--vscode-testing-iconPassed": state.success,
+      "--vscode-testing-iconFailed": state.error,
+      "--vscode-testing-iconErrored": state.error,
+      "--vscode-testing-iconQueued": state.info,
+      "--vscode-testing-iconSkipped": state.warning,
+      "--vscode-testing-iconUnset": icons.disabled,
+    };
+    for (const name of VSCODE_CORE) put(name, vscodeCoreValues[name]);
+
     // 状态色家族（--vscode-icube--status-* 与 --ras-status-* 同步）
     const statusColor = { primary: accent.base, error: state.error, success: state.success, warning: state.warning, alert: state.info };
     for (const kind of ICUBE_STATUS_KINDS) {
@@ -336,6 +427,6 @@
     deriveRoles, buildVarMap, auditContrast, auditPairs,
     NS_BG, NS_TEXT, NS_ICON, NS_BORDER,
     ICUBE_BG, ICUBE_TEXT, ICUBE_ICON, ICUBE_BORDER, ICUBE_STATUS_KINDS, ICUBE_STATUS_PARTS,
-    RAS_BG, RAS_TEXT, RAS_ICON, RAS_BORDER, RAMP_STOPS,
+    RAS_BG, RAS_TEXT, RAS_ICON, RAS_BORDER, VSCODE_CORE, RAMP_STOPS,
   };
 });

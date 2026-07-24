@@ -11,8 +11,9 @@ APP_BUNDLE="${APP_BUNDLE:-/Applications/TRAE SOLO CN.app}"
 APP_BUNDLE_ID="${APP_BUNDLE_ID:-cn.trae.solo.app}"
 APP_PROC_MATCH="${APP_PROC_MATCH:-TRAE SOLO CN}"
 NODE_BIN="${NODE_BIN:-node}"
-RUN_DIR="${TWSKIN_STATE_DIR:-$DIR/run}"
-THEMES_DIR="${TWSKIN_THEMES_DIR:-$DIR/themes}"
+TWSKIN_DATA_ROOT="${TWSKIN_DATA_DIR:-${HOME}/.trae-work-skin}"
+RUN_DIR="${TWSKIN_STATE_DIR:-$TWSKIN_DATA_ROOT/run}"
+THEMES_DIR="${TWSKIN_THEMES_DIR:-$TWSKIN_DATA_ROOT/themes}"
 
 fail() { printf 'twskin: %s\n' "$*" >&2; exit 1; }
 

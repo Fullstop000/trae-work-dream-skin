@@ -5,11 +5,17 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-24
+
 ### Added
 
 - `twskin theme download [id]` for verified official GitHub Release theme packs.
 - `twskin theme load <directory>` for atomic local theme installation.
 - Independent, checksummed theme-pack build and Release upload automation.
+- Per-theme background brightness and main-workspace overlay controls in Theme
+  Manager, with values persisted in each theme's settings.
+- A V3 bridge for VS Code core color variables so IM Channel and legacy
+  workbench surfaces follow the active theme palette.
 
 ### Changed
 
@@ -26,6 +32,16 @@ All notable changes to this package are documented here. This project follows
   manifest generation no longer copies a second runtime tree.
 - Split shared and Theme Manager CSS out of `skin.js`, and moved EVA/Xianzhou
   component styling into each theme's dynamically loaded `theme.css`.
+- Resolve runtime, data and theme paths consistently from
+  `~/.trae-work-skin`, including global and internal-registry installations.
+- Theme Manager configuration now exposes only controls supported by the
+  selected theme.
+
+### Fixed
+
+- Clear stale theme artwork variables when switching between themes.
+- Keep the generated runtime manifest limited to the canonical payload files.
+- Restore and startup scripts now use the same data directory as the CLI.
 
 ## [0.4.0] - 2026-07-22
 

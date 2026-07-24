@@ -19,20 +19,8 @@ const RUNTIME_FILES = [
   "restore.sh",
 ];
 
-function walkFiles(directory, prefix = "") {
-  const files = [];
-  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-    const relative = path.posix.join(prefix, entry.name);
-    const absolute = path.join(directory, entry.name);
-    if (entry.isDirectory()) files.push(...walkFiles(absolute, relative));
-    else if (entry.isFile() && relative !== "manifest.json") files.push(relative);
-    else if (entry.isSymbolicLink()) throw new Error(`runtime must not contain symlinks: ${relative}`);
-  }
-  return files.sort();
-}
-
 function createManifest() {
-  const files = walkFiles(RUNTIME_DIR).map((relativePath) => {
+  const files = [...RUNTIME_FILES].sort().map((relativePath) => {
     const content = fs.readFileSync(path.join(RUNTIME_DIR, relativePath));
     return {
       path: relativePath,
@@ -51,7 +39,9 @@ function createManifest() {
 }
 
 for (const file of RUNTIME_FILES) {
-  if (!fs.existsSync(path.join(RUNTIME_DIR, file))) throw new Error(`missing runtime file: ${file}`);
+  const runtimeFile = path.join(RUNTIME_DIR, file);
+  if (!fs.existsSync(runtimeFile)) throw new Error(`missing runtime file: ${file}`);
+  if (fs.lstatSync(runtimeFile).isSymbolicLink()) throw new Error(`runtime file must not be a symlink: ${file}`);
 }
 const manifest = createManifest();
 console.log(`prepared runtime ${PACKAGE.version}: ${manifest.files.length} files, themes external`);

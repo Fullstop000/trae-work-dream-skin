@@ -8,7 +8,8 @@ while [ -L "$SRC" ]; do SRC="$(/usr/bin/readlink "$SRC")"; done
 DIR="$(cd "$(dirname "$SRC")" && pwd -P)"
 APP_BUNDLE="${APP_BUNDLE:-/Applications/TRAE SOLO CN.app}"
 APP_BUNDLE_ID="${APP_BUNDLE_ID:-cn.trae.solo.app}"
-RUN_DIR="${TWSKIN_STATE_DIR:-$DIR/run}"
+TWSKIN_DATA_ROOT="${TWSKIN_DATA_DIR:-${HOME}/.trae-work-skin}"
+RUN_DIR="${TWSKIN_STATE_DIR:-$TWSKIN_DATA_ROOT/run}"
 
 if [ -f "$RUN_DIR/injector.pid" ]; then
   pid="$(/bin/cat "$RUN_DIR/injector.pid")"

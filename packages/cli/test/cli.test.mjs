@@ -60,7 +60,7 @@ test("help and version expose the stable public command surface", () => {
 
   const version = run(["version"]);
   assert.equal(version.status, 0);
-  assert.match(version.stdout, /^twskin 0\.4\.0/);
+  assert.match(version.stdout, /^twskin 0\.5\.0/);
 });
 
 test("themes --json returns the official catalog", () => {

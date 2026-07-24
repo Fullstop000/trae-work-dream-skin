@@ -13,6 +13,7 @@ TRAE Work 的令牌架构（详见 `fixtures/`）：
 |---|---|---|---|
 | 语义令牌 | `--bg-bg-*` `--text-text-*` `--icon-icon-*` `--border-border-*` | 29/15/15/6 | 组件直接消费 |
 | 别名层 | `--vscode-icube--*` | 107 | **大量组件实际消费这层**，:root 静态值，随 `data-theme` 切换 |
+| VS Code 核心兼容层 | `--vscode-*` | 59 | IM Channel 等非 Workbench 页面仍直接消费的通用表面、文本、控件与状态色 |
 | 镜像层 | `--ras-bg-bg-*` | 25 | 设置页等组件消费 |
 | 原语色阶 | `--brand-brand-*` (+grey) | 22 | 50~950 色阶 |
 | 组件令牌 | `--popup-menu-*` | 22 | 下拉/浮层菜单 |
@@ -184,9 +185,17 @@ themes/<id>/
 2. **全命名空间扇出**：角色被写到 `<html>` 的内联样式上（优先级高于 `:root` 和 `[data-theme]` 定义），覆盖：
    `--bg-bg-*`(29) `--text-text-*`(15) `--icon-icon-*`(15) `--border-border-*`(6)
    `--vscode-icube--*`(bg/text/icon/border/status 30/diff 5)
+   `--vscode-*` 核心兼容层（59 个通用表面、文本、控件与状态变量）
    `--ras-bg-bg-*`(25) `--brand-brand-*`+grey(22，用 `color-mix` 从 accent 派生整条色阶)
    `--popup-menu-*`(18)。
-   未覆盖：固定分类色板（accent-accent-9 色）、code-code、gradient、solo-title、special——保持 App 原值。
+   未覆盖：固定分类色板（accent-accent-9 色）、code-code、gradient、solo-title、special，以及旧版核心层中的尺寸、字体、ANSI 终端色——保持 App 原值。
+
+   VS Code 核心兼容层不是独立的主题配置入口；它把遗留变量桥接回已有 V3 角色。例如
+   `--vscode-sideBar-background → tokens.surface.secondary`、
+   `--vscode-foreground → tokens.text.primary`、
+   `--vscode-widget-border → tokens.border.subtle`、
+   `--vscode-testing-iconPassed → tokens.state.success`。
+   因此主题作者无需为 IM Channel 或其他遗留页面声明专用组件槽位。
 
    此外，App 还会在 `body` / `.solo-theme` / `body.icube-chat-next` 上按"最近祖先优先"重定义部分令牌
    （典型如 `--bg-bg-overlay-l1`），会遮蔽 `<html>` 内联值。引擎额外生成一份带 `!important` 的

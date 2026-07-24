@@ -21,8 +21,14 @@ test("core skin contains no theme-specific selectors", () => {
   const skin = fs.readFileSync(path.join(RUNTIME, "skin.js"), "utf8");
   assert.ok(Buffer.byteLength(skin) < 50 * 1024, `skin.js is ${Buffer.byteLength(skin)} bytes`);
   assert.doesNotMatch(skin, /body\.trae-skin-theme-/);
+  assert.match(skin, /backgroundBrightness: \(value\)/);
+  assert.match(skin, /mainOverlayOpacity: \(value\)/);
+  assert.match(skin, /background-brightness:/);
+  assert.match(skin, /main-overlay-opacity:/);
   assert.match(fs.readFileSync(path.join(RUNTIME, "styles/base.css"), "utf8"), /主内容面板/);
-  assert.match(fs.readFileSync(path.join(RUNTIME, "styles/manager.css"), "utf8"), /#trae-dream-skin-panel/);
+  const managerCss = fs.readFileSync(path.join(RUNTIME, "styles/manager.css"), "utf8");
+  assert.match(managerCss, /#trae-dream-skin-panel/);
+  assert.match(managerCss, /\.ds-slider::-webkit-slider-thumb/);
 });
 
 test("theme-specific component CSS stays with its theme", () => {

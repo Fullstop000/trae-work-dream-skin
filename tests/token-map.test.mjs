@@ -6,6 +6,7 @@ import { readFileSync } from "node:fs";
 import vm from "node:vm";
 
 const code = readFileSync(new URL("../packages/cli/runtime/token-map.mjs", import.meta.url), "utf8");
+const vscodeCoreFixture = JSON.parse(readFileSync(new URL("../fixtures/vscode-core-vars.json", import.meta.url), "utf8"));
 const sandbox = { module: { exports: {} }, exports: {} };
 vm.runInNewContext(code, sandbox);
 const TM = sandbox.module.exports;
@@ -53,6 +54,7 @@ test("扇出覆盖全部普查命名空间", () => {
   for (const s of TM.RAS_TEXT) expected.push(`--ras-text-text-${s}`);
   for (const s of TM.RAS_ICON) expected.push(`--ras-icon-icon-${s}`);
   for (const s of TM.RAS_BORDER) expected.push(`--ras-border-border-${s}`);
+  expected.push(...TM.VSCODE_CORE);
   for (const k of TM.ICUBE_STATUS_KINDS) {
     for (const p of TM.ICUBE_STATUS_PARTS) {
       expected.push(`--vscode-icube--status-${k}-${p}`, `--ras-status-${k}-${p}`);
@@ -90,6 +92,22 @@ test("关键映射值正确", () => {
   assert.equal(map["--vscode-icube--status-primary-default"], "#f4e900");
   assert.equal(map["--vscode-icube--status-error-default"], "#ff244d");
   assert.equal(map["--border-border-neutral-l3"], map["--bg-bg-overlay-l4"]);
+});
+
+test("旧版 VS Code 核心变量桥接到 V3 语义角色", () => {
+  const map = TM.buildVarMap(SAMPLE);
+  const roles = TM.deriveRoles(SAMPLE);
+  assert.equal(new Set(TM.VSCODE_CORE).size, TM.VSCODE_CORE.length, "VSCODE_CORE 含重复变量");
+  assert.deepEqual([...TM.VSCODE_CORE], vscodeCoreFixture, "运行时桥接清单与协议普查存档不一致");
+
+  // IM Channel 的卡片、文字、按钮、状态点与开关直接消费这些旧变量。
+  assert.equal(map["--vscode-sideBar-background"], roles.surface.secondary);
+  assert.equal(map["--vscode-foreground"], "#edf4f7");
+  assert.equal(map["--vscode-descriptionForeground"], roles.text.secondary);
+  assert.equal(map["--vscode-widget-border"], roles.border.subtle);
+  assert.equal(map["--vscode-button-background"], "#f4e900");
+  assert.equal(map["--vscode-checkbox-border"], roles.border.default);
+  assert.equal(map["--vscode-testing-iconPassed"], roles.state.success);
 });
 
 test("浅色主题推导", () => {
