@@ -19,7 +19,8 @@ npm 包只包含经过 SHA-256 清单约束的 CLI 与注入运行时。主题�
 `~/.trae-work-skin/themes` 加载，也可用 `TWSKIN_THEMES_DIR` 指定其他目录。
 首次执行 `twskin start` 时，如果主题目录为空，CLI 会询问是否从最新 GitHub Release
 下载并校验官方主题包；后续启动直接使用本地主题。自动化安装可使用
-`twskin start --yes` 显式同意下载。
+`twskin start --yes` 显式同意下载。如果 TRAE Work 已运行但尚未启用 CDP，
+CLI 会先提示用户保存工作并确认重启；`--yes` 也会显式同意这次重启。
 CLI package 的发布说明、贡献规范与主题分发决策位于 [`packages/cli`](packages/cli/README.md)。
 
 ## 使用

@@ -27,7 +27,9 @@ its code signature.
 
 On first start, an empty theme directory prompts before downloading from the
 latest official GitHub Release. Use `twskin start --yes` for explicit consent in
-automation. Later starts use the local themes without downloading.
+automation. If TRAE is already running without CDP, the CLI asks the user to
+save their work and confirm before restarting it; `--yes` also explicitly
+confirms that restart. Later starts use the local themes without downloading.
 
 ## Commands
 

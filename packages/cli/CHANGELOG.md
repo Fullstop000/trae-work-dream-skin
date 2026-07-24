@@ -5,6 +5,11 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+### Changed
+
+- Ask users to save their work and confirm before `twskin start` restarts a
+  running TRAE process to enable CDP. Non-interactive callers must pass `--yes`.
+
 ## [0.5.1] - 2026-07-24
 
 ### Changed

@@ -14,6 +14,7 @@ const RUNTIME = path.join(FIXTURE, "runtime");
 const DATA = path.join(FIXTURE, "data");
 const APP = path.join(FIXTURE, "TRAE Test.app");
 let watcherPid = null;
+let fakeAppPid = null;
 
 function writeExecutable(file, content) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -40,6 +41,7 @@ printf 'restored\n' > "$TWSKIN_STATE_DIR/restore.marker"
 
 after(() => {
   if (watcherPid) try { process.kill(watcherPid, "SIGTERM"); } catch {}
+  if (fakeAppPid) try { process.kill(fakeAppPid, "SIGTERM"); } catch {}
   fs.rmSync(FIXTURE, { recursive: true, force: true });
 });
 
@@ -75,6 +77,28 @@ test("theme selection while stopped persists without launching the App", async (
   const output = JSON.parse(result.stdout);
   assert.equal(output.applied, false);
   assert.equal(fs.readFileSync(path.join(DATA, "run/theme.conf"), "utf8"), "aurora\n");
+});
+
+test("start requires confirmation before restarting a running App without CDP", async () => {
+  const fakeExecutable = path.join(APP, "Contents/MacOS/TRAE Test");
+  const fakeApp = spawn(process.execPath, ["-e", "setInterval(() => {}, 1000)", fakeExecutable], {
+    stdio: "ignore",
+  });
+  fakeAppPid = fakeApp.pid;
+  await new Promise((resolve, reject) => {
+    fakeApp.once("spawn", resolve);
+    fakeApp.once("error", reject);
+  });
+  try {
+    const result = await runAsync(["start", "--json"], { PORT: "19531" });
+    assert.equal(result.status, 2, result.stderr);
+    const output = JSON.parse(result.stdout);
+    assert.equal(output.error.code, "APP_RESTART_CONFIRMATION_REQUIRED");
+    process.kill(fakeAppPid, 0);
+  } finally {
+    try { process.kill(fakeAppPid, "SIGTERM"); } catch {}
+    fakeAppPid = null;
+  }
 });
 
 test("start repairs the manager once, then reports it as already running", async () => {

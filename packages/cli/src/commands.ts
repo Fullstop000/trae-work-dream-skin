@@ -176,6 +176,7 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
       throw new CliError("PORT_IN_USE", 4, `端口 ${port} 被其他进程占用：${owner.command}`, "请退出占用端口的程序后重试。");
     }
     const appBundle = resolveAppBundle(context);
+    await confirmAppRestart(context, appBundle, options);
     runScript(context, "start.sh", {
       PORT: String(port),
       NODE_BIN: process.execPath,
@@ -201,6 +202,26 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
       options,
     );
   });
+}
+
+async function confirmAppRestart(context: CliContext, appBundle: string, options: CliOptions): Promise<void> {
+  if (!appRunning(context, appBundle) || options.yes) return;
+  if (!interactive(options)) {
+    throw new CliError(
+      "APP_RESTART_CONFIRMATION_REQUIRED",
+      2,
+      "TRAE Work 正在运行；启用 Theme Manager 需要退出并重新打开应用。",
+      "请先保存未完成的工作，然后交互式运行 twskin start 确认重启，或使用 twskin start --yes。",
+    );
+  }
+  const answer = await p.confirm({
+    message: "TRAE Work 正在运行。请先保存未完成的工作，是否现在退出并重新打开 TRAE Work？",
+    initialValue: false,
+  });
+  if (p.isCancel(answer) || !answer) {
+    p.cancel("已取消启动；TRAE Work 保持运行");
+    throw new CliError("CANCELLED", 2, "已取消启动；TRAE Work 保持运行。");
+  }
 }
 
 async function confirmThemeDownload(options: CliOptions, themesDirectory: string): Promise<void> {
