@@ -1,0 +1,4 @@
+interface:
+  display_name: "Theme Design Guidance"
+  short_description: "Design, implement, and verify complete product themes"
+  default_prompt: "Use $design-themes to design or review a complete product theme."
