@@ -5,6 +5,8 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-07-24
+
 ### Changed
 
 - Download the latest fixed-name theme assets directly from GitHub Release

@@ -13,6 +13,7 @@ const RUNTIME_ROOT = path.join(PACKAGE_ROOT, "runtime");
 const CLI = path.join(PACKAGE_ROOT, "dist/bin/twskin.js");
 const DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), "twskin-cli-test-"));
 const THEME_CONF = path.join(DATA_DIR, "run/theme.conf");
+const PACKAGE_METADATA = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, "package.json"), "utf8"));
 
 after(() => fs.rmSync(DATA_DIR, { recursive: true, force: true }));
 
@@ -32,7 +33,7 @@ function run(args, env = {}) {
 }
 
 test("package metadata defines a public macOS CLI with an explicit payload", () => {
-  const metadata = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, "package.json"), "utf8"));
+  const metadata = PACKAGE_METADATA;
   assert.equal(metadata.name, "twskin");
   assert.equal(metadata.bin.twskin, "dist/bin/twskin.js");
   assert.deepEqual(Object.keys(metadata.bin), ["twskin"]);
@@ -60,7 +61,7 @@ test("help and version expose the stable public command surface", () => {
 
   const version = run(["version"]);
   assert.equal(version.status, 0);
-  assert.match(version.stdout, /^twskin 0\.5\.0/);
+  assert.equal(version.stdout, `twskin ${PACKAGE_METADATA.version}\n`);
 });
 
 test("themes --json returns the official catalog", () => {
