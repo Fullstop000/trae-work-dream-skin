@@ -44,16 +44,30 @@ const MAX_CHECKSUM_BYTES = 4096;
 const DOWNLOAD_TIMEOUT_MS = 30_000;
 const THEME_ID = /^[a-z0-9][a-z0-9._-]{0,63}$/;
 
-async function downloadBuffer(url: string, { maxBytes, accept, notFoundCode = "DOWNLOAD_FAILED" }: DownloadBufferOptions): Promise<Buffer> {
+function downloadHeaders(context: CliContext, url: string, accept: string): Record<string, string> {
+  const headers: Record<string, string> = {
+    Accept: accept,
+    "User-Agent": "twskin-cli",
+    "X-GitHub-Api-Version": "2022-11-28",
+  };
+  const token = context.env.TWSKIN_GITHUB_TOKEN || context.env.GH_TOKEN || context.env.GITHUB_TOKEN;
+  try {
+    const parsed = new URL(url);
+    if (token && parsed.protocol === "https:" && (parsed.hostname === "api.github.com" || parsed.hostname === "github.com")) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+  } catch {
+    // fetch reports malformed URLs using the standard download error path.
+  }
+  return headers;
+}
+
+async function downloadBuffer(context: CliContext, url: string, { maxBytes, accept, notFoundCode = "DOWNLOAD_FAILED" }: DownloadBufferOptions): Promise<Buffer> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), DOWNLOAD_TIMEOUT_MS);
   try {
     const response = await fetch(url, {
-      headers: {
-        Accept: accept,
-        "User-Agent": "twskin-cli",
-        "X-GitHub-Api-Version": "2022-11-28",
-      },
+      headers: downloadHeaders(context, url, accept),
       redirect: "follow",
       signal: controller.signal,
     });
@@ -88,7 +102,7 @@ function releaseAsset(release: GithubRelease, filename: string): ReleaseAsset | 
 
 async function readLatestRelease(context: CliContext): Promise<GithubRelease> {
   const apiUrl = context.env.TWSKIN_RELEASE_API_URL || DEFAULT_RELEASE_API;
-  const content = await downloadBuffer(apiUrl, {
+  const content = await downloadBuffer(context, apiUrl, {
     maxBytes: 2 * 1024 * 1024,
     accept: "application/vnd.github+json",
     notFoundCode: "RELEASE_NOT_FOUND",
@@ -214,8 +228,8 @@ export async function downloadThemes(context: CliContext, requestedId?: string):
   const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "twskin-theme-download-"));
   try {
     const [archiveContent, checksumContent] = await Promise.all([
-      downloadBuffer(selected.archive.browser_download_url, { maxBytes: MAX_ARCHIVE_BYTES, accept: "application/octet-stream" }),
-      downloadBuffer(selected.checksum.browser_download_url, { maxBytes: MAX_CHECKSUM_BYTES, accept: "text/plain" }),
+      downloadBuffer(context, selected.archive.browser_download_url, { maxBytes: MAX_ARCHIVE_BYTES, accept: "application/octet-stream" }),
+      downloadBuffer(context, selected.checksum.browser_download_url, { maxBytes: MAX_CHECKSUM_BYTES, accept: "text/plain" }),
     ]);
     const expectedDigest = checksumContent.toString("utf8").match(/\b([a-f0-9]{64})\b/i)?.[1]?.toLowerCase();
     if (!expectedDigest) throw new CliError("CHECKSUM_INVALID", 4, "主题包 SHA-256 文件格式无效。");

@@ -40,6 +40,11 @@ rollback. It never changes the active theme implicitly.
 For testing or an enterprise mirror, `TWSKIN_RELEASE_API_URL` may point to a
 GitHub-compatible latest-release JSON endpoint.
 
+When GitHub's anonymous API quota is unavailable, set `TWSKIN_GITHUB_TOKEN`,
+`GH_TOKEN`, or `GITHUB_TOKEN`. The CLI only sends that token to HTTPS requests
+for `api.github.com` and `github.com`; it is never forwarded to a configured
+mirror.
+
 ## Local loading
 
 `twskin theme load <directory>` accepts either a directory containing `theme.json`

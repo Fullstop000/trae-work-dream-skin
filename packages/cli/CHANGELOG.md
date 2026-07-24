@@ -39,6 +39,8 @@ All notable changes to this package are documented here. This project follows
 
 ### Fixed
 
+- Allow authenticated GitHub Release downloads when anonymous API quota is
+  unavailable, without forwarding credentials to configured mirrors.
 - Clear stale theme artwork variables when switching between themes.
 - Keep the generated runtime manifest limited to the canonical payload files.
 - Restore and startup scripts now use the same data directory as the CLI.
