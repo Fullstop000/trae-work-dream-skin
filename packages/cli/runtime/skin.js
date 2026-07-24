@@ -951,7 +951,7 @@ ${selector} {
       resetTimer = setTimeout(disarmReset, 8000);
       return;
     }
-    clearTimeout(resetTimer);
+    disarmReset();
     restoreNativeTheme();
   });
 

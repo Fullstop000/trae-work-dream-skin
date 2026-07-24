@@ -5,6 +5,11 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+### Fixed
+
+- Return the restore control from `取消 / 确认恢复` to `恢复默认` after the user
+  confirms restoration.
+
 ## [0.5.2] - 2026-07-24
 
 ### Changed

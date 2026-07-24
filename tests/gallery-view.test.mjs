@@ -10,3 +10,14 @@ const SKIN = fs.readFileSync(path.join(ROOT, "packages/cli/runtime/skin.js"), "u
 test("theme categories are hidden while viewing the current theme config", () => {
   assert.match(SKIN, /tabsBar\.style\.display = configOpen \? "none" : "";/);
 });
+
+test("restore confirmation returns to its default button state after confirmation", () => {
+  const handlerStart = SKIN.indexOf('resetConfig.addEventListener("click"');
+  const handlerEnd = SKIN.indexOf("const activateTheme", handlerStart);
+  assert.ok(handlerStart >= 0 && handlerEnd > handlerStart, "restore confirmation handler is missing");
+  const handler = SKIN.slice(handlerStart, handlerEnd);
+  const disarm = handler.indexOf("disarmReset();");
+  const restore = handler.indexOf("restoreNativeTheme();");
+  assert.ok(disarm >= 0, "restore confirmation does not reset its armed state");
+  assert.ok(restore > disarm, "restore confirmation must reset before restoring the native theme");
+});
