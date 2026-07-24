@@ -5,6 +5,11 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+### Changed
+
+- Download the latest fixed-name theme assets directly from GitHub Release
+  redirects instead of consuming anonymous GitHub API quota.
+
 ## [0.5.0] - 2026-07-24
 
 ### Added

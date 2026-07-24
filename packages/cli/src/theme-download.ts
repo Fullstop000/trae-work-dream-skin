@@ -39,6 +39,8 @@ export interface ThemeDownloadResult {
 }
 
 const DEFAULT_RELEASE_API = "https://api.github.com/repos/Fullstop000/trae-work-dream-skin/releases/latest";
+const DEFAULT_RELEASE_ASSET_BASE_URL = "https://github.com/Fullstop000/trae-work-dream-skin/releases/latest/download";
+const LATEST_ASSET_BASENAME = "twskin-themes";
 const MAX_ARCHIVE_BYTES = 128 * 1024 * 1024;
 const MAX_CHECKSUM_BYTES = 4096;
 const DOWNLOAD_TIMEOUT_MS = 30_000;
@@ -116,7 +118,14 @@ async function readLatestRelease(context: CliContext): Promise<GithubRelease> {
   return release as GithubRelease;
 }
 
-function selectAssets(release: GithubRelease): { tag: string; base: string; archive: ReleaseAsset; checksum: ReleaseAsset } {
+interface SelectedAssets {
+  tag?: string;
+  base: string;
+  archive: ReleaseAsset;
+  checksum: ReleaseAsset;
+}
+
+function selectReleaseAssets(release: GithubRelease): SelectedAssets {
   const tag = release.tag_name;
   const base = `twskin-themes-${tag}`;
   const archive = releaseAsset(release, `${base}.tar.gz`);
@@ -130,6 +139,24 @@ function selectAssets(release: GithubRelease): { tag: string; base: string; arch
     );
   }
   return { tag, base, archive, checksum };
+}
+
+async function selectAssets(context: CliContext): Promise<SelectedAssets> {
+  if (context.env.TWSKIN_RELEASE_API_URL) {
+    return selectReleaseAssets(await readLatestRelease(context));
+  }
+  const baseUrl = (context.env.TWSKIN_RELEASE_ASSET_BASE_URL || DEFAULT_RELEASE_ASSET_BASE_URL).replace(/\/+$/, "");
+  return {
+    base: LATEST_ASSET_BASENAME,
+    archive: {
+      name: `${LATEST_ASSET_BASENAME}.tar.gz`,
+      browser_download_url: `${baseUrl}/${LATEST_ASSET_BASENAME}.tar.gz`,
+    },
+    checksum: {
+      name: `${LATEST_ASSET_BASENAME}.sha256`,
+      browser_download_url: `${baseUrl}/${LATEST_ASSET_BASENAME}.sha256`,
+    },
+  };
 }
 
 function archiveEntries(context: CliContext, archiveFile: string, verbose = false): string[] {
@@ -186,7 +213,7 @@ function compatibleCli(range: string, currentVersion: string): boolean {
   return Boolean(minimum && maximum && compareVersions(current, minimum) >= 0 && compareVersions(current, maximum) < 0);
 }
 
-function parsePackManifest(directory: string, expectedTag: string, cliVersion: string): ThemePackManifest {
+function parsePackManifest(directory: string, expectedTag: string | undefined, cliVersion: string): ThemePackManifest {
   const file = path.join(directory, "theme-pack.json");
   let manifest: unknown;
   try { manifest = JSON.parse(fs.readFileSync(file, "utf8")); }
@@ -198,7 +225,7 @@ function parsePackManifest(directory: string, expectedTag: string, cliVersion: s
   if (!pack.packVersion || !pack.compatibleCli || !pack.themes || pack.themes.some((theme) => !theme || !THEME_ID.test(theme.id || ""))) {
     throw new CliError("THEME_PACK_INVALID", 4, "主题包清单字段不完整。");
   }
-  if (pack.releaseTag && pack.releaseTag !== expectedTag) {
+  if (expectedTag && pack.releaseTag && pack.releaseTag !== expectedTag) {
     throw new CliError("THEME_PACK_INVALID", 4, `主题包版本与 Release 标签不一致：${pack.releaseTag} / ${expectedTag}`);
   }
   if (!compatibleCli(pack.compatibleCli, cliVersion)) {
@@ -223,8 +250,7 @@ function extractArchive(context: CliContext, archiveFile: string, directory: str
 
 export async function downloadThemes(context: CliContext, requestedId?: string): Promise<ThemeDownloadResult> {
   if (requestedId && !THEME_ID.test(requestedId)) throw new CliError("THEME_ID_INVALID", 2, `主题 ID 不合法：${requestedId}`);
-  const release = await readLatestRelease(context);
-  const selected = selectAssets(release);
+  const selected = await selectAssets(context);
   const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "twskin-theme-download-"));
   try {
     const [archiveContent, checksumContent] = await Promise.all([
@@ -243,6 +269,8 @@ export async function downloadThemes(context: CliContext, requestedId?: string):
     fs.mkdirSync(extracted);
     extractArchive(context, archiveFile, extracted);
     const pack = parsePackManifest(extracted, selected.tag, context.packageVersion);
+    const releaseTag = selected.tag || pack.releaseTag;
+    if (!releaseTag) throw new CliError("THEME_PACK_INVALID", 4, "主题包清单缺少 releaseTag。");
     const discovered = discoverThemeDirectories(path.join(extracted, "themes"));
     const declared = new Set(pack.themes.map((theme) => theme.id));
     const found = new Set(discovered.map((theme) => theme.id));
@@ -250,9 +278,9 @@ export async function downloadThemes(context: CliContext, requestedId?: string):
       throw new CliError("THEME_PACK_INVALID", 4, "主题包内容与 theme-pack.json 不一致。");
     }
     const chosen = requestedId ? discovered.filter((theme) => theme.id === requestedId) : discovered;
-    if (chosen.length === 0) throw new CliError("THEME_NOT_FOUND", 2, `Release ${selected.tag} 中找不到主题：${requestedId}`);
+    if (chosen.length === 0) throw new CliError("THEME_NOT_FOUND", 2, `Release ${releaseTag} 中找不到主题：${requestedId}`);
     const installed = chosen.map((theme) => installThemeDirectory(context, theme.source));
-    return { tag: selected.tag, digest: actualDigest, installed, directory: context.themesDir };
+    return { tag: releaseTag, digest: actualDigest, installed, directory: context.themesDir };
   } finally {
     fs.rmSync(temporary, { recursive: true, force: true });
   }

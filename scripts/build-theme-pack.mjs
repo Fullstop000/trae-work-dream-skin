@@ -11,6 +11,7 @@ const DIST = path.join(REPO_ROOT, "dist");
 const STAGE = path.join(DIST, ".theme-pack-stage");
 const TAG = `v${PACKAGE.version}`;
 const BASENAME = `twskin-themes-${TAG}`;
+const LATEST_BASENAME = "twskin-themes";
 
 function digest(file) {
   return crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
@@ -58,15 +59,21 @@ try {
 
   const archive = path.join(DIST, `${BASENAME}.tar.gz`);
   const checksum = path.join(DIST, `${BASENAME}.sha256`);
+  const latestArchive = path.join(DIST, `${LATEST_BASENAME}.tar.gz`);
+  const latestChecksum = path.join(DIST, `${LATEST_BASENAME}.sha256`);
   fs.rmSync(archive, { force: true });
   fs.rmSync(checksum, { force: true });
+  fs.rmSync(latestArchive, { force: true });
+  fs.rmSync(latestChecksum, { force: true });
   fs.rmSync(path.join(DIST, `trae-work-dream-skin-themes-${TAG}.tar.gz`), { force: true });
   fs.rmSync(path.join(DIST, `trae-work-dream-skin-themes-${TAG}.sha256`), { force: true });
   const tar = spawnSync("/usr/bin/tar", ["-czf", archive, "-C", STAGE, "theme-pack.json", "themes"], { encoding: "utf8" });
   if (tar.status !== 0) throw new Error(tar.stderr || "tar failed");
   const sha256 = digest(archive);
   fs.writeFileSync(checksum, `${sha256}  ${path.basename(archive)}\n`);
-  process.stdout.write(`${archive}\n${checksum}\n${themes.length} themes · ${fs.statSync(archive).size} bytes · sha256 ${sha256}\n`);
+  fs.copyFileSync(archive, latestArchive);
+  fs.writeFileSync(latestChecksum, `${sha256}  ${path.basename(latestArchive)}\n`);
+  process.stdout.write(`${archive}\n${checksum}\n${latestArchive}\n${latestChecksum}\n${themes.length} themes · ${fs.statSync(archive).size} bytes · sha256 ${sha256}\n`);
 } finally {
   fs.rmSync(STAGE, { recursive: true, force: true });
 }

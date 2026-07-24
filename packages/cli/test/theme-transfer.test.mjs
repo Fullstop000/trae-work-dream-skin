@@ -94,6 +94,33 @@ test("theme load rejects an oversized theme.css", async () => {
   assert.equal(JSON.parse(result.stdout).error.code, "THEME_CSS_TOO_LARGE");
 });
 
+test("theme download uses fixed latest-release assets without the GitHub API", async () => {
+  const archive = fs.readFileSync(ARCHIVE);
+  const digest = crypto.createHash("sha256").update(archive).digest("hex");
+  const requests = [];
+  const server = http.createServer((request, response) => {
+    requests.push(request.url);
+    if (request.url === "/twskin-themes.tar.gz") response.end(archive);
+    else if (request.url === "/twskin-themes.sha256") response.end(`${digest}  twskin-themes.tar.gz\n`);
+    else response.writeHead(404).end();
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const origin = `http://127.0.0.1:${server.address().port}`;
+  try {
+    const result = await runAsync(["theme", "download", "release-one", "--json"], {
+      TWSKIN_RELEASE_API_URL: "",
+      TWSKIN_RELEASE_ASSET_BASE_URL: origin,
+    });
+    assert.equal(result.status, 0, result.stderr);
+    const output = JSON.parse(result.stdout);
+    assert.equal(output.release, "v0.4.0");
+    assert.deepEqual(output.installed, ["release-one"]);
+    assert.deepEqual(requests.sort(), ["/twskin-themes.sha256", "/twskin-themes.tar.gz"]);
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
 test("theme download verifies and installs an official GitHub Release asset", async () => {
   const archive = fs.readFileSync(ARCHIVE);
   const digest = crypto.createHash("sha256").update(archive).digest("hex");

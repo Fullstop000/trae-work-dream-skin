@@ -23,22 +23,27 @@ keeps large visual assets out of normal CLI upgrades.
 Every CLI release attaches these independently downloadable assets:
 
 ```text
+twskin-themes.tar.gz
+twskin-themes.sha256
 twskin-themes-v<version>.tar.gz
 twskin-themes-v<version>.sha256
 ```
 
-`twskin theme download [id]` resolves the latest GitHub Release and requires asset
-names to match its tag exactly. With no ID, all themes are installed; with an ID,
-only that theme is installed. The archive root contains `theme-pack.json` and
-`themes/<id>/` directories.
+`twskin theme download [id]` downloads the fixed-name assets through GitHub's
+`releases/latest/download` redirect, without calling the rate-limited Releases
+API. The versioned copies remain available for archival and manual downloads.
+With no ID, all themes are installed; with an ID, only that theme is installed.
+The archive root contains `theme-pack.json` and `themes/<id>/` directories.
 
 The command limits metadata and archive sizes, uses a network timeout, verifies
 SHA-256 before extraction, rejects absolute/traversal paths and link/special file
 types, validates every theme manifest and performs an atomic directory swap with
 rollback. It never changes the active theme implicitly.
 
-For testing or an enterprise mirror, `TWSKIN_RELEASE_API_URL` may point to a
-GitHub-compatible latest-release JSON endpoint.
+For testing or an enterprise mirror, `TWSKIN_RELEASE_ASSET_BASE_URL` may point
+to a directory containing the fixed-name assets. The legacy
+`TWSKIN_RELEASE_API_URL` override remains available for a GitHub-compatible
+latest-release JSON endpoint.
 
 When GitHub's anonymous API quota is unavailable, set `TWSKIN_GITHUB_TOKEN`,
 `GH_TOKEN`, or `GITHUB_TOKEN`. The CLI only sends that token to HTTPS requests

@@ -36,6 +36,6 @@ jobs:
         run: npm run build:themes
         working-directory: packages/cli
       - name: Upload official theme pack to GitHub Release
-        run: gh release upload "$RELEASE_TAG" dist/twskin-themes-"$RELEASE_TAG".tar.gz dist/twskin-themes-"$RELEASE_TAG".sha256 --clobber
+        run: gh release upload "$RELEASE_TAG" dist/twskin-themes-"$RELEASE_TAG".tar.gz dist/twskin-themes-"$RELEASE_TAG".sha256 dist/twskin-themes.tar.gz dist/twskin-themes.sha256 --clobber
         env:
           GH_TOKEN: ${{ github.token }}
