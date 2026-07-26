@@ -42,6 +42,7 @@ export function createContext(env: NodeJS.ProcessEnv = process.env): Readonly<Cl
       themeConf: path.join(stateDir, "theme.conf"),
       pidFile: path.join(stateDir, "injector.pid"),
       portFile: path.join(stateDir, "port"),
+      cdpConfigState: path.join(stateDir, "cdp-config.json"),
       lockFile: path.join(stateDir, "cli.lock"),
       logFile: path.join(stateDir, "injector.log"),
       runtimeManifest: path.join(runtimeRoot, "manifest.json"),
@@ -50,6 +51,7 @@ export function createContext(env: NodeJS.ProcessEnv = process.env): Readonly<Cl
       bundle: env.APP_BUNDLE || DEFAULT_APP_BUNDLE,
       bundleId: env.APP_BUNDLE_ID || DEFAULT_APP_BUNDLE_ID,
       processMatch: env.APP_PROC_MATCH || DEFAULT_APP_PROC_MATCH,
+      ...(env.TWSKIN_APP_ARGV_FILE ? { argvFile: path.resolve(env.TWSKIN_APP_ARGV_FILE) } : {}),
     }),
   });
 }

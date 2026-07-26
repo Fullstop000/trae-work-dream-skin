@@ -4,6 +4,7 @@ export interface CliPaths {
   themeConf: string;
   pidFile: string;
   portFile: string;
+  cdpConfigState: string;
   lockFile: string;
   logFile: string;
   runtimeManifest: string;
@@ -13,6 +14,7 @@ export interface AppContext {
   bundle: string;
   bundleId: string;
   processMatch: string;
+  argvFile?: string;
 }
 
 export interface CliContext {

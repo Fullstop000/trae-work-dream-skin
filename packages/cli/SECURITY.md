@@ -15,6 +15,9 @@ content.
 
 - CDP binds to `127.0.0.1` only.
 - The CLI verifies that the configured CDP port belongs to TRAE before using it.
+- The CLI changes only `remote-debugging-port` in TRAE's user-level `argv.json`,
+  preserves JSONC comments and unrelated settings, and restores the previous
+  value on stop, restore or uninstall.
 - The TRAE application bundle and code signature are never modified.
 - Packaged engine files are covered by a SHA-256 manifest checked by
   `twskin doctor`.

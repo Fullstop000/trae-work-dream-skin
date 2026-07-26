@@ -29,7 +29,10 @@ On first start, an empty theme directory prompts before downloading from the
 latest official GitHub Release. Use `twskin start --yes` for explicit consent in
 automation. If TRAE is already running without CDP, the CLI asks the user to
 save their work and confirm before restarting it; `--yes` also explicitly
-confirms that restart. Later starts use the local themes without downloading.
+confirms that restart. After a successful start, the CLI persists the loopback
+CDP port in TRAE's user-level `argv.json`. While the watcher remains active,
+quitting and reopening TRAE automatically reconnects and reapplies the selected
+theme. Later starts use the local themes without downloading.
 
 ## Commands
 
@@ -51,7 +54,8 @@ twskin help                  Print command help
 `twskin theme <id>` applies immediately while Theme Manager is active. Otherwise
 the selection is saved and applied by the next `twskin start`. `twskin stop`
 preserves the selected theme and its settings, so a later `twskin start` can
-restore them.
+restore them. It also restores the pre-existing `remote-debugging-port` value
+instead of leaving twskin's persistent CDP configuration behind.
 
 ## Theme directory
 

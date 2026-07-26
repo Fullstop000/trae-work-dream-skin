@@ -597,13 +597,12 @@ async function cmdWatch(args, payload) {
     let targets;
     try {
       targets = await listPageTargets(args.port, args.timeoutMs);
+      if (cdpFailures > 0) log("cdp reachable again; resuming theme injection");
       cdpFailures = 0;
     } catch (error) {
       cdpFailures += 1;
-      if (cdpFailures % 15 === 0) log(`cdp unreachable (${cdpFailures}): ${error.message}`);
-      if (cdpFailures >= 60) {
-        log("cdp gone for ~2 minutes, watcher exits");
-        process.exit(0);
+      if (cdpFailures === 1 || cdpFailures % 300 === 0) {
+        log(`cdp unreachable; waiting for TRAE to restart (${cdpFailures}): ${error.message}`);
       }
       return;
     }

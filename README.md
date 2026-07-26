@@ -21,6 +21,9 @@ npm 包只包含经过 SHA-256 清单约束的 CLI 与注入运行时。主题�
 下载并校验官方主题包；后续启动直接使用本地主题。自动化安装可使用
 `twskin start --yes` 显式同意下载。如果 TRAE Work 已运行但尚未启用 CDP，
 CLI 会先提示用户保存工作并确认重启；`--yes` 也会显式同意这次重启。
+首次成功启动后，CLI 会在 TRAE 自带的用户级 `argv.json` 中持久启用本地 CDP；
+只要 twskin watcher 仍在运行，之后正常退出并重新打开 TRAE 时会自动恢复主题，
+无需再次执行 `twskin start`。
 CLI package 的发布说明、贡献规范与主题分发决策位于 [`packages/cli`](packages/cli/README.md)。
 
 ## 使用
@@ -45,7 +48,8 @@ CLI package 的发布说明、贡献规范与主题分发决策位于 [`packages
 
 `twskin theme <id>` 在 Theme Manager 运行时立即热切换；未运行时保存选择，
 下次执行 `twskin start` 时生效。`twskin stop` 会保留当前主题和调节值，之后
-再次执行 `twskin start` 即可恢复。`stop`、`status`、`themes`、`doctor` 也支持 `--json`。
+再次执行 `twskin start` 即可恢复，同时撤销 twskin 写入的持久 CDP 配置。
+`stop`、`status`、`themes`、`doctor` 也支持 `--json`。
 
 ## 主题
 
@@ -75,6 +79,7 @@ node --test "tests/*.test.mjs"                           # token/component 映�
 ## 安全边界
 
 - CDP 仅绑 127.0.0.1；启动脚本校验端口属于目标 App 进程
+- 只定点管理 TRAE 用户级 `argv.json` 的 `remote-debugging-port`；停止或卸载时还原原值
 - 不修改 `.app` 内容与签名；`packages/cli/runtime/restore.sh` 完全还原（含 App 原始外观）
 - App 升级导致皮肤失效时无副作用，重新运行 `twskin start` 即可
 

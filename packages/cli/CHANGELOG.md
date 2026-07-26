@@ -9,6 +9,16 @@ All notable changes to this package are documented here. This project follows
 
 - Add `twskin stop` to stop the watcher and restore TRAE's native appearance
   without quitting TRAE, while preserving the selected theme and its settings.
+- Reapply the selected theme automatically after TRAE restarts while the
+  watcher is active, using TRAE's user-level persistent CDP configuration.
+
+### Changed
+
+- Keep the watcher alive while TRAE is closed so it can reconnect on a later
+  launch.
+- Preserve JSONC comments and unrelated settings when managing
+  `remote-debugging-port`, and restore the user's previous value on stop,
+  restore or uninstall.
 
 ### Removed
 

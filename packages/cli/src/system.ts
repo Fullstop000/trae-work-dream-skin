@@ -50,7 +50,9 @@ export function readText(file: string, fallback = ""): string {
 export function atomicWrite(file: string, content: string): void {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   const temporary = `${file}.${process.pid}.${Date.now()}.tmp`;
-  fs.writeFileSync(temporary, content, { mode: 0o600 });
+  let mode = 0o600;
+  try { mode = fs.statSync(file).mode & 0o777; } catch {}
+  fs.writeFileSync(temporary, content, { mode });
   fs.renameSync(temporary, file);
 }
 
@@ -206,6 +208,7 @@ export function startWatcher(context: CliContext, port: number): number {
   fs.closeSync(logFd);
   if (!child.pid) throw new CliError("WATCHER_START_FAILED", 5, "守护进程启动失败。", "运行 twskin doctor 检查环境。");
   atomicWrite(context.paths.pidFile, `${child.pid}\n`);
+  atomicWrite(context.paths.portFile, `${port}\n`);
   return child.pid;
 }
 

@@ -42,6 +42,7 @@ test("package metadata defines a public macOS CLI with an explicit payload", () 
   assert.deepEqual(metadata.os, ["darwin"]);
   assert.equal(metadata.publishConfig.access, "public");
   assert.equal(metadata.publishConfig.provenance, undefined);
+  assert.equal(metadata.dependencies["jsonc-parser"], "^3.3.1");
   assert.ok(metadata.files.includes("runtime/"));
   const context = createContext({
     ...process.env,

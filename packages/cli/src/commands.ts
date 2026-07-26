@@ -26,6 +26,7 @@ import { discoverThemeDirectories, installThemeDirectory, listThemes, readTheme,
 import { MIN_NODE_MAJOR } from "./context.js";
 import { downloadThemes } from "./theme-download.js";
 import type { ThemeDownloadResult } from "./theme-download.js";
+import { disablePersistentCdp, enablePersistentCdp } from "./persistent-cdp.js";
 import type { CliContext, CliOptions } from "./types.js";
 
 interface DoctorCheck {
@@ -117,6 +118,7 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
       bootstrap = await downloadWithProgress(context, undefined, options);
     }
     const port = readPort(context);
+    const appBundle = resolveAppBundle(context);
     const cdp = await cdpVersion(port);
     if (cdp) {
       const watcherBefore = watcherStatus(context);
@@ -127,6 +129,7 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
         ? managerStatus(context, port)
         : { ready: false, version: null };
       if (managerBefore.ready && managerBefore.version === context.packageVersion) {
+        const persistentCdp = enablePersistentCdp(context, appBundle, port);
         const theme = readTheme(context);
         emitStartResult(
           {
@@ -136,6 +139,7 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
             port,
             watcherPid: watcherBefore.pid,
             theme,
+            persistentCdp,
             guide: { managerEntry: "TRAE Work 右下角的调色盘图标" },
           },
           "TRAE Work Skin 已经在运行",
@@ -147,6 +151,7 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
       }
       runInjector(context, ["--once", "--port", String(port)]);
       const pid = startWatcher(context, port);
+      const persistentCdp = enablePersistentCdp(context, appBundle, port);
       const state = bootstrap ? "ready" : "recovered";
       const headline = bootstrap
         ? `首次启动完成，已安装 ${bootstrap.installed.length} 套官方主题。`
@@ -158,6 +163,7 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
           mode: "refresh",
           port,
           watcherPid: pid,
+          persistentCdp,
           bootstrappedThemes: bootstrap?.installed.map((theme) => theme.id) || [],
           guide: { managerEntry: "TRAE Work 右下角的调色盘图标" },
         },
@@ -173,7 +179,6 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
     if (owner && !owner.command.includes(context.app.processMatch)) {
       throw new CliError("PORT_IN_USE", 4, `端口 ${port} 被其他进程占用：${owner.command}`, "请退出占用端口的程序后重试。");
     }
-    const appBundle = resolveAppBundle(context);
     await confirmAppRestart(context, appBundle, options);
     runScript(context, "start.sh", {
       PORT: String(port),
@@ -182,6 +187,7 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
       APP_BUNDLE_ID: context.app.bundleId,
       APP_PROC_MATCH: context.app.processMatch,
     });
+    const persistentCdp = enablePersistentCdp(context, appBundle, port);
     const headline = bootstrap
       ? `首次启动完成，已安装 ${bootstrap.installed.length} 套官方主题。`
       : "TRAE Work Skin 已启动。";
@@ -191,6 +197,7 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
         state: "ready",
         mode: "launch",
         port,
+        persistentCdp,
         bootstrappedThemes: bootstrap?.installed.map((theme) => theme.id) || [],
         guide: { managerEntry: "TRAE Work 右下角的调色盘图标" },
       },
@@ -262,25 +269,30 @@ export async function stopCommand(context: CliContext, options: CliOptions): Pro
     const port = readPort(context);
     const cdpReachable = Boolean(await cdpVersion(port));
     const watcherStopped = stopWatcher(context);
+    let persistentCdpRemoved = false;
     let targets = 0;
     let restoredTargets = 0;
 
-    if (cdpReachable) {
-      const output = runInjector(context, ["--stop", "--port", String(port)]);
-      try {
-        const result = JSON.parse(output) as { targets?: unknown; restoredTargets?: unknown };
-        if (typeof result.targets === "number") targets = result.targets;
-        if (typeof result.restoredTargets === "number") restoredTargets = result.restoredTargets;
-      } catch {}
+    try {
+      if (cdpReachable) {
+        const output = runInjector(context, ["--stop", "--port", String(port)]);
+        try {
+          const result = JSON.parse(output) as { targets?: unknown; restoredTargets?: unknown };
+          if (typeof result.targets === "number") targets = result.targets;
+          if (typeof result.restoredTargets === "number") restoredTargets = result.restoredTargets;
+        } catch {}
+      }
+    } finally {
+      persistentCdpRemoved = disablePersistentCdp(context).changed;
     }
 
     const human = cdpReachable
       ? "TRAE Work Skin 已停止，TRAE Work 已恢复原生外观。"
-      : watcherStopped
+      : watcherStopped || persistentCdpRemoved
         ? "TRAE Work Skin 守护进程已停止；TRAE Work 当前未启用 CDP。"
         : "TRAE Work Skin 已经处于停止状态。";
     emit(
-      { command: "stop", watcherStopped, cdpReachable, targets, restoredTargets },
+      { command: "stop", watcherStopped, cdpReachable, targets, restoredTargets, persistentCdpRemoved },
       human,
       options.json,
     );
@@ -396,6 +408,7 @@ export async function doctorCommand(context: CliContext, options: CliOptions): P
 
 export async function restoreCommand(context: CliContext, options: CliOptions): Promise<void> {
   await withLock(context, "restore", async () => {
+    disablePersistentCdp(context);
     runScript(context, "restore.sh", { APP_BUNDLE: resolveAppBundle(context), APP_BUNDLE_ID: context.app.bundleId });
     emit({ command: "restore" }, "已恢复 TRAE 原生外观。", options.json);
   });
@@ -452,6 +465,7 @@ export async function uninstallCommand(context: CliContext, options: CliOptions)
     throw new CliError("DEVELOPMENT_INSTALL", 2, "不能从源码工作区执行卸载。", "请使用已经安装的 twskin uninstall。");
   }
   await withLock(context, "uninstall", async () => {
+    disablePersistentCdp(context);
     const port = readPort(context);
     if (await cdpVersion(port)) {
       runScript(context, "restore.sh", { APP_BUNDLE: resolveAppBundle(context), APP_BUNDLE_ID: context.app.bundleId });

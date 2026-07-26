@@ -13,6 +13,7 @@ const FIXTURE = fs.mkdtempSync(path.join(os.tmpdir(), "twskin-lifecycle-"));
 const RUNTIME = path.join(FIXTURE, "runtime");
 const DATA = path.join(FIXTURE, "data");
 const APP = path.join(FIXTURE, "TRAE Test.app");
+const APP_ARGV = path.join(FIXTURE, "argv.json");
 let watcherPid = null;
 let fakeAppPid = null;
 
@@ -25,6 +26,7 @@ function writeExecutable(file, content) {
 before(() => {
   fs.mkdirSync(path.join(RUNTIME, "themes/aurora"), { recursive: true });
   fs.mkdirSync(APP, { recursive: true });
+  fs.writeFileSync(APP_ARGV, "{\n  // lifecycle fixture\n  \"locale\": \"en\"\n}\n");
   fs.writeFileSync(path.join(RUNTIME, "themes/aurora/theme.json"), JSON.stringify({ id: "aurora", name: "Aurora" }));
   fs.writeFileSync(path.join(RUNTIME, "themes/aurora/background.svg"), "<svg xmlns=\"http://www.w3.org/2000/svg\"/>");
   fs.writeFileSync(path.join(RUNTIME, "injector.mjs"), `
@@ -59,6 +61,7 @@ function runAsync(args, env = {}) {
         APP_BUNDLE: APP,
         APP_BUNDLE_ID: "test.twskin.app",
         APP_PROC_MATCH: "TRAE Test",
+        TWSKIN_APP_ARGV_FILE: APP_ARGV,
         ...env,
       },
       stdio: ["ignore", "pipe", "pipe"],
@@ -71,6 +74,13 @@ function runAsync(args, env = {}) {
     child.on("close", (status, signal) => resolve({ status, signal, stdout, stderr }));
   });
 }
+
+test("production watcher waits for TRAE to return after CDP disconnects", () => {
+  const source = fs.readFileSync(path.join(PACKAGE_ROOT, "runtime/injector.mjs"), "utf8");
+  assert.match(source, /cdp unreachable/);
+  assert.doesNotMatch(source, /cdp gone for .*watcher exits/);
+  assert.match(source, /setInterval\(tick, 2000\)/);
+});
 
 test("theme selection while stopped persists without launching the App", async () => {
   const result = await runAsync(["theme", "aurora", "--json"], { PORT: "19529" });
@@ -118,6 +128,8 @@ test("start repairs the manager once, then reports it as already running", async
     assert.equal(result.status, 0, result.stderr);
     const output = JSON.parse(result.stdout);
     assert.equal(output.mode, "refresh");
+    assert.equal(JSON.parse(fs.readFileSync(APP_ARGV, "utf8").replace(/\/\/.*$/gm, ""))["remote-debugging-port"], String(port));
+    assert.ok(fs.existsSync(path.join(DATA, "run/cdp-config.json")));
     watcherPid = Number(fs.readFileSync(path.join(DATA, "run/injector.pid"), "utf8").trim());
     assert.ok(Number.isInteger(watcherPid) && watcherPid > 0);
     process.kill(watcherPid, 0);
@@ -138,7 +150,11 @@ test("start repairs the manager once, then reports it as already running", async
     assert.equal(stoppedOutput.cdpReachable, true);
     assert.equal(stoppedOutput.targets, 1);
     assert.equal(stoppedOutput.restoredTargets, 1);
+    assert.equal(stoppedOutput.persistentCdpRemoved, true);
     assert.equal(fs.existsSync(path.join(DATA, "run/injector.pid")), false);
+    assert.doesNotMatch(fs.readFileSync(APP_ARGV, "utf8"), /remote-debugging-port/);
+    assert.match(fs.readFileSync(APP_ARGV, "utf8"), /lifecycle fixture/);
+    assert.equal(fs.existsSync(path.join(DATA, "run/cdp-config.json")), false);
     watcherPid = null;
   } finally {
     await new Promise((resolve) => server.close(resolve));
@@ -150,8 +166,18 @@ test("restore delegates state through TWSKIN_STATE_DIR instead of writing into n
     try { process.kill(watcherPid, "SIGTERM"); } catch {}
     watcherPid = null;
   }
+  fs.writeFileSync(APP_ARGV, "{\n  \"locale\": \"en\",\n  \"remote-debugging-port\": \"19529\"\n}\n");
+  fs.mkdirSync(path.join(DATA, "run"), { recursive: true });
+  fs.writeFileSync(path.join(DATA, "run/cdp-config.json"), `${JSON.stringify({
+    schemaVersion: 1,
+    argvFile: APP_ARGV,
+    managedPort: 19529,
+    previousExists: false,
+  })}\n`);
   const result = await runAsync(["restore", "--json"], { PORT: "19529" });
   assert.equal(result.status, 0, result.stderr);
   assert.equal(fs.readFileSync(path.join(DATA, "run/restore.marker"), "utf8"), "restored\n");
+  assert.doesNotMatch(fs.readFileSync(APP_ARGV, "utf8"), /remote-debugging-port/);
+  assert.equal(fs.existsSync(path.join(DATA, "run/cdp-config.json")), false);
   assert.equal(fs.existsSync(path.join(RUNTIME, "run")), false);
 });

@@ -20,6 +20,7 @@ const BOOTSTRAP_DATA = path.join(FIXTURE, "bootstrap-data");
 const BOOTSTRAP_THEMES = path.join(BOOTSTRAP_DATA, "themes");
 const RUNTIME = path.join(FIXTURE, "runtime");
 const APP = path.join(FIXTURE, "TRAE Test.app");
+const APP_ARGV = path.join(FIXTURE, "argv.json");
 let bootstrapWatcherPid = null;
 
 function writeTheme(directory, id, extra = true) {
@@ -39,6 +40,7 @@ function runAsync(args, env = {}) {
         TWSKIN_DATA_DIR: DATA,
         TWSKIN_THEMES_DIR: TARGET,
         TWSKIN_DISTRIBUTION: "development",
+        TWSKIN_APP_ARGV_FILE: APP_ARGV,
         ...env,
       },
       stdio: ["ignore", "pipe", "pipe"],
@@ -67,6 +69,7 @@ before(() => {
   assert.equal(tar.status, 0, tar.stderr);
   fs.mkdirSync(RUNTIME, { recursive: true });
   fs.mkdirSync(APP, { recursive: true });
+  fs.writeFileSync(APP_ARGV, "{}\n");
   fs.writeFileSync(path.join(RUNTIME, "injector.mjs"), "if (process.argv.includes('--watch')) setInterval(() => {}, 1000);\n");
 });
 
