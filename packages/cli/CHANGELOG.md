@@ -5,29 +5,31 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.5.3] - 2026-07-26
+
 ### Added
 
-- Add `twskin stop` to stop the watcher and restore TRAE's native appearance
+- `twskin stop` now stops the watcher and restores TRAE's native appearance
   without quitting TRAE, while preserving the selected theme and its settings.
-- Reapply the selected theme automatically after TRAE restarts while the
-  watcher is active, using TRAE's user-level persistent CDP configuration.
+- The selected theme is reapplied automatically after TRAE restarts while the
+  watcher remains active.
 
 ### Changed
 
-- Keep the watcher alive while TRAE is closed so it can reconnect on a later
+- The watcher now remains available while TRAE is closed and reconnects on a later
   launch.
-- Preserve JSONC comments and unrelated settings when managing
-  `remote-debugging-port`, and restore the user's previous value on stop,
-  restore or uninstall.
+- JSONC comments, unrelated settings and any existing `remote-debugging-port`
+  value are preserved when enabling automatic reconnection, then restored on
+  stop, restore or uninstall.
 
 ### Removed
 
-- Remove the misspelled `twskin unisntall` compatibility alias.
+- The misspelled `twskin unisntall` compatibility alias is no longer accepted.
 
 ### Fixed
 
-- Return the restore control from `取消 / 确认恢复` to `恢复默认` after the user
-  confirms restoration.
+- The restore control now returns from `取消 / 确认恢复` to `恢复默认` after the
+  user confirms restoration.
 
 ## [0.5.2] - 2026-07-24
 
