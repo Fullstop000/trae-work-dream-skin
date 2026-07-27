@@ -665,24 +665,31 @@ ${selector} {
   const configToggle = document.createElement("button");
   configToggle.className = "ds-config-toggle";
   configToggle.type = "button";
-  configToggle.textContent = "配置";
+  configToggle.textContent = "当前主题";
   configToggle.title = "查看当前主题配置";
+  const globalToggle = document.createElement("button");
+  globalToggle.className = "ds-global-toggle";
+  globalToggle.type = "button";
+  globalToggle.setAttribute("aria-label", "主题库设置");
+  globalToggle.setAttribute("aria-pressed", "false");
+  globalToggle.title = "主题库设置";
+  globalToggle.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="m19.4 15 .1 1.7-2.1 2.1-1.7-.1-1.2 1-.4 1.6h-3l-.4-1.6-1.2-1-1.7.1-2.1-2.1.1-1.7-1-1.2L3 13.4v-3l1.6-.4 1-1.2-.1-1.7 2.1-2.1 1.7.1 1.2-1 .4-1.6h3l.4 1.6 1.2 1 1.7-.1 2.1 2.1-.1 1.7 1 1.2 1.6.4v3l-1.6.4-1 1.2Z"/></svg>';
   const syncButton = document.createElement("button");
   syncButton.className = "ds-sync";
   syncButton.type = "button";
-  syncButton.textContent = "更新";
+  syncButton.textContent = "检查更新";
   syncButton.title = "检查官方主题更新";
   const reloadButton = document.createElement("button");
-  reloadButton.className = "ds-reload";
+  reloadButton.className = "ds-local-reload";
   reloadButton.type = "button";
-  reloadButton.innerHTML = '<span class="ds-reload-icon">↻</span>';
+  reloadButton.textContent = "重新扫描本地主题";
   reloadButton.title = "重新加载主题目录（新主题热加载）";
   const closeButton = document.createElement("button");
   closeButton.className = "ds-close";
   closeButton.type = "button";
   closeButton.textContent = "×";
   closeButton.title = "关闭 (Esc)";
-  headerActions.append(syncButton, reloadButton, configToggle, closeButton);
+  headerActions.append(configToggle, globalToggle, closeButton);
   header.append(headerText, headerActions);
   const panelBody = document.createElement("div");
   panelBody.className = "ds-body";
@@ -717,6 +724,29 @@ ${selector} {
   blurSwitch.setAttribute("role", "switch");
   blurSwitch.setAttribute("aria-label", "面板模糊");
   blurRow.append(blurCopy, blurSwitch);
+  const globalView = document.createElement("div");
+  globalView.className = "ds-global-view";
+  const globalHead = document.createElement("div");
+  globalHead.className = "ds-global-head";
+  const globalTitle = document.createElement("div");
+  globalTitle.className = "ds-global-title";
+  globalTitle.textContent = "主题库设置";
+  const globalDesc = document.createElement("div");
+  globalDesc.className = "ds-global-desc";
+  globalDesc.textContent = "管理所有主题共用的更新与本地目录";
+  globalHead.append(globalTitle, globalDesc);
+  const checkRow = document.createElement("div");
+  checkRow.className = "ds-setting-row";
+  const checkCopy = document.createElement("div");
+  checkCopy.className = "ds-setting-copy";
+  const checkLabel = document.createElement("div");
+  checkLabel.className = "ds-setting-label";
+  checkLabel.textContent = "检查官方主题更新";
+  const checkDesc = document.createElement("div");
+  checkDesc.className = "ds-setting-desc";
+  checkDesc.setAttribute("aria-live", "polite");
+  checkCopy.append(checkLabel, checkDesc);
+  checkRow.append(checkCopy, syncButton);
   const updateRow = document.createElement("div");
   updateRow.className = "ds-setting-row";
   const updateCopy = document.createElement("div");
@@ -734,6 +764,18 @@ ${selector} {
   updateSwitch.setAttribute("role", "switch");
   updateSwitch.setAttribute("aria-label", "自动更新官方主题");
   updateRow.append(updateCopy, updateSwitch);
+  const localThemesRow = document.createElement("div");
+  localThemesRow.className = "ds-setting-row ds-local-themes-row";
+  const localThemesCopy = document.createElement("div");
+  localThemesCopy.className = "ds-setting-copy";
+  const localThemesLabel = document.createElement("div");
+  localThemesLabel.className = "ds-setting-label";
+  localThemesLabel.textContent = "本地主题";
+  const localThemesDesc = document.createElement("div");
+  localThemesDesc.className = "ds-setting-desc";
+  localThemesDesc.textContent = "新增或修改 themes/ 目录后重新读取";
+  localThemesCopy.append(localThemesLabel, localThemesDesc);
+  localThemesRow.append(localThemesCopy, reloadButton);
   const brightnessRow = document.createElement("div");
   brightnessRow.className = "ds-setting-row ds-setting-row-slider";
   const brightnessHead = document.createElement("div");
@@ -794,8 +836,21 @@ ${selector} {
   resetActions.className = "ds-reset-actions";
   resetActions.append(resetCancel, resetConfig);
   configHead.append(configName, copyConfig);
-  configView.append(configHead, updateRow, brightnessRow, mainOverlayRow, blurRow, configCode);
-  panelBody.append(syncBanner, galleryView, configView);
+  const restoreRow = document.createElement("div");
+  restoreRow.className = "ds-setting-row ds-restore-row";
+  const restoreCopy = document.createElement("div");
+  restoreCopy.className = "ds-setting-copy";
+  const restoreLabel = document.createElement("div");
+  restoreLabel.className = "ds-setting-label";
+  restoreLabel.textContent = "恢复原生外观";
+  const restoreDesc = document.createElement("div");
+  restoreDesc.className = "ds-setting-desc";
+  restoreDesc.textContent = "停止应用主题化，并恢复 TRAE 默认界面";
+  restoreCopy.append(restoreLabel, restoreDesc);
+  restoreRow.append(restoreCopy, resetActions);
+  configView.append(configHead, brightnessRow, mainOverlayRow, blurRow, configCode);
+  globalView.append(globalHead, syncBanner, checkRow, updateRow, localThemesRow, restoreRow);
+  panelBody.append(galleryView, configView, globalView);
 
   // 分类 Tab（固定在头部下，不随列表滚动；选择持久化）
   const CATEGORY_LS = `${LS_PREFIX}category`;
@@ -836,19 +891,25 @@ ${selector} {
   const footerText = document.createElement("span");
   footerText.className = "ds-footer-text";
   footerText.textContent = `TRAE Work Skin v${VERSION}`;
-  footer.append(footerText, resetActions);
+  footer.append(footerText);
   panel.append(header, tabsBar, panelBody, footer);
 
-  let configOpen = false;
-  const showConfig = (open) => {
-    configOpen = Boolean(open);
-    // 配置视图只展示当前主题设置；返回画廊时再恢复分类栏和主题列表。
-    tabsBar.style.display = configOpen ? "none" : "";
-    galleryView.style.display = configOpen ? "none" : "";
-    configView.style.display = configOpen ? "block" : "";
-    configToggle.textContent = configOpen ? "主题" : "配置";
-    configToggle.title = configOpen ? "返回主题列表" : "查看当前主题配置";
+  let activeView = "gallery";
+  const showView = (view) => {
+    activeView = view;
+    // 详情页只呈现对应所有权范围的设置，画廊则恢复主题库操作与分类列表。
+    tabsBar.style.display = view === "gallery" ? "" : "none";
+    galleryView.style.display = view === "gallery" ? "" : "none";
+    configView.style.display = view === "theme" ? "block" : "none";
+    globalView.style.display = view === "global" ? "block" : "none";
+    configToggle.textContent = view === "gallery" ? "当前主题" : "主题";
+    configToggle.title = view === "gallery" ? "查看当前主题配置" : "返回主题列表";
+    globalToggle.classList.toggle("ds-global-toggle-active", view === "global");
+    globalToggle.setAttribute("aria-pressed", String(view === "global"));
+    globalToggle.title = view === "global" ? "返回主题列表" : "主题库设置";
+    renderThemeSyncState();
   };
+  const showConfig = (open) => showView(open ? "theme" : "gallery");
   renderCurrentConfig = (theme = findTheme(
     (() => { try { return localStorage.getItem(LS_KEY); } catch { return null; } })(),
   )) => {
@@ -883,12 +944,21 @@ ${selector} {
     if (themeSyncState.phase === "error") return themeSyncState.message || "主题更新失败";
     return "";
   };
+  const SUCCESS_FEEDBACK_DURATION_MS = 4000;
+  let successFeedbackTimer = null;
+  const hasRecentSyncSuccess = () => {
+    if (themeSyncState.phase !== "success") return false;
+    const completedAt = Date.parse(themeSyncState.lastSuccessfulSyncAt || "");
+    return Number.isFinite(completedAt) && Date.now() - completedAt < SUCCESS_FEEDBACK_DURATION_MS;
+  };
   const renderThemeSyncState = () => {
     const phase = themeSyncState.phase || "idle";
     const summary = syncSummary();
+    const updateCount = Number(themeSyncState.updateCount || 0);
+    const showSuccessFeedback = hasRecentSyncSuccess();
     syncBanner.replaceChildren();
     syncBanner.className = `ds-sync-banner ds-sync-${phase}`;
-    if (!summary || phase === "fresh" || phase === "idle") {
+    if (!summary || phase === "fresh" || phase === "idle" || (phase === "success" && !showSuccessFeedback) || activeView !== "global") {
       syncBanner.style.display = "none";
     } else {
       syncBanner.style.display = "flex";
@@ -918,13 +988,31 @@ ${selector} {
         syncBanner.append(retry);
       }
     }
-    syncButton.classList.toggle("ds-sync-pending", Number(themeSyncState.updateCount || 0) > 0);
+    syncButton.classList.toggle("ds-sync-pending", updateCount > 0);
     syncButton.disabled = phase === "checking" || phase === "downloading" || phase === "installing";
     syncButton.title = summary || "检查官方主题更新";
+    globalToggle.classList.toggle("ds-global-pending", updateCount > 0);
+    let checkStatusCopy = "尚未检查";
+    if (phase === "checking") checkStatusCopy = "正在检查更新…";
+    else if (phase === "update-available") checkStatusCopy = `发现 ${updateCount} 项更新`;
+    else if (phase === "success" && showSuccessFeedback) checkStatusCopy = "已完成同步";
+    else if (phase === "error") checkStatusCopy = "检查失败，可重试";
+    else if (themeSyncState.lastCheckedAt) checkStatusCopy = `上次检查：${new Date(themeSyncState.lastCheckedAt).toLocaleString()}`;
+    checkDesc.textContent = checkStatusCopy;
+    if (successFeedbackTimer) {
+      clearTimeout(successFeedbackTimer);
+      successFeedbackTimer = null;
+    }
+    if (showSuccessFeedback) {
+      const remaining = SUCCESS_FEEDBACK_DURATION_MS - (Date.now() - Date.parse(themeSyncState.lastSuccessfulSyncAt));
+      successFeedbackTimer = setTimeout(() => {
+        successFeedbackTimer = null;
+        renderThemeSyncState();
+      }, Math.max(0, remaining));
+    }
     updateSwitch.setAttribute("aria-checked", String(Boolean(themeSyncState.autoUpdateThemes)));
     updateSwitch.title = themeSyncState.autoUpdateThemes ? "关闭官方主题自动更新" : "开启官方主题自动更新";
-    const checkedAt = themeSyncState.lastCheckedAt ? new Date(themeSyncState.lastCheckedAt).toLocaleString() : "尚未检查";
-    footerText.textContent = `TRAE Work Skin v${VERSION} · 主题更新：${checkedAt}`;
+    footerText.textContent = `TRAE Work Skin v${VERSION}`;
   };
   renderBrightnessControl = (theme = findTheme(
     (() => { try { return localStorage.getItem(LS_KEY); } catch { return null; } })(),
@@ -952,8 +1040,16 @@ ${selector} {
   };
   configToggle.addEventListener("click", (event) => {
     event.stopPropagation();
-    renderCurrentConfig();
-    showConfig(!configOpen);
+    if (activeView === "gallery") {
+      renderCurrentConfig();
+      showView("theme");
+    } else {
+      showView("gallery");
+    }
+  });
+  globalToggle.addEventListener("click", (event) => {
+    event.stopPropagation();
+    showView(activeView === "global" ? "gallery" : "global");
   });
   syncButton.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -1070,7 +1166,7 @@ ${selector} {
     card.dataset.category = theme.category || "其他";
     const badge = document.createElement("span");
     badge.className = "ds-badge";
-    badge.textContent = "✓ 使用中";
+    badge.textContent = "当前主题";
     const preview = document.createElement("div");
     preview.className = "ds-preview";
     preview.style.backgroundImage = `url("${theme.art}")`;
@@ -1124,11 +1220,16 @@ ${selector} {
   });
   reloadButton.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (reloadButton.classList.contains("ds-reload-loading")) return;
-    reloadButton.classList.add("ds-reload-loading");
+    if (reloadButton.classList.contains("ds-local-reload-loading")) return;
+    reloadButton.classList.add("ds-local-reload-loading");
+    const original = reloadButton.textContent;
+    reloadButton.textContent = "正在扫描…";
     // 守护进程轮询到这个标记后会重建主题目录、重新注入并重新打开面板
     window.__TRAE_DREAM_SKIN_RELOAD_REQUEST__ = Date.now();
-    setTimeout(() => reloadButton.classList.remove("ds-reload-loading"), 6000);
+    setTimeout(() => {
+      reloadButton.classList.remove("ds-local-reload-loading");
+      reloadButton.textContent = original;
+    }, 6000);
   });
   window.__TRAE_DREAM_SKIN_SYNC_LISTENER__ && window.removeEventListener("trae-dream-skin-sync-state", window.__TRAE_DREAM_SKIN_SYNC_LISTENER__);
   window.__TRAE_DREAM_SKIN_SYNC_LISTENER__ = () => {
