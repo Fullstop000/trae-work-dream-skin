@@ -11,7 +11,7 @@ An unofficial theme manager for TRAE Work CN on macOS.
 ## Install
 
 ```bash
-npm install --global @byted-relic/twskin --registry=https://bnpm.byted.org
+npm install --global twskin
 twskin start
 ```
 

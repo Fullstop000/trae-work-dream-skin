@@ -16,7 +16,7 @@ switching and restoring local themes in TRAE Work on macOS.
 ## Install
 
 ```bash
-npm install --global @byted-relic/twskin --registry=https://bnpm.byted.org
+npm install --global twskin
 twskin start
 ```
 

@@ -1,10 +1,13 @@
 name: Publish CLI to npm
 
 on:
+  push:
+    tags:
+      - "v*"
   workflow_dispatch:
     inputs:
       tag:
-        description: Git tag to publish to npm
+        description: Existing Git tag to publish to npm
         required: true
         type: string
 
@@ -19,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.tag }}
+          ref: ${{ inputs.tag || github.ref }}
       - uses: actions/setup-node@v6
         with:
           node-version: 24
@@ -29,10 +32,10 @@ jobs:
         working-directory: packages/cli
       - name: Verify release tag matches package version
         env:
-          RELEASE_TAG: ${{ inputs.tag }}
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
         run: test "${RELEASE_TAG#v}" = "$(node -p "JSON.parse(require('fs').readFileSync('package.json')).version")"
         working-directory: packages/cli
       - run: npm run build
         working-directory: packages/cli
-      - run: npm publish --access public --provenance
+      - run: npm publish --access public
         working-directory: packages/cli

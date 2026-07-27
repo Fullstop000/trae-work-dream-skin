@@ -1,5 +1,5 @@
 {
-  "name": "@byted-relic/twskin",
+  "name": "twskin",
   "version": "0.5.3",
   "description": "An unofficial community theme manager and CLI for TRAE Work on macOS.",
   "type": "module",
@@ -60,7 +60,8 @@
   },
   "homepage": "https://github.com/Fullstop000/trae-work-dream-skin#readme",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
     "@clack/prompts": "^1.7.0",
