@@ -1,0 +1,736 @@
+/* 索尔维 1927 · Solarized Light
+   设计母题：日光下的实验档案。Solarized yellow = 光量子索引，blue = 手写实验批注。 */
+body.trae-skin-theme-solvay-1927-solarized-light {
+  --solvay-night: #fdf6e3;
+  --solvay-panel: #eee8d5;
+  --solvay-paper: #002b36;
+  --solvay-muted: #586e75;
+  --solvay-ink: #b58900;
+  --solvay-ink-soft: rgba(181, 137, 0, 0.24);
+  --solvay-photon: #268bd2;
+  --solvay-photon-soft: rgba(38, 139, 210, 0.2);
+  --solvay-grid: rgba(38, 139, 210, 0.055);
+  --solvay-collapse: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 主照片只由固定根层绘制；暖纸晕染与蓝色坐标线模拟档案室灯箱。 */
+body.trae-skin-theme-solvay-1927-solarized-light::after {
+  background-color: rgba(253, 246, 227, 0.06) !important;
+  background-image:
+    radial-gradient(circle at 50% 48%, transparent 18%, rgba(253, 246, 227, 0.2) 62%, rgba(181, 137, 0, 0.08) 100%),
+    linear-gradient(90deg, rgba(181, 137, 0, 0.08), transparent 34%, transparent 66%, rgba(38, 139, 210, 0.08)),
+    linear-gradient(var(--solvay-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--solvay-grid) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px !important;
+  background-position: center !important;
+}
+
+body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-chat-panel-container,
+body.trae-skin-theme-solvay-1927-solarized-light .panel-container > .panel-content {
+  background-color: transparent !important;
+  background-image:
+    linear-gradient(90deg, rgba(253, 246, 227, 0.64) 0, rgba(238, 232, 213, 0.34) 150px, rgba(253, 246, 227, 0.12) 360px),
+    linear-gradient(var(--trae-skin-landing-surface), var(--trae-skin-landing-surface)) !important;
+  background-size: 100% 100% !important;
+  background-repeat: no-repeat !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-chat-panel-container {
+  background-image:
+    linear-gradient(90deg, rgba(253, 246, 227, 0.64) 0, rgba(238, 232, 213, 0.34) 150px, rgba(253, 246, 227, 0.12) 360px),
+    linear-gradient(var(--trae-skin-chat-surface), var(--trae-skin-chat-surface)) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-main-area {
+  background: rgba(253, 246, 227, 0.12) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .task-list-panel {
+  background-image:
+    linear-gradient(90deg, transparent 0 24px, rgba(181, 137, 0, 0.2) 24px 25px, transparent 25px),
+    linear-gradient(90deg, transparent 0 calc(100% - 25px), rgba(38, 139, 210, 0.16) calc(100% - 25px) calc(100% - 24px), transparent calc(100% - 24px)),
+    linear-gradient(rgba(38, 139, 210, 0.035) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 100% 24px !important;
+  border-right-color: rgba(38, 139, 210, 0.24) !important;
+  box-shadow: inset -1px 0 rgba(181, 137, 0, 0.11) !important;
+}
+
+/* 图标像实验册里的套色印刷：黄版与蓝版略微错位，交互时套准。 */
+body.trae-skin-theme-solvay-1927-solarized-light svg.trae-icon,
+body.trae-skin-theme-solvay-1927-solarized-light [class*="tabIcon-"] svg,
+body.trae-skin-theme-solvay-1927-solarized-light .task-list-skills-item > svg.add-icon {
+  filter:
+    drop-shadow(-1.5px 0 rgba(181, 137, 0, 0.58))
+    drop-shadow(1.5px 0 rgba(38, 139, 210, 0.58));
+  transition:
+    color 180ms var(--solvay-collapse),
+    filter 260ms var(--solvay-collapse),
+    transform 260ms var(--solvay-collapse) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light button:hover svg.trae-icon,
+body.trae-skin-theme-solvay-1927-solarized-light [role="button"]:hover svg.trae-icon,
+body.trae-skin-theme-solvay-1927-solarized-light button[aria-selected="true"] svg,
+body.trae-skin-theme-solvay-1927-solarized-light [aria-current="page"] svg,
+body.trae-skin-theme-solvay-1927-solarized-light [data-state="checked"] svg {
+  color: var(--solvay-photon) !important;
+  filter: drop-shadow(0 0 5px rgba(38, 139, 210, 0.5)) !important;
+  transform: translateZ(0) scale(1.06);
+}
+body.trae-skin-theme-solvay-1927-solarized-light button:active svg.trae-icon,
+body.trae-skin-theme-solvay-1927-solarized-light [role="button"]:active svg.trae-icon {
+  color: var(--solvay-ink) !important;
+  filter: drop-shadow(0 0 4px rgba(181, 137, 0, 0.46)) !important;
+  transform: scale(0.94);
+}
+body.trae-skin-theme-solvay-1927-solarized-light button:disabled svg,
+body.trae-skin-theme-solvay-1927-solarized-light [aria-disabled="true"] svg {
+  filter: none !important;
+  opacity: 0.44;
+}
+
+/* Banner：实验档案的索引卡。黄色竖标是光量子，蓝色横线是批注坐标。 */
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper {
+  margin-bottom: 36px !important;
+  perspective: none;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"] {
+  position: relative !important;
+  min-height: 142px !important;
+  padding: 44px 36px 28px 44px !important;
+  overflow: hidden !important;
+  color: var(--solvay-paper) !important;
+  border: 1px solid rgba(181, 137, 0, 0.52) !important;
+  border-radius: 2px !important;
+  clip-path: none !important;
+  background:
+    linear-gradient(90deg, var(--solvay-ink) 0 10px, transparent 10px),
+    radial-gradient(circle at calc(100% - 24px) 20px, rgba(0, 43, 54, 0.28) 0 2px, transparent 2.5px),
+    repeating-linear-gradient(0deg, transparent 0 23px, rgba(38, 139, 210, 0.055) 23px 24px),
+    linear-gradient(90deg, rgba(181, 137, 0, 0.08), transparent 34%, transparent 74%, rgba(38, 139, 210, 0.08)),
+    rgba(253, 246, 227, 0.96) !important;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100% !important;
+  box-shadow:
+    0 18px 42px rgba(88, 110, 117, 0.2),
+    7px 7px 0 rgba(181, 137, 0, 0.08),
+    -5px -5px 0 rgba(255, 255, 255, 0.48) !important;
+  isolation: isolate;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"]::before {
+  content: "LABORATORY INDEX  /  LIGHT QUANTA";
+  top: 16px;
+  left: 44px;
+  color: var(--solvay-paper);
+  font: 700 10px/1 var(--trae-skin-font-code);
+  letter-spacing: 0.25em;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"]::after {
+  content: "V CONGRÈS SOLVAY  ·  BRUXELLES  ·  24—29 OCT 1927";
+  top: auto;
+  right: 34px;
+  bottom: 16px;
+  color: var(--solvay-ink);
+  font: 650 9px/1 var(--trae-skin-font-code);
+  letter-spacing: 0.13em;
+  text-shadow: none;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="animationContainer-"] {
+  position: relative !important;
+  overflow: visible !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="animationContainer-"]::before {
+  content: "" !important;
+  position: absolute !important;
+  z-index: -1 !important;
+  top: 50% !important;
+  left: 260px !important;
+  width: 300px !important;
+  height: 58px !important;
+  color: var(--solvay-photon) !important;
+  opacity: 0.18;
+  transform: translateY(-50%);
+  pointer-events: none;
+  animation: solvay-wave-drift 9s linear infinite;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="mainTextContainer-"] {
+  position: relative;
+  z-index: 1;
+  min-height: 62px !important;
+  column-gap: 22px !important;
+  color: var(--solvay-paper) !important;
+  font-family: var(--trae-skin-font-heading) !important;
+  font-size: 42px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.72) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="mainTextContainer-"]::after {
+  content: var(--solvay-mode-symbol, "ψ");
+  position: absolute;
+  top: -34px;
+  right: 0;
+  color: rgba(181, 137, 0, 0.13);
+  font: 700 94px/1 var(--trae-skin-font-heading);
+  letter-spacing: -0.08em;
+  pointer-events: none;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="mainTextContainer-"] > [class*="icon-"] {
+  position: relative !important;
+  width: 60px !important;
+  height: 60px !important;
+  flex-basis: 60px !important;
+  color: var(--solvay-paper) !important;
+  border: 1px solid rgba(0, 43, 54, 0.48) !important;
+  border-radius: 50% !important;
+  clip-path: none !important;
+  background: var(--solvay-ink) !important;
+  box-shadow:
+    0 0 0 6px rgba(181, 137, 0, 0.12),
+    8px 0 0 rgba(38, 139, 210, 0.1) !important;
+  animation: solvay-emblem-superpose 4.8s ease-in-out infinite;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="mainTextContainer-"] > [class*="icon-"] svg {
+  width: 27px !important;
+  height: 27px !important;
+  filter: none !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="withTraeText-"] {
+  display: none !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light:has(.messageInputContainer[data-mode="work"]) .welcomeTitleWrapper [class*="traeWorkTitle-"] {
+  --solvay-mode-symbol: "ψ";
+}
+body.trae-skin-theme-solvay-1927-solarized-light:has(.messageInputContainer[data-mode="code"]) .welcomeTitleWrapper [class*="traeWorkTitle-"] {
+  --solvay-mode-symbol: "Δx·Δp";
+}
+body.trae-skin-theme-solvay-1927-solarized-light:has(.messageInputContainer[data-mode="design"]) .welcomeTitleWrapper [class*="traeWorkTitle-"] {
+  --solvay-mode-symbol: "λ";
+}
+
+/* 模式选择器：三张档案索引签。选中态像黄色荧光笔落下一道标记。 */
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn {
+  padding: 2px 0 6px !important;
+  gap: var(--trae-skin-mode-tabs-gap) !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(181, 137, 0, 0.38) !important;
+  border-radius: 0 !important;
+  clip-path: none !important;
+  background:
+    linear-gradient(90deg, var(--solvay-ink), transparent 42%, transparent 72%, var(--solvay-photon)) bottom / 100% 1px no-repeat,
+    rgba(238, 232, 213, 0.9) !important;
+  box-shadow: 0 12px 34px rgba(88, 110, 117, 0.18) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"] {
+  top: 2px !important;
+  left: 0 !important;
+  height: calc(var(--trae-skin-mode-tabs-height) - 7px) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  clip-path: none !important;
+  background: linear-gradient(180deg, rgba(181, 137, 0, 0.18), rgba(181, 137, 0, 0.06)) !important;
+  box-shadow:
+    inset 0 -3px var(--solvay-ink),
+    inset 1px 0 rgba(181, 137, 0, 0.26),
+    inset -1px 0 rgba(181, 137, 0, 0.26) !important;
+  transition:
+    left 320ms var(--solvay-collapse),
+    transform 320ms var(--solvay-collapse),
+    box-shadow 320ms var(--solvay-collapse) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"]::before,
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"]::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  bottom: 7px;
+  width: 1px;
+  pointer-events: none;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"]::before {
+  left: 3px;
+  background: var(--solvay-ink);
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"]::after {
+  right: 3px;
+  background: var(--solvay-photon);
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"] {
+  position: relative !important;
+  border-radius: 0 !important;
+  color: var(--solvay-muted) !important;
+  font-family: var(--trae-skin-font-heading) !important;
+  font-size: 12px !important;
+  font-weight: 650 !important;
+  letter-spacing: 0.06em !important;
+  text-shadow: none !important;
+  transition:
+    color 180ms ease,
+    letter-spacing 260ms var(--solvay-collapse),
+    background-color 180ms ease !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"]:hover:not([aria-selected="true"]) {
+  color: var(--solvay-paper) !important;
+  background:
+    linear-gradient(90deg, rgba(181, 137, 0, 0.08), rgba(38, 139, 210, 0.08)) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"][aria-selected="true"] {
+  color: var(--solvay-paper) !important;
+  letter-spacing: 0.09em !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tab-codes="true"] .mode-switcher-btn button[role="tab"]::after {
+  top: 3px;
+  right: 5px;
+  color: var(--solvay-ink);
+  font: 650 7px/1 var(--trae-skin-font-code);
+  letter-spacing: 0;
+  opacity: 0.58;
+}
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tab-codes="true"] .mode-switcher-btn button[role="tab"][aria-selected="true"]::after {
+  color: var(--solvay-ink);
+  opacity: 1;
+}
+
+/* Composer：实验记录纸。黄色页签负责定位，蓝色横线记录测量。 */
+body.trae-skin-theme-solvay-1927-solarized-light .messageInputContainer {
+  position: relative !important;
+  isolation: isolate !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .messageInputEditorWrapper {
+  position: relative !important;
+  box-sizing: border-box !important;
+  padding: 2px !important;
+  overflow: visible !important;
+  border: 1px solid rgba(181, 137, 0, 0.55) !important;
+  border-left-width: 5px !important;
+  border-radius: 2px !important;
+  clip-path: none !important;
+  background: rgba(253, 246, 227, 0.98) !important;
+  box-shadow:
+    0 18px 40px rgba(88, 110, 117, 0.18),
+    5px 5px 0 rgba(181, 137, 0, 0.07),
+    inset 0 -2px rgba(38, 139, 210, 0.22) !important;
+  transition: box-shadow 260ms var(--solvay-collapse), transform 260ms var(--solvay-collapse) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .messageInputEditorWrapper::before {
+  content: "LAB NOTE 05  /  INPUT ψ";
+  position: absolute;
+  z-index: 6;
+  top: 12px;
+  left: 24px;
+  color: var(--solvay-muted);
+  font: 650 8px/1 var(--trae-skin-font-code);
+  letter-spacing: 0.17em;
+  pointer-events: none;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .messageInputEditorWrapper::after {
+  content: "PHOTON READY";
+  position: absolute;
+  z-index: 6;
+  top: 11px;
+  right: 24px;
+  padding-left: 18px;
+  color: var(--solvay-ink);
+  font: 700 8px/1 var(--trae-skin-font-code);
+  letter-spacing: 0.12em;
+  background:
+    radial-gradient(circle, var(--solvay-ink) 0 2px, transparent 2.5px) 0 50% / 7px 7px no-repeat,
+    radial-gradient(circle, var(--solvay-ink) 0 2px, transparent 2.5px) 7px 50% / 7px 7px no-repeat;
+  pointer-events: none;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .messageInputEditorWrapper:has(.chat-input-v2-input-box-editable:focus) {
+  box-shadow:
+    0 22px 48px rgba(88, 110, 117, 0.2),
+    0 0 0 2px rgba(181, 137, 0, 0.32),
+    inset 0 -3px rgba(38, 139, 210, 0.36) !important;
+  transform: translateY(-1px);
+}
+body.trae-skin-theme-solvay-1927-solarized-light .messageInputEditorWrapper:has(.chat-input-v2-input-box-editable:focus)::after {
+  content: "MEASUREMENT FILED";
+  color: var(--solvay-paper);
+  background: radial-gradient(circle, var(--solvay-photon) 0 2.5px, transparent 3px) 5px 50% / 7px 7px no-repeat;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .messageInputChatInput {
+  position: relative !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  clip-path: none !important;
+  background:
+    linear-gradient(90deg, rgba(181, 137, 0, 0.1) 0 14px, transparent 14px),
+    repeating-linear-gradient(0deg, transparent 0 23px, rgba(38, 139, 210, 0.065) 23px 24px),
+    linear-gradient(90deg, transparent 0 42px, rgba(181, 137, 0, 0.16) 42px 43px, transparent 43px),
+    rgba(255, 253, 245, 0.985) !important;
+  background-size: 100% 100%, 24px 24px, 24px 24px, 100% 100% !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 43, 54, 0.045) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .messageInputChatInput::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, rgba(38, 139, 210, 0.18), transparent);
+  transform: translateX(-110%);
+}
+body.trae-skin-theme-solvay-1927-solarized-light .messageInputEditorWrapper:has(.chat-input-v2-input-box-editable:focus) .messageInputChatInput::after {
+  animation: solvay-measure-scan 1050ms var(--solvay-collapse) 1;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-editor-part {
+  position: relative !important;
+  z-index: 2 !important;
+  padding: 32px 18px 0 24px !important;
+  background: transparent !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-input-box-wrapper {
+  min-height: 52px !important;
+  padding: 3px 4px 7px !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-input-box-editable,
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-input-box-editable p {
+  color: var(--solvay-paper) !important;
+  caret-color: var(--solvay-ink) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-input-box-editable {
+  text-shadow:
+    -1px 0 rgba(181, 137, 0, 0.18),
+    1px 0 rgba(38, 139, 210, 0.18);
+}
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-input-box-editable:focus {
+  text-shadow: none;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-placeholder {
+  max-width: calc(100% - 42px) !important;
+  color: #657b83 !important;
+  font-size: 12px !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .messageInputToolbarIconBtn,
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-editor-part-lower-content button:not(.chat-input-v2-send-button) {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  transition: color 160ms ease, background-color 160ms ease !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .messageInputToolbarIconBtn:hover,
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-editor-part-lower-content button:not(.chat-input-v2-send-button):hover {
+  color: var(--solvay-photon) !important;
+  background:
+    linear-gradient(135deg, rgba(181, 137, 0, 0.1), rgba(38, 139, 210, 0.12)) !important;
+}
+
+/* 发送键：一枚黄色光量子印章；悬停时蓝色电子沿印章外圈运行。 */
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-send-button {
+  position: relative !important;
+  overflow: visible !important;
+  border: 1px solid rgba(0, 43, 54, 0.42) !important;
+  border-radius: 50% !important;
+  color: var(--solvay-paper) !important;
+  background: var(--solvay-ink) !important;
+  box-shadow:
+    0 7px 18px rgba(88, 110, 117, 0.22),
+    inset -3px 0 rgba(0, 43, 54, 0.12),
+    inset 3px 0 rgba(255, 255, 255, 0.18) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-send-button::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 1px solid rgba(181, 137, 0, 0.44);
+  border-left-color: var(--solvay-ink);
+  border-radius: 50%;
+  transform: rotate(-24deg) scaleY(0.55);
+  pointer-events: none;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-send-button::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  right: -1px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--solvay-photon);
+  box-shadow: 0 0 6px rgba(38, 139, 210, 0.5);
+  transform-origin: -16px 13px;
+  pointer-events: none;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-send-button:not(.disabled):hover::before {
+  animation: solvay-orbit 780ms linear infinite;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-send-button:not(.disabled):hover::after {
+  animation: solvay-electron 780ms linear infinite;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-send-button:not(.disabled):hover {
+  color: var(--solvay-paper) !important;
+  border-color: var(--solvay-paper) !important;
+  filter: none !important;
+  transform: translateY(-1px) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-send-button:active {
+  transform: scale(0.9) !important;
+  box-shadow: 0 0 0 5px rgba(181, 137, 0, 0.13) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .chat-input-v2-send-button.disabled {
+  opacity: 0.48 !important;
+  filter: grayscale(0.7) !important;
+}
+
+/* 消息：提问是一张黄色索引卡，回答沿蓝色实验记录线展开。 */
+body.trae-skin-theme-solvay-1927-solarized-light .user-message__text-box {
+  position: relative !important;
+  padding: 18px 20px 16px 26px !important;
+  border: 1px solid rgba(181, 137, 0, 0.4) !important;
+  border-left: 4px solid var(--solvay-ink) !important;
+  border-radius: 2px !important;
+  clip-path: none !important;
+  background:
+    radial-gradient(circle at 13px 13px, var(--solvay-ink) 0 2px, transparent 2.5px),
+    repeating-linear-gradient(0deg, transparent 0 23px, rgba(38, 139, 210, 0.045) 23px 24px),
+    rgba(255, 250, 240, 0.96) !important;
+  box-shadow:
+    0 14px 32px rgba(88, 110, 117, 0.18),
+    3px 3px 0 rgba(38, 139, 210, 0.07) !important;
+  animation: solvay-particle-arrive 320ms var(--solvay-collapse) both;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .core-finish-card {
+  position: relative !important;
+  padding-left: 20px !important;
+  border: 0 !important;
+  border-left: 2px solid rgba(38, 139, 210, 0.34) !important;
+  background:
+    linear-gradient(90deg, rgba(38, 139, 210, 0.04), transparent 24%) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .core-finish-card::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: -4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--solvay-photon);
+  box-shadow:
+    0 0 0 5px rgba(38, 139, 210, 0.08),
+    0 0 14px rgba(38, 139, 210, 0.34);
+}
+body.trae-skin-theme-solvay-1927-solarized-light .core-finish-card__code-card,
+body.trae-skin-theme-solvay-1927-solarized-light [class*="recommendationCard"],
+body.trae-skin-theme-solvay-1927-solarized-light [class*="card-QNuQ2F"] {
+  border-radius: 0 !important;
+  background:
+    linear-gradient(rgba(38, 139, 210, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(38, 139, 210, 0.04) 1px, transparent 1px),
+    rgba(238, 232, 213, 0.94) !important;
+  background-size: 20px 20px, 20px 20px, 100% 100% !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light pre,
+body.trae-skin-theme-solvay-1927-solarized-light .core-finish-card__code-card {
+  border-left: 3px solid var(--solvay-photon) !important;
+  box-shadow: -4px 0 rgba(181, 137, 0, 0.16) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light blockquote {
+  border-left: 2px solid var(--solvay-ink) !important;
+  color: var(--trae-skin-text-secondary) !important;
+  background: linear-gradient(90deg, rgba(181, 137, 0, 0.08), transparent) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-chat-panel-container table {
+  overflow: hidden !important;
+  border: 1px solid rgba(38, 139, 210, 0.28) !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border-radius: 0 !important;
+  background: rgba(253, 246, 227, 0.92) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-chat-panel-container th {
+  color: var(--solvay-paper) !important;
+  background: linear-gradient(90deg, rgba(181, 137, 0, 0.22), rgba(181, 137, 0, 0.08)) !important;
+  border-color: rgba(38, 139, 210, 0.22) !important;
+  font-family: var(--trae-skin-font-code) !important;
+  letter-spacing: 0.04em;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-chat-panel-container td {
+  border-color: rgba(38, 139, 210, 0.12) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-chat-panel-container tr:hover td {
+  background: rgba(38, 139, 210, 0.055) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light a {
+  color: var(--solvay-photon) !important;
+  text-decoration-color: rgba(181, 137, 0, 0.58);
+  text-underline-offset: 3px;
+}
+
+/* 侧栏、菜单与设置：延续档案标签和实验记录线。 */
+body.trae-skin-theme-solvay-1927-solarized-light .task-list-new-task-item,
+body.trae-skin-theme-solvay-1927-solarized-light .task-list-panel button:not([role="tab"]) {
+  border-radius: 0 !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .task-list-new-task-item:hover,
+body.trae-skin-theme-solvay-1927-solarized-light .task-list-panel button:not([role="tab"]):hover,
+body.trae-skin-theme-solvay-1927-solarized-light .task-list-panel [tabindex="0"]:hover {
+  background:
+    linear-gradient(90deg, rgba(181, 137, 0, 0.09), rgba(38, 139, 210, 0.08)) !important;
+  box-shadow:
+    inset 2px 0 var(--solvay-ink),
+    inset -2px 0 var(--solvay-photon) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .task-list-new-task-item-active,
+body.trae-skin-theme-solvay-1927-solarized-light [aria-current="page"] {
+  background:
+    linear-gradient(90deg, rgba(181, 137, 0, 0.15), rgba(38, 139, 210, 0.11)) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .core-model-select-portal-content,
+body.trae-skin-theme-solvay-1927-solarized-light [data-radix-popper-content-wrapper] > *,
+body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-settings-content {
+  border-radius: 0 !important;
+  background-image:
+    linear-gradient(90deg, var(--solvay-ink) 0 2px, transparent 2px),
+    linear-gradient(rgba(38, 139, 210, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(38, 139, 210, 0.035) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 24px 24px, 24px 24px !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light [role="menuitem"],
+body.trae-skin-theme-solvay-1927-solarized-light [role="option"] {
+  border-radius: 0 !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light [role="menuitem"][data-highlighted],
+body.trae-skin-theme-solvay-1927-solarized-light [role="option"][data-highlighted] {
+  background: linear-gradient(90deg, rgba(181, 137, 0, 0.1), rgba(38, 139, 210, 0.1)) !important;
+  box-shadow:
+    inset 2px 0 var(--solvay-ink),
+    inset -2px 0 var(--solvay-photon) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-settings-content input:focus,
+body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-settings-content textarea:focus,
+body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-settings-content select:focus {
+  border-color: var(--solvay-ink) !important;
+  box-shadow:
+    -2px 0 var(--solvay-ink),
+    2px 0 var(--solvay-photon) !important;
+}
+
+/* IM Channel 及遗留表面通过 V3 变量得到色彩，这里只添加实验态状态反馈。 */
+body.trae-skin-theme-solvay-1927-solarized-light .panel-content [data-state="checked"],
+body.trae-skin-theme-solvay-1927-solarized-light .panel-content [role="switch"][aria-checked="true"] {
+  background-color: var(--solvay-ink) !important;
+  box-shadow: 0 0 0 3px rgba(38, 139, 210, 0.12) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .panel-content [role="switch"][aria-checked="false"] {
+  background-color: rgba(88, 110, 117, 0.38) !important;
+}
+
+/* 宿主 tooltip 使用深色 invert 表面，却在 Light 外观下继承深色正文。
+   两套浮层统一成深青底、暖纸字；快捷键降为 Solarized base1。 */
+body.trae-skin-theme-solvay-1927-solarized-light [role="tooltip"],
+body.trae-skin-theme-solvay-1927-solarized-light [role="tooltip"] [class*="text-"],
+body.trae-skin-theme-solvay-1927-solarized-light [role="tooltip"] [class*="hotkey-"] {
+  color: #fdf6e3 !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light [role="tooltip"] [class*="container-"],
+body.trae-skin-theme-solvay-1927-solarized-light .icube-tooltip-text.icube-simple-style {
+  color: #fdf6e3 !important;
+  border-color: rgba(181, 137, 0, 0.5) !important;
+  background: #002b36 !important;
+  box-shadow:
+    0 8px 22px rgba(88, 110, 117, 0.26),
+    inset 3px 0 #b58900 !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light [role="tooltip"] [class*="key-"],
+body.trae-skin-theme-solvay-1927-solarized-light .icube-tooltip-text.icube-simple-style [class*="key-"] {
+  color: #93a1a1 !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .icube-tooltip-down-flag.icube-simple-style {
+  color: #fdf6e3 !important;
+  border-top-color: #002b36 !important;
+}
+
+/* 状态动效 */
+@keyframes solvay-wave-drift {
+  0% { opacity: 0.1; transform: translate(-8px, -50%) scaleX(0.98); }
+  50% { opacity: 0.28; transform: translate(8px, -50%) scaleX(1.04); }
+  100% { opacity: 0.1; transform: translate(-8px, -50%) scaleX(0.98); }
+}
+@keyframes solvay-emblem-superpose {
+  0%, 100% {
+    box-shadow: 0 0 0 6px rgba(181, 137, 0, 0.12), 8px 0 0 rgba(38, 139, 210, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(181, 137, 0, 0.2), 4px 0 0 rgba(38, 139, 210, 0.18);
+  }
+}
+@keyframes solvay-measure-scan {
+  0% { opacity: 0; transform: translateX(-110%); }
+  18% { opacity: 1; }
+  78% { opacity: 0.72; }
+  100% { opacity: 0; transform: translateX(110%); }
+}
+@keyframes solvay-orbit {
+  to { transform: rotate(336deg) scaleY(0.55); }
+}
+@keyframes solvay-electron {
+  to { transform: rotate(360deg); }
+}
+@keyframes solvay-particle-arrive {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+@keyframes solvay-mode-collapse {
+  0% {
+    opacity: 0.35;
+    transform: translateX(-5px);
+    text-shadow: -3px 0 rgba(181, 137, 0, 0.42), 3px 0 rgba(38, 139, 210, 0.32);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.72);
+  }
+}
+body.trae-skin-theme-solvay-1927-solarized-light:has(.messageInputContainer[data-mode="work"]) .welcomeTitleWrapper [class*="mainTextContainer-"],
+body.trae-skin-theme-solvay-1927-solarized-light:has(.messageInputContainer[data-mode="code"]) .welcomeTitleWrapper [class*="mainTextContainer-"],
+body.trae-skin-theme-solvay-1927-solarized-light:has(.messageInputContainer[data-mode="design"]) .welcomeTitleWrapper [class*="mainTextContainer-"] {
+  animation: solvay-mode-collapse 420ms var(--solvay-collapse) both;
+}
+
+@media (max-width: 980px) {
+  body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"] {
+    min-height: 128px !important;
+    padding-inline: 30px !important;
+  }
+  body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"]::before {
+    left: 30px;
+  }
+  body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="animationContainer-"]::before {
+    left: 220px !important;
+    width: 240px !important;
+  }
+}
+@media (max-width: 720px) {
+  body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="traeWorkTitle-"]::after {
+    display: none;
+  }
+  body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="mainTextContainer-"] {
+    font-size: 31px !important;
+  }
+  body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper [class*="animationContainer-"]::before {
+    display: none !important;
+  }
+  body.trae-skin-theme-solvay-1927-solarized-light .messageInputEditorWrapper::after {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.trae-skin-theme-solvay-1927-solarized-light *,
+  body.trae-skin-theme-solvay-1927-solarized-light *::before,
+  body.trae-skin-theme-solvay-1927-solarized-light *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,274 @@
+{
+  "schemaVersion": 3,
+  "id": "solvay-1927-solarized-light",
+  "version": "1.0.2",
+  "engines": { "twskin": ">=0.5.4 <1.0.0" },
+  "name": "索尔维 1927 · Solarized Light",
+  "desc": "以暖纸、黄色光量子标记与实验档案重现第五届索尔维会议",
+  "category": "历史",
+  "appearance": "light",
+  "background": {
+    "color": "#fdf6e3",
+    "position": "center 42%",
+    "size": "cover",
+    "repeat": "no-repeat",
+    "blur": 0,
+    "brightness": 1.04,
+    "saturation": 0.06,
+    "overlay": {
+      "color": "#fdf6e3",
+      "opacity": 0.34
+    }
+  },
+  "surfaces": {
+    "colors": {
+      "left": "#eee8d5",
+      "chat": "#fdf6e3",
+      "main": "#fdf6e3",
+      "landing": "#eee8d5"
+    },
+    "opacity": {
+      "left": 0.78,
+      "chat": 0.62,
+      "main": 0.46,
+      "landing": 0.54
+    },
+    "blurPx": {
+      "left": 3,
+      "chat": 2,
+      "main": 0,
+      "landing": 1
+    },
+    "saturation": 0.84,
+    "gap": "#eee8d5e6",
+    "divider": "#b5890057"
+  },
+  "tokens": {
+    "accent": {
+      "base": "#b58900",
+      "hover": "#c99a00",
+      "active": "#8f6d00",
+      "subtle": "#b5890033",
+      "onAccent": "#002b36"
+    },
+    "surface": {
+      "base": "#fdf6e3",
+      "secondary": "#eee8d5",
+      "tertiary": "#e5ddc8",
+      "card": "#fffaf0",
+      "cardHover": "#e9e2cf",
+      "input": "#fffdf5",
+      "menu": "#fdf6e3",
+      "tooltip": "#eee8d5",
+      "invert": "#002b36"
+    },
+    "text": {
+      "primary": "#002b36",
+      "secondary": "#586e75",
+      "tertiary": "#657b83",
+      "disabled": "#839496"
+    },
+    "icons": {
+      "primary": "#073642",
+      "secondary": "#b58900",
+      "tertiary": "#268bd2",
+      "disabled": "#93a1a1"
+    },
+    "border": {
+      "subtle": "#b5890038",
+      "default": "#657b8373",
+      "strong": "#b58900a8",
+      "contrast": "#8f6d00"
+    },
+    "state": {
+      "success": "#859900",
+      "warning": "#b58900",
+      "error": "#dc322f",
+      "info": "#268bd2"
+    }
+  },
+  "typography": {
+    "ui": {
+      "family": "-apple-system, BlinkMacSystemFont, \"PingFang SC\", \"Noto Sans CJK SC\", sans-serif"
+    },
+    "heading": {
+      "family": "\"Avenir Next Condensed\", \"Helvetica Neue\", \"PingFang SC\", sans-serif",
+      "weight": 700,
+      "letterSpacing": "0.085em"
+    },
+    "code": {
+      "family": "\"IBM Plex Mono\", \"SFMono-Regular\", \"JetBrains Mono\", monospace"
+    }
+  },
+  "shape": {
+    "radius": {
+      "small": 0,
+      "medium": 2,
+      "large": 4,
+      "pill": 999
+    },
+    "borderWidth": 1
+  },
+  "elevation": {
+    "card": "0 12px 30px #586e7538, inset 0 1px 0 #ffffffa8",
+    "floating": "0 24px 64px #586e7552, 0 0 0 1px #b5890066",
+    "focusRing": "0 0 0 2px #fdf6e3, 0 0 0 4px #b58900"
+  },
+  "scrollbar": {
+    "track": "#eee8d580",
+    "thumb": "#93a1a180",
+    "thumbHover": "#b58900b8",
+    "width": 7
+  },
+  "components": {
+    "chat": {
+      "userBubble": "#eee8d5f2",
+      "userBubbleBorder": "#b5890080",
+      "assistantMessage": "transparent",
+      "assistantMessageBorder": "transparent",
+      "assistantMessageShadow": "none",
+      "code": "#fffdf5f7",
+      "card": "#fffaf0f2"
+    },
+    "popover": {
+      "background": "#fdf6e3fa",
+      "itemHover": "#b5890024",
+      "itemSelected": "#b5890038"
+    },
+    "settings": {
+      "overlay": "#002b3657",
+      "panel": "#fdf6e3fa",
+      "sidebar": "#eee8d5f7",
+      "card": "#fffaf0f2",
+      "control": "#fffdf5f7",
+      "active": "#b589002b"
+    },
+    "landing": {
+      "banner": {
+        "variant": "system-plate",
+        "colors": {
+          "surface": "#eee8d5f2",
+          "border": "#b5890073",
+          "accent": "#b58900",
+          "text": "#002b36",
+          "muted": "#586e75",
+          "status": "#795c00"
+        },
+        "metrics": {
+          "cornerCutPx": 18,
+          "maxWidthPx": 720,
+          "iconSizePx": 56
+        },
+        "effects": {
+          "shadow": "0 22px 54px #586e7540, inset 0 1px #ffffffb8"
+        },
+        "content": {
+          "statusText": "PHOTON INDEXED",
+          "modes": {
+            "work": {
+              "code": "ψ",
+              "label": "STATE PREPARATION"
+            },
+            "code": {
+              "code": "Δ",
+              "label": "UNCERTAINTY"
+            },
+            "design": {
+              "code": "λ",
+              "label": "INTERFERENCE"
+            }
+          }
+        }
+      }
+    },
+    "navigation": {
+      "modeTabs": {
+        "variant": "launch-rail",
+        "colors": {
+          "track": "#eee8d5f2",
+          "border": "#b5890057",
+          "indicator": "#fdf6e3",
+          "accent": "#b58900",
+          "activeText": "#002b36",
+          "inactiveText": "#43575e",
+          "hover": "#e5ddc8e6"
+        },
+        "metrics": {
+          "heightPx": 46,
+          "tabWidthPx": 92,
+          "gapPx": 4,
+          "cornerCutPx": 8
+        },
+        "effects": {
+          "shadow": "0 10px 28px #586e7538, inset 0 1px #ffffffa3"
+        },
+        "content": {
+          "iconPolicy": "always",
+          "showModeCode": true,
+          "modes": {
+            "work": {
+              "code": "ψ"
+            },
+            "code": {
+              "code": "Δx·Δp"
+            },
+            "design": {
+              "code": "λ"
+            }
+          }
+        }
+      }
+    }
+  },
+  "workbench": {
+    "opacity": {
+      "sidebar": 0.84,
+      "editor": 0.8,
+      "panel": 0.84
+    }
+  },
+  "effects": {
+    "mode": "standard",
+    "panelBlurEnabled": true,
+    "scanlineColor": "transparent",
+    "gridColor": "#b589000d",
+    "magenta": "#b58900",
+    "glow": "0 0 14px #b5890038"
+  },
+  "icons": {
+    "overrides": {
+      "chatNew": "photon-new.svg",
+      "NewTask": "photon-new.svg",
+      "marketplace": "diffraction.svg",
+      "automation": "uncertainty.svg",
+      "chat": "dialogue.svg",
+      "Search": "wave-search.svg",
+      "arrow_up": "photon-launch.svg",
+      "modeWork": {
+        "src": "work-superposition.svg",
+        "selector": "body.trae-skin-theme-solvay-1927-solarized-light .mode-switcher-btn > span:nth-of-type(1) [class*=\"tabIcon-\"] svg"
+      },
+      "modeCode": {
+        "src": "code-uncertainty.svg",
+        "selector": "body.trae-skin-theme-solvay-1927-solarized-light .mode-switcher-btn > span:nth-of-type(2) [class*=\"tabIcon-\"] svg"
+      },
+      "modeDesign": {
+        "src": "design-interference.svg",
+        "selector": "body.trae-skin-theme-solvay-1927-solarized-light .mode-switcher-btn > span:nth-of-type(3) [class*=\"tabIcon-\"] svg"
+      },
+      "bannerObservation": {
+        "src": "electron-photon.svg",
+        "selector": "body.trae-skin-theme-solvay-1927-solarized-light .welcomeTitleWrapper [class*=\"mainTextContainer-\"] > [class*=\"icon-\"] svg"
+      },
+      "bannerWave": {
+        "src": "interference-wave.svg",
+        "selector": "body.trae-skin-theme-solvay-1927-solarized-light .welcomeTitleWrapper [class*=\"animationContainer-\"]",
+        "pseudo": true
+      },
+      "imChannel": {
+        "src": "dialogue.svg",
+        "selector": "body.trae-skin-theme-solvay-1927-solarized-light .task-list-skills-item:has(.task-list-new-task-text) > svg.add-icon:not(.trae-icon)"
+      }
+    }
+  }
+}
