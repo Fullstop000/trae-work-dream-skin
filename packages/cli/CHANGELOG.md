@@ -5,12 +5,15 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.5.5] - 2026-07-27
+
 ### Added
 
 - Versioned theme metadata (`version` and `engines.twskin`) and the generated
   GitHub Release Catalog.
 - `twskin theme check`, `twskin theme sync` and `twskin theme auto-update`.
 - Theme Manager update status, manual sync action and automatic-update toggle.
+- The official `Solvay 1927 · Solarized Light` theme.
 
 ## [0.5.4] - 2026-07-27
 
