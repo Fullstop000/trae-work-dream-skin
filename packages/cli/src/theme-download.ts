@@ -5,6 +5,7 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { CliError } from "./errors.js";
 import { discoverThemeDirectories, installThemeDirectory } from "./themes.js";
+import { satisfiesRange } from "./semver.js";
 import type { CliContext, InstalledTheme } from "./types.js";
 
 interface ReleaseAsset {
@@ -36,6 +37,15 @@ export interface ThemeDownloadResult {
   digest: string;
   installed: InstalledTheme[];
   directory: string;
+}
+
+export interface ThemeDownloadSource {
+  archiveUrl: string;
+  checksumUrl?: string;
+  expectedDigest?: string;
+  tag?: string;
+  themeIds?: readonly string[];
+  themeVersions?: Readonly<Record<string, string>>;
 }
 
 const DEFAULT_RELEASE_API = "https://api.github.com/repos/Fullstop000/trae-work-dream-skin/releases/latest";
@@ -192,25 +202,8 @@ function validateArchive(context: CliContext, archiveFile: string): void {
   }
 }
 
-function versionParts(version: string): [number, number, number] | null {
-  const match = String(version).match(/^(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/);
-  return match ? [Number(match[1]), Number(match[2]), Number(match[3])] : null;
-}
-
-function compareVersions(left: [number, number, number], right: [number, number, number]): number {
-  for (const index of [0, 1, 2] as const) {
-    if (left[index] !== right[index]) return left[index] < right[index] ? -1 : 1;
-  }
-  return 0;
-}
-
 function compatibleCli(range: string, currentVersion: string): boolean {
-  const match = String(range).match(/^>=(\d+\.\d+\.\d+)\s+<(\d+\.\d+\.\d+)$/);
-  const current = versionParts(currentVersion);
-  if (!match || !current) return false;
-  const minimum = versionParts(match[1]!);
-  const maximum = versionParts(match[2]!);
-  return Boolean(minimum && maximum && compareVersions(current, minimum) >= 0 && compareVersions(current, maximum) < 0);
+  return satisfiesRange(range, currentVersion);
 }
 
 function parsePackManifest(directory: string, expectedTag: string | undefined, cliVersion: string): ThemePackManifest {
@@ -248,17 +241,34 @@ function extractArchive(context: CliContext, archiveFile: string, directory: str
   if (result.status !== 0) throw new CliError("ARCHIVE_INVALID", 4, "主题包解压失败。", "重新下载官方 Release 资产。", result.stderr.trim());
 }
 
-export async function downloadThemes(context: CliContext, requestedId?: string): Promise<ThemeDownloadResult> {
+export async function downloadThemes(context: CliContext, requestedId?: string, source?: ThemeDownloadSource): Promise<ThemeDownloadResult> {
   if (requestedId && !THEME_ID.test(requestedId)) throw new CliError("THEME_ID_INVALID", 2, `主题 ID 不合法：${requestedId}`);
-  const selected = await selectAssets(context);
+  if (source?.themeIds?.some((id) => !THEME_ID.test(id))) throw new CliError("THEME_ID_INVALID", 2, "Catalog 中包含不合法的主题 ID。");
+  const selected = source
+    ? {
+      tag: source.tag,
+      base: "twskin-catalog",
+      archive: { name: "theme-pack.tar.gz", browser_download_url: source.archiveUrl },
+      checksum: source.checksumUrl ? { name: "theme-pack.sha256", browser_download_url: source.checksumUrl } : undefined,
+    }
+    : await selectAssets(context);
   const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "twskin-theme-download-"));
   try {
     const [archiveContent, checksumContent] = await Promise.all([
       downloadBuffer(context, selected.archive.browser_download_url, { maxBytes: MAX_ARCHIVE_BYTES, accept: "application/octet-stream" }),
-      downloadBuffer(context, selected.checksum.browser_download_url, { maxBytes: MAX_CHECKSUM_BYTES, accept: "text/plain" }),
+      selected.checksum
+        ? downloadBuffer(context, selected.checksum.browser_download_url, { maxBytes: MAX_CHECKSUM_BYTES, accept: "text/plain" })
+        : Promise.resolve(null),
     ]);
-    const expectedDigest = checksumContent.toString("utf8").match(/\b([a-f0-9]{64})\b/i)?.[1]?.toLowerCase();
+    const checksumDigest = checksumContent?.toString("utf8").match(/\b([a-f0-9]{64})\b/i)?.[1]?.toLowerCase();
+    const expectedDigest = source?.expectedDigest?.toLowerCase() || checksumDigest;
     if (!expectedDigest) throw new CliError("CHECKSUM_INVALID", 4, "主题包 SHA-256 文件格式无效。");
+    if (source?.expectedDigest && !/^[a-f0-9]{64}$/i.test(source.expectedDigest)) {
+      throw new CliError("CHECKSUM_INVALID", 4, "Catalog 中的主题包 SHA-256 无效。");
+    }
+    if (source?.expectedDigest && checksumDigest && source.expectedDigest.toLowerCase() !== checksumDigest) {
+      throw new CliError("CHECKSUM_MISMATCH", 4, "Catalog 与主题包 SHA-256 文件不一致。", "请稍后重试；不要安装该主题包。");
+    }
     const actualDigest = crypto.createHash("sha256").update(archiveContent).digest("hex");
     if (actualDigest !== expectedDigest) throw new CliError("CHECKSUM_MISMATCH", 4, "主题包 SHA-256 校验失败。", "请勿使用该文件；稍后重新下载。");
 
@@ -277,8 +287,19 @@ export async function downloadThemes(context: CliContext, requestedId?: string):
     if (declared.size !== pack.themes.length || declared.size !== found.size || discovered.some((theme) => !declared.has(theme.id))) {
       throw new CliError("THEME_PACK_INVALID", 4, "主题包内容与 theme-pack.json 不一致。");
     }
-    const chosen = requestedId ? discovered.filter((theme) => theme.id === requestedId) : discovered;
+    const allowed = source?.themeIds ? new Set(source.themeIds) : null;
+    const chosen = requestedId
+      ? discovered.filter((theme) => theme.id === requestedId)
+      : allowed ? discovered.filter((theme) => allowed.has(theme.id)) : discovered;
     if (chosen.length === 0) throw new CliError("THEME_NOT_FOUND", 2, `Release ${releaseTag} 中找不到主题：${requestedId}`);
+    if (source?.themeVersions) {
+      for (const theme of chosen) {
+        const expectedVersion = source.themeVersions[theme.id];
+        if (!expectedVersion || theme.version !== expectedVersion) {
+          throw new CliError("CATALOG_THEME_MISMATCH", 4, `主题 ${theme.id} 的版本与 Catalog 不一致。`, "请稍后重试；不要安装该主题包。");
+        }
+      }
+    }
     const installed = chosen.map((theme) => installThemeDirectory(context, theme.source));
     return { tag: releaseTag, digest: actualDigest, installed, directory: context.themesDir };
   } finally {

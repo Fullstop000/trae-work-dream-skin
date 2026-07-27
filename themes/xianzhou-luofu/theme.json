@@ -1,5 +1,7 @@
 {
   "schemaVersion": 3,
+  "version": "1.0.0",
+  "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "xianzhou-luofu",
   "name": "仙舟「罗浮」",
   "desc": "工笔岩彩仙舟、玉界门云海与仙舟群像",

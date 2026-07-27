@@ -30,6 +30,9 @@ Open Theme Manager from the palette button in the bottom-right corner of TRAE.
 | List installed themes | `twskin themes` |
 | Switch themes | `twskin theme <id>` |
 | Download themes | `twskin theme download [id]` |
+| Check theme updates | `twskin theme check` |
+| Sync theme updates | `twskin theme sync` |
+| Toggle auto updates | `twskin theme auto-update <on\|off>` |
 | Load local themes | `twskin theme load <directory>` |
 | Restore TRAE | `twskin restore` |
 | Uninstall | `twskin uninstall` |

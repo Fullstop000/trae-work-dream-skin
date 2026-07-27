@@ -1,5 +1,7 @@
 {
   "schemaVersion": 3,
+  "version": "1.0.0",
+  "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "ocean",
   "name": "深海",
   "desc": "深蓝青色沉静",

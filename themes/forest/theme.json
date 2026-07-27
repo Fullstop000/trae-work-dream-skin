@@ -1,5 +1,7 @@
 {
   "schemaVersion": 3,
+  "version": "1.0.0",
+  "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "forest",
   "name": "雾林",
   "desc": "深绿薄荷清新",

@@ -1,5 +1,7 @@
 {
   "schemaVersion": 3,
+  "version": "1.0.0",
+  "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "eva-01",
   "name": "EVA 初号机 · 终局警报",
   "desc": "红黑粗野主义海报、复印颗粒与初号机单眼绿光",

@@ -39,3 +39,7 @@ jobs:
         run: gh release upload "$RELEASE_TAG" dist/twskin-themes-"$RELEASE_TAG".tar.gz dist/twskin-themes-"$RELEASE_TAG".sha256 dist/twskin-themes.tar.gz dist/twskin-themes.sha256 --clobber
         env:
           GH_TOKEN: ${{ github.token }}
+      - name: Publish theme catalog after theme assets
+        run: gh release upload "$RELEASE_TAG" dist/twskin-catalog-v1.json dist/twskin-catalog-v1-"$RELEASE_TAG".json --clobber
+        env:
+          GH_TOKEN: ${{ github.token }}

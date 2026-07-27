@@ -59,6 +59,9 @@ test("help and version expose the stable public command surface", () => {
   assert.match(help.stdout, /twskin stop/);
   assert.match(help.stdout, /twskin uninstall/);
   assert.match(help.stdout, /twskin theme download \[id\]/);
+  assert.match(help.stdout, /twskin theme check/);
+  assert.match(help.stdout, /twskin theme sync/);
+  assert.match(help.stdout, /twskin theme auto-update <on\|off>/);
   assert.match(help.stdout, /twskin theme load <directory>/);
 
   const version = run(["version"]);
@@ -75,6 +78,7 @@ test("themes --json returns the official catalog", () => {
   assert.ok(output.themes.some((theme) => theme.id === "eva-01"));
   assert.ok(output.themes.some((theme) => theme.id === "eva-01-light"));
   assert.ok(output.themes.length >= 10);
+  assert.equal(output.themes.find((theme) => theme.id === "eva-01")?.version, "1.0.0");
 });
 
 test("status --json is read-only and covers the four core states", () => {
@@ -87,6 +91,7 @@ test("status --json is read-only and covers the four core states", () => {
   assert.equal(typeof output.status.cdp.reachable, "boolean");
   assert.equal(typeof output.status.watcher.running, "boolean");
   assert.equal(typeof output.status.theme.id, "string");
+  assert.equal(typeof output.status.themeUpdates.phase, "string");
   assert.equal(output.status.distribution, "development");
   const afterValue = fs.existsSync(THEME_CONF) ? fs.readFileSync(THEME_CONF, "utf8") : null;
   assert.equal(afterValue, before);

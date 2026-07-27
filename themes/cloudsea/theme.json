@@ -1,5 +1,7 @@
 {
   "schemaVersion": 3,
+  "version": "1.0.0",
+  "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "cloudsea",
   "name": "云海观星台",
   "desc": "云端制图师与漂浮群岛",

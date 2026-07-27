@@ -21,11 +21,21 @@ const BOOTSTRAP_THEMES = path.join(BOOTSTRAP_DATA, "themes");
 const RUNTIME = path.join(FIXTURE, "runtime");
 const APP = path.join(FIXTURE, "TRAE Test.app");
 const APP_ARGV = path.join(FIXTURE, "argv.json");
+const CATALOG_DATA = path.join(FIXTURE, "catalog-data");
+const CATALOG_TARGET = path.join(CATALOG_DATA, "themes");
+const CATALOG_RECOVERY_DATA = path.join(FIXTURE, "catalog-recovery-data");
+const CATALOG_RECOVERY_TARGET = path.join(CATALOG_RECOVERY_DATA, "themes");
 let bootstrapWatcherPid = null;
 
-function writeTheme(directory, id, extra = true) {
+function writeTheme(directory, id, extra = true, version = "0.0.0") {
   fs.mkdirSync(directory, { recursive: true });
-  fs.writeFileSync(path.join(directory, "theme.json"), JSON.stringify({ id, name: `Theme ${id}` }));
+  fs.writeFileSync(path.join(directory, "theme.json"), JSON.stringify({
+    schemaVersion: 3,
+    id,
+    version,
+    engines: { twskin: ">=0.5.4 <1.0.0" },
+    name: `Theme ${id}`,
+  }));
   fs.writeFileSync(path.join(directory, "theme.css"), `body.trae-skin-theme-${id} { --fixture-theme: ${id}; }\n`);
   fs.writeFileSync(path.join(directory, "background.svg"), `<svg xmlns="http://www.w3.org/2000/svg"><title>${id}</title></svg>`);
   if (extra) fs.writeFileSync(path.join(directory, "design-exploration.png"), "must not be installed");
@@ -57,7 +67,7 @@ function runAsync(args, env = {}) {
 before(() => {
   writeTheme(path.join(SOURCE, "local-one"), "local-one");
   writeTheme(path.join(SOURCE, "local-two"), "local-two");
-  writeTheme(path.join(PACK_STAGE, "themes/release-one"), "release-one", false);
+  writeTheme(path.join(PACK_STAGE, "themes/release-one"), "release-one", false, "1.0.0");
   fs.writeFileSync(path.join(PACK_STAGE, "theme-pack.json"), JSON.stringify({
     schemaVersion: 1,
     packVersion: "0.4.0",
@@ -180,6 +190,123 @@ test("theme download refuses an asset whose SHA-256 does not match", async () =>
     const result = await runAsync(["theme", "download", "--json"], { TWSKIN_RELEASE_API_URL: `${origin}/latest` });
     assert.equal(result.status, 4);
     assert.equal(JSON.parse(result.stdout).error.code, "CHECKSUM_MISMATCH");
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
+test("theme catalog checks, caches, and syncs only compatible updates", async () => {
+  const archive = fs.readFileSync(ARCHIVE);
+  const digest = crypto.createHash("sha256").update(archive).digest("hex");
+  const catalog = {
+    schemaVersion: 1,
+    catalogVersion: "0.5.4",
+    releaseTag: "v0.4.0",
+    compatibleCli: ">=0.5.4 <1.0.0",
+    generatedAt: "2026-07-27T00:00:00.000Z",
+    pack: {
+      asset: "twskin-themes-v0.4.0.tar.gz",
+      checksumAsset: "twskin-themes-v0.4.0.sha256",
+      size: archive.byteLength,
+      sha256: digest,
+    },
+    themes: [{
+      id: "release-one",
+      version: "1.0.0",
+      schemaVersion: 3,
+      engines: { twskin: ">=0.5.4 <1.0.0" },
+      name: "Theme release-one",
+      desc: "",
+      category: "测试",
+    }],
+  };
+  let catalogRequests = 0;
+  let origin = "";
+  const server = http.createServer((request, response) => {
+    if (request.url === "/twskin-catalog-v1.json") {
+      catalogRequests += 1;
+      response.setHeader("etag", '"catalog-v1"');
+      if (request.headers["if-none-match"] === '"catalog-v1"') response.writeHead(304).end();
+      else response.end(JSON.stringify(catalog));
+    } else if (request.url === "/twskin-themes-v0.4.0.tar.gz") response.end(archive);
+    else if (request.url === "/twskin-themes-v0.4.0.sha256") response.end(`${digest}  twskin-themes-v0.4.0.tar.gz\n`);
+    else response.writeHead(404).end();
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  origin = `http://127.0.0.1:${server.address().port}`;
+  try {
+    const environment = {
+      TWSKIN_DATA_DIR: CATALOG_DATA,
+      TWSKIN_THEMES_DIR: CATALOG_TARGET,
+      TWSKIN_RELEASE_ASSET_BASE_URL: origin,
+      TWSKIN_THEME_CATALOG_URL: `${origin}/twskin-catalog-v1.json`,
+    };
+    const disabled = await runAsync(["theme", "auto-update", "off", "--json"], environment);
+    assert.equal(disabled.status, 0, disabled.stderr);
+
+    const automatic = await runAsync(["theme", "auto-sync", "--json"], environment);
+    assert.equal(automatic.status, 0, automatic.stderr);
+    assert.equal(JSON.parse(automatic.stdout).phase, "update-available");
+    assert.equal(fs.existsSync(path.join(CATALOG_TARGET, "release-one/theme.json")), false);
+
+    const synced = await runAsync(["theme", "sync", "--json"], environment);
+    assert.equal(synced.status, 0, synced.stderr);
+    assert.deepEqual(JSON.parse(synced.stdout).installed, ["release-one"]);
+    assert.ok(fs.existsSync(path.join(CATALOG_TARGET, "release-one/theme.json")));
+
+    const checked = await runAsync(["theme", "check", "--json"], environment);
+    assert.equal(checked.status, 0, checked.stderr);
+    assert.equal(JSON.parse(checked.stdout).updates.length, 0);
+    assert.ok(catalogRequests >= 2);
+    assert.ok(fs.existsSync(path.join(CATALOG_DATA, "cache/twskin-catalog-v1.json")));
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
+test("theme catalog heals an ETag when its cached Catalog is missing", async () => {
+  const archive = fs.readFileSync(ARCHIVE);
+  const digest = crypto.createHash("sha256").update(archive).digest("hex");
+  const catalog = {
+    schemaVersion: 1,
+    catalogVersion: "0.5.4",
+    releaseTag: "v0.4.0",
+    compatibleCli: ">=0.5.4 <1.0.0",
+    generatedAt: "2026-07-27T00:00:00.000Z",
+    pack: {
+      asset: "twskin-themes-v0.4.0.tar.gz",
+      checksumAsset: "twskin-themes-v0.4.0.sha256",
+      size: archive.byteLength,
+      sha256: digest,
+    },
+    themes: [],
+  };
+  const etags = [];
+  const server = http.createServer((request, response) => {
+    if (request.url !== "/twskin-catalog-v1.json") return response.writeHead(404).end();
+    const etag = request.headers["if-none-match"];
+    etags.push(typeof etag === "string" ? etag : null);
+    response.setHeader("etag", '"catalog-v1"');
+    if (etag === '"catalog-v1"') return response.writeHead(304).end();
+    response.end(JSON.stringify(catalog));
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const origin = `http://127.0.0.1:${server.address().port}`;
+  try {
+    const environment = {
+      TWSKIN_DATA_DIR: CATALOG_RECOVERY_DATA,
+      TWSKIN_THEMES_DIR: CATALOG_RECOVERY_TARGET,
+      TWSKIN_RELEASE_ASSET_BASE_URL: origin,
+      TWSKIN_THEME_CATALOG_URL: `${origin}/twskin-catalog-v1.json`,
+    };
+    const initial = await runAsync(["theme", "check", "--json"], environment);
+    assert.equal(initial.status, 0, initial.stderr);
+    fs.rmSync(path.join(CATALOG_RECOVERY_DATA, "cache", "twskin-catalog-v1.json"));
+
+    const recovered = await runAsync(["theme", "check", "--json"], environment);
+    assert.equal(recovered.status, 0, recovered.stderr);
+    assert.deepEqual(etags, [null, '"catalog-v1"', null]);
+    assert.ok(fs.existsSync(path.join(CATALOG_RECOVERY_DATA, "cache", "twskin-catalog-v1.json")));
   } finally {
     await new Promise((resolve) => server.close(resolve));
   }

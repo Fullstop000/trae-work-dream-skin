@@ -5,6 +5,13 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+### Added
+
+- Versioned theme metadata (`version` and `engines.twskin`) and the generated
+  GitHub Release Catalog.
+- `twskin theme check`, `twskin theme sync` and `twskin theme auto-update`.
+- Theme Manager update status, manual sync action and automatic-update toggle.
+
 ## [0.5.4] - 2026-07-27
 
 ### Fixed

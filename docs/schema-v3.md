@@ -37,6 +37,8 @@ themes/<id>/
 {
   "schemaVersion": 3,
   "id": "neon-district",
+  "version": "1.0.0",             // 主题内容版本，使用 SemVer
+  "engines": { "twskin": ">=0.5.4 <1.0.0" }, // 兼容的 Theme Manager 范围
   "name": "霓虹城区 MAX",
   "desc": "一句话描述",
   "category": "科幻",              // 可选：画廊分类 Tab 归类，缺省归入「其他」
@@ -141,6 +143,12 @@ themes/<id>/
   }
 }
 ```
+
+`schemaVersion` 描述 JSON 协议，`version` 描述主题内容，两者不能混用。修改
+图片、颜色、描述或主题 CSS 时递增 `version`；只有主题 JSON 的破坏性结构变化
+才递增 `schemaVersion`。`engines.twskin` 使用 `>=x.y.z <a.b.c` 范围，主题若
+依赖新的运行时能力，应提高下限。没有 `version` 的旧本地主题按 `0.0.0` 处理，
+但官方主题必须声明这两个分发字段。
 
 ### Landing banner 与模式 Tab
 

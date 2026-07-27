@@ -12,6 +12,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
@@ -61,6 +62,12 @@ const STATE_DIR = process.env.TWSKIN_STATE_DIR || path.join(DATA_DIR, "run");
 const THEME_CONF = path.join(STATE_DIR, "theme.conf");
 const PID_FILE = path.join(STATE_DIR, "injector.pid");
 const MAX_THEME_CSS_BYTES = 1024 * 1024;
+const DEFAULT_CATALOG_CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000;
+
+function catalogCheckIntervalMs() {
+  const configured = Number(process.env.TWSKIN_CATALOG_CHECK_INTERVAL_MS || DEFAULT_CATALOG_CHECK_INTERVAL_MS);
+  return Number.isFinite(configured) && configured >= 0 ? configured : DEFAULT_CATALOG_CHECK_INTERVAL_MS;
+}
 
 function buildCatalog(themesDir) {
   const catalog = [];
@@ -139,6 +146,7 @@ function buildCatalog(themesDir) {
     }
     catalog.push({
       id: String(meta.id),
+      version: typeof meta.version === "string" ? meta.version : "0.0.0",
       name: String(meta.name),
       desc: String(meta.desc || ""),
       category: String(meta.category || "其他"),
@@ -152,6 +160,14 @@ function buildCatalog(themesDir) {
     });
   }
   return catalog;
+}
+
+function readThemeSyncState() {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(path.join(STATE_DIR, "theme-sync-state.json"), "utf8"));
+    if (parsed && parsed.schemaVersion === 1 && typeof parsed.phase === "string") return parsed;
+  } catch {}
+  return { schemaVersion: 1, phase: "idle", autoUpdateThemes: true, updateCount: 0, newThemes: 0, updatedThemes: 0, incompatibleThemes: 0 };
 }
 
 function readThemeConf() {
@@ -180,6 +196,7 @@ export function buildPayload(args) {
     .replaceAll("__BASE_CSS__", () => JSON.stringify(baseCss))
     .replaceAll("__MANAGER_CSS__", () => JSON.stringify(managerCss))
     .replaceAll("__CATALOG__", () => JSON.stringify(catalog))
+    .replaceAll("__THEME_SYNC_STATE__", () => JSON.stringify(readThemeSyncState()))
     .replaceAll("__DEFAULT_THEME__", () => JSON.stringify(resolveDefaultTheme(catalog, args.defaultTheme)))
     .replaceAll("__VERSION__", () => JSON.stringify(VERSION));
 }
@@ -279,6 +296,61 @@ async function getStamp(session) {
   } catch {
     return null;
   }
+}
+
+async function readPageThemeSyncRequest(session) {
+  try {
+    const result = await session.send("Runtime.evaluate", {
+      expression: "window.__TRAE_DREAM_SKIN_SYNC_REQUEST__ || null",
+      returnByValue: true,
+    }, 4000);
+    const request = result.result?.value;
+    return request && typeof request === "object" && typeof request.id === "string" && typeof request.action === "string" ? request : null;
+  } catch {
+    return null;
+  }
+}
+
+async function publishThemeSyncState(sessions, state) {
+  const expression = `(() => {
+    window.__TRAE_DREAM_SKIN_SYNC_STATE__ = ${JSON.stringify(state)};
+    window.dispatchEvent(new CustomEvent("trae-dream-skin-sync-state"));
+  })()`;
+  for (const entry of sessions.values()) {
+    if (entry.session.closed) continue;
+    await entry.session.send("Runtime.evaluate", { expression, returnByValue: true }, 4000).catch(() => {});
+  }
+}
+
+function runThemeCli(action, value) {
+  const entry = process.env.TWSKIN_CLI_ENTRY;
+  if (!entry || !fs.existsSync(entry)) throw new Error("theme sync CLI entry is unavailable");
+  const args = action === "check"
+    ? [entry, "theme", "check", "--json"]
+    : action === "sync"
+      ? [entry, "theme", "sync", "--json"]
+      : action === "auto-sync"
+        ? [entry, "theme", "auto-sync", "--json"]
+        : action === "auto-update"
+          ? [entry, "theme", "auto-update", value ? "on" : "off", "--json"]
+          : null;
+  if (!args) throw new Error(`unknown theme sync action: ${action}`);
+  const result = spawnSync(process.execPath, args, {
+    cwd: path.dirname(entry),
+    env: process.env,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  if (result.status !== 0) {
+    try {
+      const payload = JSON.parse(result.stdout || "{}");
+      throw new Error(payload.error?.message || result.stderr.trim() || "theme sync failed");
+    } catch (error) {
+      if (error instanceof SyntaxError) throw new Error(result.stderr.trim() || "theme sync failed");
+      throw error;
+    }
+  }
+  return readThemeSyncState();
 }
 
 async function cmdList(args) {
@@ -560,6 +632,9 @@ async function cmdWatch(args, payload) {
   let enableOnStartup = true;
   let lastReloadRequest = null;
   let reloadPrimed = false;
+  let lastThemeSyncRequest = null;
+  let themeSyncPrimed = false;
+  let nextAutomaticThemeSyncAt = Date.now() + 4_000;
 
   const injectTarget = async (target) => {
     const session = await CdpSession.connect(target.webSocketDebuggerUrl, args.timeoutMs);
@@ -582,6 +657,46 @@ async function cmdWatch(args, payload) {
     const r = await injectInto(session, payload);
     sessions.set(target.id, { session, target });
     log(`injected into ${target.id} (${target.url}) -> ${JSON.stringify(r)}`);
+  };
+
+  const rebuildThemePayload = async (openPanel = false) => {
+    payload = buildPayload(args);
+    for (const entry of sessions.values()) {
+      if (entry.session.closed) continue;
+      try {
+        await injectInto(entry.session, payload);
+      } catch (error) {
+        log(`theme catalog re-inject failed ${entry.target.id}: ${error.message}`);
+      }
+    }
+    if (openPanel) {
+      const entry = sessions.values().next().value;
+      if (entry?.session && !entry.session.closed) {
+        await entry.session.send("Runtime.evaluate", {
+          expression: "window.__TRAE_DREAM_SKIN_GALLERY__?.open?.()",
+          returnByValue: true,
+        }, 4000).catch(() => {});
+      }
+    }
+  };
+
+  const handleThemeSync = async (action, { value = null, openPanel = false, silent = false } = {}) => {
+    const current = readThemeSyncState();
+    const phase = action === "check" ? "checking" : action === "auto-update" ? "idle" : "downloading";
+    if (!silent) {
+      await publishThemeSyncState(sessions, { ...current, phase, message: action === "check" ? "正在检查主题更新" : "正在同步官方主题" });
+    }
+    try {
+      const state = runThemeCli(action === "auto-sync" ? "auto-sync" : action, value);
+      await publishThemeSyncState(sessions, state);
+      log(`theme ${action} completed: ${state.phase}`);
+      await rebuildThemePayload(openPanel || state.phase === "success");
+    } catch (error) {
+      const failed = { ...readThemeSyncState(), phase: "error", message: error instanceof Error ? error.message : String(error) };
+      await publishThemeSyncState(sessions, failed);
+      log(`theme ${action} failed: ${failed.message}`);
+      await rebuildThemePayload(openPanel);
+    }
   };
 
   const tick = async () => {
@@ -679,6 +794,23 @@ async function cmdWatch(args, payload) {
         } catch (error) {
           log(`theme reload failed: ${error.message}`);
         }
+      }
+
+      const syncRequest = await readPageThemeSyncRequest(firstEntry.session);
+      if (!themeSyncPrimed) {
+        themeSyncPrimed = true;
+        lastThemeSyncRequest = syncRequest?.id || null;
+      } else if (syncRequest && syncRequest.id !== lastThemeSyncRequest) {
+        lastThemeSyncRequest = syncRequest.id;
+        const action = ["check", "sync", "auto-update"].includes(syncRequest.action) ? syncRequest.action : "check";
+        await handleThemeSync(action, {
+          value: syncRequest.autoUpdate === true,
+          openPanel: true,
+        });
+        nextAutomaticThemeSyncAt = Date.now() + catalogCheckIntervalMs();
+      } else if (Date.now() >= nextAutomaticThemeSyncAt) {
+        nextAutomaticThemeSyncAt = Date.now() + catalogCheckIntervalMs();
+        await handleThemeSync("auto-sync", { silent: true });
       }
     }
   };

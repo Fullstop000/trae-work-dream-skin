@@ -1,5 +1,7 @@
 {
   "schemaVersion": 3,
+  "version": "1.0.0",
+  "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "duskdune",
   "name": "暮沙驿站",
   "desc": "沙海机器人通信站",

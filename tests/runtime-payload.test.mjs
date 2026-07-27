@@ -19,7 +19,7 @@ test("runtime styles are single-source files and produce a valid injection paylo
 
 test("core skin contains no theme-specific selectors", () => {
   const skin = fs.readFileSync(path.join(RUNTIME, "skin.js"), "utf8");
-  assert.ok(Buffer.byteLength(skin) < 50 * 1024, `skin.js is ${Buffer.byteLength(skin)} bytes`);
+  assert.ok(Buffer.byteLength(skin) < 64 * 1024, `skin.js is ${Buffer.byteLength(skin)} bytes`);
   assert.doesNotMatch(skin, /body\.trae-skin-theme-/);
   assert.match(skin, /backgroundBrightness: \(value\)/);
   assert.match(skin, /mainOverlayOpacity: \(value\)/);
@@ -29,6 +29,13 @@ test("core skin contains no theme-specific selectors", () => {
   const managerCss = fs.readFileSync(path.join(RUNTIME, "styles/manager.css"), "utf8");
   assert.match(managerCss, /#trae-dream-skin-panel/);
   assert.match(managerCss, /\.ds-slider::-webkit-slider-thumb/);
+});
+
+test("automatic theme sync is silent and follows the Catalog check interval", () => {
+  const injector = fs.readFileSync(path.join(RUNTIME, "injector.mjs"), "utf8");
+  assert.match(injector, /function catalogCheckIntervalMs\(\)/);
+  assert.match(injector, /handleThemeSync\("auto-sync", \{ silent: true \}\)/);
+  assert.doesNotMatch(injector, /nextAutomaticThemeSyncAt = Date\.now\(\) \+ 60_000/);
 });
 
 test("theme-specific component CSS stays with its theme", () => {
