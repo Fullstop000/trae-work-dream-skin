@@ -5,6 +5,17 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.5.6] - 2026-07-27
+
+### Changed
+
+- Reorganized Theme Manager controls by ownership: current-theme settings now
+  contain only per-theme appearance controls, while catalog updates, local theme
+  scanning, and restoring TRAE's native appearance live in Theme Library Settings.
+- Moved Theme Library Settings to a compact, accessible gear button in the
+  manager header. Manual update checks and their status now live there, keeping
+  the theme gallery focused on browsing and switching themes.
+
 ## [0.5.5] - 2026-07-27
 
 ### Added
