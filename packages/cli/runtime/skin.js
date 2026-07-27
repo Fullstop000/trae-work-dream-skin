@@ -810,7 +810,7 @@ ${selector} {
   footer.className = "ds-footer";
   const footerText = document.createElement("span");
   footerText.className = "ds-footer-text";
-  footerText.textContent = `${CATALOG.length} 套主题 · TRAE Work Skin v${VERSION}`;
+  footerText.textContent = `TRAE Work Skin v${VERSION}`;
   footer.append(footerText, resetActions);
   panel.append(header, tabsBar, panelBody, footer);
 
