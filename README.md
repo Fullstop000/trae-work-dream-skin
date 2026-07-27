@@ -11,7 +11,7 @@ TRAE Work CN 的非官方社区主题引擎：内置多套主题、图标替换�
 推荐通过 npm 安装正式 CLI（仅支持 macOS，需要 Node.js 22+）：
 
 ```bash
-npm install --global twskin
+npm install --global @byted-relic/twskin --registry=https://bnpm.byted.org
 twskin start
 ```
 

@@ -26,7 +26,7 @@ function walk(directory) {
   return files;
 }
 
-if (pkg.name !== "twskin") fail("unexpected package name");
+if (pkg.name !== "@byted-relic/twskin") fail("unexpected package name");
 if (pkg.bin?.twskin !== "dist/bin/twskin.js") fail("twskin bin mapping is missing");
 if (!pkg.dependencies?.["@clack/prompts"]) fail("@clack/prompts runtime dependency is missing");
 if (!pkg.dependencies?.["jsonc-parser"]) fail("jsonc-parser runtime dependency is missing");

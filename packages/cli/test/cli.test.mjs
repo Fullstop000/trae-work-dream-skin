@@ -34,7 +34,7 @@ function run(args, env = {}) {
 
 test("package metadata defines a public macOS CLI with an explicit payload", () => {
   const metadata = PACKAGE_METADATA;
-  assert.equal(metadata.name, "twskin");
+  assert.equal(metadata.name, "@byted-relic/twskin");
   assert.equal(metadata.bin.twskin, "dist/bin/twskin.js");
   assert.deepEqual(Object.keys(metadata.bin), ["twskin"]);
   assert.equal(fs.existsSync(path.join(PACKAGE_ROOT, "dist/bin/twds.js")), false);

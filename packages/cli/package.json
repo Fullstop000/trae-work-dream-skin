@@ -1,5 +1,5 @@
 {
-  "name": "twskin",
+  "name": "@byted-relic/twskin",
   "version": "0.5.3",
   "description": "An unofficial community theme manager and CLI for TRAE Work on macOS.",
   "type": "module",
