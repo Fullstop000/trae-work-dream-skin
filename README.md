@@ -11,7 +11,7 @@ An unofficial theme manager for TRAE Work CN on macOS.
 ## Install
 
 ```bash
-npm install --global twskin
+npm install --global twskin@latest --registry=https://registry.npmjs.org
 twskin start
 ```
 

@@ -16,7 +16,7 @@ switching and restoring local themes in TRAE Work on macOS.
 ## Install
 
 ```bash
-npm install --global twskin
+npm install --global twskin@latest --registry=https://registry.npmjs.org
 twskin start
 ```
 

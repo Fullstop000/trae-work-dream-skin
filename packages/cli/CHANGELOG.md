@@ -5,6 +5,21 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.5.4] - 2026-07-27
+
+### Fixed
+
+- Installation now explicitly uses npm's public registry.
+
+### Changed
+
+- Theme Manager now reports the matching `0.5.4` package version.
+
+### For contributors
+
+- The npm publish workflow now performs the package build and validation once,
+  and serializes duplicate publishes for the same release tag.
+
 ## [0.5.3] - 2026-07-26
 
 ### Added
@@ -30,7 +45,6 @@ All notable changes to this package are documented here. This project follows
 
 - The restore control now returns from `取消 / 确认恢复` to `恢复默认` after the
   user confirms restoration.
-- Publish the CLI under its internal registry name, `@byted-relic/twskin`.
 
 ## [0.5.2] - 2026-07-24
 

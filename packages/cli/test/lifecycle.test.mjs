@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 
 const PACKAGE_ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const CLI = path.join(PACKAGE_ROOT, "dist/bin/twskin.js");
+const PACKAGE_VERSION = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, "package.json"), "utf8")).version;
 const FIXTURE = fs.mkdtempSync(path.join(os.tmpdir(), "twskin-lifecycle-"));
 const RUNTIME = path.join(FIXTURE, "runtime");
 const DATA = path.join(FIXTURE, "data");
@@ -30,7 +31,7 @@ before(() => {
   fs.writeFileSync(path.join(RUNTIME, "themes/aurora/theme.json"), JSON.stringify({ id: "aurora", name: "Aurora" }));
   fs.writeFileSync(path.join(RUNTIME, "themes/aurora/background.svg"), "<svg xmlns=\"http://www.w3.org/2000/svg\"/>");
   fs.writeFileSync(path.join(RUNTIME, "injector.mjs"), `
-    if (process.argv.includes("--manager-status")) console.log(JSON.stringify({ ready: true, version: "0.5.3" }));
+    if (process.argv.includes("--manager-status")) console.log(JSON.stringify({ ready: true, version: "${PACKAGE_VERSION}" }));
     else if (process.argv.includes("--stop")) console.log(JSON.stringify({ ok: true, targets: 1, restoredTargets: 1 }));
     else if (process.argv.includes("--watch")) setInterval(() => {}, 1000);
   `);

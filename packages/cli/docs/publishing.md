@@ -20,7 +20,7 @@ This creates the current `twskin` version on npm. Verify it with:
 
 ```bash
 npm view twskin version --registry=https://registry.npmjs.org
-npm install --global twskin
+npm install --global twskin@latest --registry=https://registry.npmjs.org
 ```
 
 ## Trusted publishing

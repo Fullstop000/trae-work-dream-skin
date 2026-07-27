@@ -15,7 +15,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
-const VERSION = "0.5.3";
+const VERSION = "0.5.4";
 const DATA_DIR = process.env.TWSKIN_DATA_DIR || path.join(os.homedir(), ".trae-work-skin");
 
 function parseArgs(argv) {
