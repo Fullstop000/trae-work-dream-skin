@@ -1,5 +1,7 @@
 {
   "schemaVersion": 3,
+  "version": "1.0.0",
+  "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "neon-district",
   "name": "霓虹城区 MAX",
   "desc": "酸黄、青蓝与洋红过载的雨夜黑客城区",

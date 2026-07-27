@@ -7,6 +7,7 @@
   const TOKEN_MAP = self.DREAM_SKIN_TOKEN_MAP;
   const COMPONENT_MAP = self.DREAM_SKIN_COMPONENT_MAP;
   const CATALOG = __CATALOG__;
+  let themeSyncState = __THEME_SYNC_STATE__;
   const DEFAULT_THEME = __DEFAULT_THEME__;
   const VERSION = __VERSION__;
   const BASE_CSS = __BASE_CSS__;
@@ -666,6 +667,11 @@ ${selector} {
   configToggle.type = "button";
   configToggle.textContent = "配置";
   configToggle.title = "查看当前主题配置";
+  const syncButton = document.createElement("button");
+  syncButton.className = "ds-sync";
+  syncButton.type = "button";
+  syncButton.textContent = "更新";
+  syncButton.title = "检查官方主题更新";
   const reloadButton = document.createElement("button");
   reloadButton.className = "ds-reload";
   reloadButton.type = "button";
@@ -676,13 +682,15 @@ ${selector} {
   closeButton.type = "button";
   closeButton.textContent = "×";
   closeButton.title = "关闭 (Esc)";
-  headerActions.append(reloadButton, configToggle, closeButton);
+  headerActions.append(syncButton, reloadButton, configToggle, closeButton);
   header.append(headerText, headerActions);
   const panelBody = document.createElement("div");
   panelBody.className = "ds-body";
 
   const galleryView = document.createElement("div");
   galleryView.className = "ds-gallery-view";
+  const syncBanner = document.createElement("div");
+  syncBanner.className = "ds-sync-banner";
   const configView = document.createElement("div");
   configView.className = "ds-config-view";
   const configHead = document.createElement("div");
@@ -709,6 +717,23 @@ ${selector} {
   blurSwitch.setAttribute("role", "switch");
   blurSwitch.setAttribute("aria-label", "面板模糊");
   blurRow.append(blurCopy, blurSwitch);
+  const updateRow = document.createElement("div");
+  updateRow.className = "ds-setting-row";
+  const updateCopy = document.createElement("div");
+  updateCopy.className = "ds-setting-copy";
+  const updateLabel = document.createElement("div");
+  updateLabel.className = "ds-setting-label";
+  updateLabel.textContent = "自动更新官方主题";
+  const updateDesc = document.createElement("div");
+  updateDesc.className = "ds-setting-desc";
+  updateDesc.textContent = "发现兼容的新主题或更新时自动下载安装";
+  updateCopy.append(updateLabel, updateDesc);
+  const updateSwitch = document.createElement("button");
+  updateSwitch.className = "ds-switch";
+  updateSwitch.type = "button";
+  updateSwitch.setAttribute("role", "switch");
+  updateSwitch.setAttribute("aria-label", "自动更新官方主题");
+  updateRow.append(updateCopy, updateSwitch);
   const brightnessRow = document.createElement("div");
   brightnessRow.className = "ds-setting-row ds-setting-row-slider";
   const brightnessHead = document.createElement("div");
@@ -769,8 +794,8 @@ ${selector} {
   resetActions.className = "ds-reset-actions";
   resetActions.append(resetCancel, resetConfig);
   configHead.append(configName, copyConfig);
-  configView.append(configHead, brightnessRow, mainOverlayRow, blurRow, configCode);
-  panelBody.append(galleryView, configView);
+  configView.append(configHead, updateRow, brightnessRow, mainOverlayRow, blurRow, configCode);
+  panelBody.append(syncBanner, galleryView, configView);
 
   // 分类 Tab（固定在头部下，不随列表滚动；选择持久化）
   const CATEGORY_LS = `${LS_PREFIX}category`;
@@ -829,7 +854,7 @@ ${selector} {
   )) => {
     if (!theme) return;
     const config = publicThemeConfig(theme);
-    configName.textContent = `${theme.name} · ${theme.id}`;
+    configName.textContent = `${theme.name} · ${theme.id} · v${theme.version || "0.0.0"}`;
     currentLabel.textContent = `当前：${theme.name}`;
     configCode.textContent = JSON.stringify(config, null, 2);
   };
@@ -839,6 +864,67 @@ ${selector} {
     if (!theme) return;
     blurSwitch.setAttribute("aria-checked", String(Boolean(enabled)));
     blurSwitch.title = enabled ? "关闭毛玻璃效果" : "启用毛玻璃效果";
+  };
+  const requestThemeSync = (action, autoUpdate) => {
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    window.__TRAE_DREAM_SKIN_SYNC_REQUEST__ = { id, action, ...(typeof autoUpdate === "boolean" ? { autoUpdate } : {}) };
+    themeSyncState = {
+      ...themeSyncState,
+      phase: action === "check" ? "checking" : action === "auto-update" ? "idle" : "downloading",
+      message: action === "check" ? "正在检查主题更新" : "正在同步官方主题",
+    };
+    renderThemeSyncState();
+  };
+  const syncSummary = () => {
+    if (themeSyncState.phase === "checking") return "正在检查主题更新…";
+    if (themeSyncState.phase === "downloading" || themeSyncState.phase === "installing") return themeSyncState.message || "正在同步官方主题…";
+    if (themeSyncState.phase === "update-available") return `发现 ${themeSyncState.newThemes || 0} 个新主题、${themeSyncState.updatedThemes || 0} 个更新`;
+    if (themeSyncState.phase === "success") return themeSyncState.message || "主题同步完成";
+    if (themeSyncState.phase === "error") return themeSyncState.message || "主题更新失败";
+    return "";
+  };
+  const renderThemeSyncState = () => {
+    const phase = themeSyncState.phase || "idle";
+    const summary = syncSummary();
+    syncBanner.replaceChildren();
+    syncBanner.className = `ds-sync-banner ds-sync-${phase}`;
+    if (!summary || phase === "fresh" || phase === "idle") {
+      syncBanner.style.display = "none";
+    } else {
+      syncBanner.style.display = "flex";
+      const text = document.createElement("span");
+      text.className = "ds-sync-copy";
+      text.textContent = summary;
+      syncBanner.append(text);
+      if (phase === "update-available") {
+        const install = document.createElement("button");
+        install.type = "button";
+        install.className = "ds-sync-action";
+        install.textContent = "立即更新";
+        install.addEventListener("click", (event) => {
+          event.stopPropagation();
+          requestThemeSync("sync");
+        });
+        syncBanner.append(install);
+      } else if (phase === "error") {
+        const retry = document.createElement("button");
+        retry.type = "button";
+        retry.className = "ds-sync-action";
+        retry.textContent = "重试";
+        retry.addEventListener("click", (event) => {
+          event.stopPropagation();
+          requestThemeSync("check");
+        });
+        syncBanner.append(retry);
+      }
+    }
+    syncButton.classList.toggle("ds-sync-pending", Number(themeSyncState.updateCount || 0) > 0);
+    syncButton.disabled = phase === "checking" || phase === "downloading" || phase === "installing";
+    syncButton.title = summary || "检查官方主题更新";
+    updateSwitch.setAttribute("aria-checked", String(Boolean(themeSyncState.autoUpdateThemes)));
+    updateSwitch.title = themeSyncState.autoUpdateThemes ? "关闭官方主题自动更新" : "开启官方主题自动更新";
+    const checkedAt = themeSyncState.lastCheckedAt ? new Date(themeSyncState.lastCheckedAt).toLocaleString() : "尚未检查";
+    footerText.textContent = `TRAE Work Skin v${VERSION} · 主题更新：${checkedAt}`;
   };
   renderBrightnessControl = (theme = findTheme(
     (() => { try { return localStorage.getItem(LS_KEY); } catch { return null; } })(),
@@ -868,6 +954,14 @@ ${selector} {
     event.stopPropagation();
     renderCurrentConfig();
     showConfig(!configOpen);
+  });
+  syncButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    requestThemeSync("check");
+  });
+  updateSwitch.addEventListener("click", (event) => {
+    event.stopPropagation();
+    requestThemeSync("auto-update", !themeSyncState.autoUpdateThemes);
   });
   copyConfig.addEventListener("click", async (event) => {
     event.stopPropagation();
@@ -986,6 +1080,10 @@ ${selector} {
     name.className = "ds-name";
     name.textContent = theme.name;
     meta.appendChild(name);
+    const version = document.createElement("span");
+    version.className = "ds-version";
+    version.textContent = `v${theme.version || "0.0.0"}`;
+    meta.appendChild(version);
     if (theme.desc) {
       const desc = document.createElement("span");
       desc.className = "ds-desc";
@@ -998,6 +1096,7 @@ ${selector} {
     galleryView.appendChild(card);
   }
   applyCategoryFilter();
+  renderThemeSyncState();
 
   const button = document.createElement("button");
   button.id = BUTTON_ID;
@@ -1031,6 +1130,15 @@ ${selector} {
     window.__TRAE_DREAM_SKIN_RELOAD_REQUEST__ = Date.now();
     setTimeout(() => reloadButton.classList.remove("ds-reload-loading"), 6000);
   });
+  window.__TRAE_DREAM_SKIN_SYNC_LISTENER__ && window.removeEventListener("trae-dream-skin-sync-state", window.__TRAE_DREAM_SKIN_SYNC_LISTENER__);
+  window.__TRAE_DREAM_SKIN_SYNC_LISTENER__ = () => {
+    const next = window.__TRAE_DREAM_SKIN_SYNC_STATE__;
+    if (next && typeof next === "object") {
+      themeSyncState = next;
+      renderThemeSyncState();
+    }
+  };
+  window.addEventListener("trae-dream-skin-sync-state", window.__TRAE_DREAM_SKIN_SYNC_LISTENER__);
   document.addEventListener("click", (e) => {
     if (isPanelOpen() && !panel.contains(e.target)) setPanelOpen(false);
   });

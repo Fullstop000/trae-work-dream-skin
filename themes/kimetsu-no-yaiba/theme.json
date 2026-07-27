@@ -1,5 +1,7 @@
 {
   "schemaVersion": 3,
+  "version": "1.0.0",
+  "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "kimetsu-no-yaiba",
   "name": "鬼灭之刃 · 墨刃日轮",
   "desc": "黑白漫画网点、猩红日轮与大正金线构成的鬼杀队任务界面",

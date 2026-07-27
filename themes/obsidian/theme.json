@@ -1,5 +1,7 @@
 {
   "schemaVersion": 3,
+  "version": "1.0.0",
+  "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "obsidian",
   "name": "黑曜机械师",
   "desc": "雨夜机器人工作室",

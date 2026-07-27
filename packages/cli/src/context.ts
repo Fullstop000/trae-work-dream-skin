@@ -46,6 +46,10 @@ export function createContext(env: NodeJS.ProcessEnv = process.env): Readonly<Cl
       lockFile: path.join(stateDir, "cli.lock"),
       logFile: path.join(stateDir, "injector.log"),
       runtimeManifest: path.join(runtimeRoot, "manifest.json"),
+      catalogCache: path.join(dataDir, "cache", "twskin-catalog-v1.json"),
+      catalogState: path.join(stateDir, "catalog-state.json"),
+      themeUpdateSettings: path.join(stateDir, "theme-update-settings.json"),
+      themeSyncState: path.join(stateDir, "theme-sync-state.json"),
     }),
     app: Object.freeze({
       bundle: env.APP_BUNDLE || DEFAULT_APP_BUNDLE,

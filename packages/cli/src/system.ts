@@ -202,7 +202,11 @@ export function startWatcher(context: CliContext, port: number): number {
     cwd: context.runtimeRoot,
     detached: true,
     stdio: ["ignore", logFd, logFd],
-    env: { ...context.env, ...runtimeEnvironment(context) },
+    env: {
+      ...context.env,
+      ...runtimeEnvironment(context),
+      TWSKIN_CLI_ENTRY: path.join(context.packageRoot, "dist", "bin", "twskin.js"),
+    },
   });
   child.unref();
   fs.closeSync(logFd);

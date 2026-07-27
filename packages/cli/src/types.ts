@@ -8,6 +8,10 @@ export interface CliPaths {
   lockFile: string;
   logFile: string;
   runtimeManifest: string;
+  catalogCache: string;
+  catalogState: string;
+  themeUpdateSettings: string;
+  themeSyncState: string;
 }
 
 export interface AppContext {
@@ -38,13 +42,18 @@ export interface CliOptions {
 }
 
 export interface ThemeManifest extends Record<string, unknown> {
+  schemaVersion?: number;
   id?: string;
+  version?: string;
+  engines?: { twskin?: string };
   name?: string;
   desc?: string;
 }
 
 export interface ThemeDirectory {
   id: string;
+  version: string;
+  compatibleCli: string | null;
   name: string;
   desc: string;
   manifest: ThemeManifest;
@@ -59,6 +68,7 @@ export interface InstalledTheme extends ThemeDirectory {
 
 export interface ThemeSummary {
   id: string;
+  version: string;
   name: string;
   desc: string;
   invalid?: boolean;

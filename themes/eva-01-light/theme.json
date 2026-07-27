@@ -1,5 +1,7 @@
 {
   "schemaVersion": 3,
+  "version": "1.0.0",
+  "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "eva-01-light",
   "name": "EVA 初号机 · 测试设施",
   "desc": "明亮技术档案、实验设施玻璃界面与初号机诊断系统",

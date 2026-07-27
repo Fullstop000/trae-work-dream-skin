@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { CliError } from "./errors.js";
+import { isCompatibleRange, isVersion } from "./semver.js";
 import { atomicWrite, readText } from "./system.js";
 import type { CliContext, InstalledTheme, ThemeDirectory, ThemeManifest, ThemeSummary } from "./types.js";
 
@@ -66,14 +67,34 @@ export function validateThemeDirectory(directory: string): ThemeDirectory {
   if (!manifest || typeof manifest !== "object" || Array.isArray(manifest)) {
     throw new CliError("THEME_MANIFEST_INVALID", 2, `theme.json 必须是对象：${source}`);
   }
+  if (manifest.schemaVersion != null && (!Number.isInteger(manifest.schemaVersion) || Number(manifest.schemaVersion) < 1)) {
+    throw new CliError("THEME_MANIFEST_INVALID", 2, `schemaVersion 必须是正整数：${source}`);
+  }
   const id = typeof manifest.id === "string" && manifest.id ? manifest.id : path.basename(source);
   if (!THEME_ID.test(id)) throw new CliError("THEME_ID_INVALID", 2, `主题 ID 不合法：${id}`, "仅允许小写字母、数字、点、横线和下划线，最长 64 字符。");
+  const version = manifest.version == null ? "0.0.0" : manifest.version;
+  if (!isVersion(version)) throw new CliError("THEME_VERSION_INVALID", 2, `主题版本不合法：${String(version)}`, "使用 SemVer，例如 1.0.0。");
+  let compatibleCli: string | null = null;
+  if (manifest.engines != null) {
+    if (!manifest.engines || typeof manifest.engines !== "object" || Array.isArray(manifest.engines)) {
+      throw new CliError("THEME_MANIFEST_INVALID", 2, `engines 必须是对象：${source}`);
+    }
+    const declared = (manifest.engines as { twskin?: unknown }).twskin;
+    if (declared != null) {
+      if (!isCompatibleRange(declared)) {
+        throw new CliError("THEME_ENGINE_RANGE_INVALID", 2, `主题兼容范围不合法：${String(declared)}`, "使用形如 >=0.5.4 <1.0.0 的范围。");
+      }
+      compatibleCli = declared;
+    }
+  }
   const background = CANONICAL_ASSETS
     .filter((filename) => filename.startsWith("background."))
     .find((filename) => fs.existsSync(path.join(source, filename)));
   if (!background) throw new CliError("THEME_BACKGROUND_MISSING", 2, `主题缺少 canonical background：${source}`);
   return {
     id,
+    version,
+    compatibleCli,
     name: typeof manifest.name === "string" && manifest.name ? manifest.name : id,
     desc: typeof manifest.desc === "string" ? manifest.desc : "",
     manifest,
@@ -157,9 +178,9 @@ export function listThemes(context: CliContext): ThemeSummary[] {
     if (!fs.existsSync(path.join(directory, "theme.json"))) continue;
     try {
       const theme = validateThemeDirectory(directory);
-      themes.push({ id: theme.id, name: theme.name, desc: theme.desc });
+      themes.push({ id: theme.id, version: theme.version, name: theme.name, desc: theme.desc });
     } catch (error) {
-      themes.push({ id: entry.name, name: entry.name, desc: error instanceof Error ? error.message : String(error), invalid: true });
+      themes.push({ id: entry.name, version: "?", name: entry.name, desc: error instanceof Error ? error.message : String(error), invalid: true });
     }
   }
   return themes.sort((left, right) => left.id.localeCompare(right.id));

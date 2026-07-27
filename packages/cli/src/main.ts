@@ -1,13 +1,17 @@
 import process from "node:process";
 import {
   doctorCommand,
+  checkThemeCommand,
   downloadThemeCommand,
   helpText,
   loadThemeCommand,
+  autoUpdateThemeCommand,
+  autoSyncThemeCommand,
   startCommand,
   statusCommand,
   stopCommand,
   themeCommand,
+  syncThemeCommand,
   themesCommand,
   restoreCommand,
   uninstallCommand,
@@ -57,6 +61,18 @@ export async function run(argv: readonly string[] = process.argv.slice(2), envir
         if (first === "download") {
           if (rest.length > 1) throw new CliError("TOO_MANY_ARGUMENTS", 2, "参数过多。", "用法：twskin theme download [id]");
           await downloadThemeCommand(context, rest[0], parsed.options);
+        } else if (first === "check") {
+          if (rest.length) throw new CliError("TOO_MANY_ARGUMENTS", 2, "参数过多。", "用法：twskin theme check");
+          await checkThemeCommand(context, parsed.options);
+        } else if (first === "sync") {
+          if (rest.length) throw new CliError("TOO_MANY_ARGUMENTS", 2, "参数过多。", "用法：twskin theme sync");
+          await syncThemeCommand(context, parsed.options);
+        } else if (first === "auto-sync") {
+          if (rest.length) throw new CliError("TOO_MANY_ARGUMENTS", 2, "参数过多。", "用法：twskin theme auto-sync");
+          await autoSyncThemeCommand(context, parsed.options);
+        } else if (first === "auto-update") {
+          if (rest.length !== 1) throw new CliError(rest.length ? "TOO_MANY_ARGUMENTS" : "AUTO_UPDATE_VALUE_INVALID", 2, rest.length ? "参数过多。" : "缺少 on 或 off。", "用法：twskin theme auto-update <on|off>");
+          autoUpdateThemeCommand(context, rest[0], parsed.options);
         } else if (first === "load") {
           if (rest.length !== 1) throw new CliError(rest.length ? "TOO_MANY_ARGUMENTS" : "THEME_SOURCE_REQUIRED", 2, rest.length ? "参数过多。" : "缺少本地主题目录。", "用法：twskin theme load <directory>");
           await loadThemeCommand(context, rest[0], parsed.options);

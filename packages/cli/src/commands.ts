@@ -26,6 +26,7 @@ import { discoverThemeDirectories, installThemeDirectory, listThemes, readTheme,
 import { MIN_NODE_MAJOR } from "./context.js";
 import { downloadThemes } from "./theme-download.js";
 import type { ThemeDownloadResult } from "./theme-download.js";
+import { autoSyncThemesCommandState, checkThemesCommandState, readThemeSyncState, setThemeAutoUpdate, syncThemesCommandState } from "./theme-catalog.js";
 import { disablePersistentCdp, enablePersistentCdp } from "./persistent-cdp.js";
 import type { CliContext, CliOptions } from "./types.js";
 
@@ -79,6 +80,9 @@ Usage:
   twskin themes [--json]       列出本地主题
   twskin theme <id>            切换主题
   twskin theme download [id]   从最新 GitHub Release 下载全部或指定主题
+  twskin theme check           检查官方主题 Catalog
+  twskin theme sync            下载并安装所有可用主题更新
+  twskin theme auto-update <on|off> 设置官方主题自动更新
   twskin theme load <directory> 从本地目录加载一个或多个主题
   twskin doctor [--json]       检查 Node、TRAE、端口和文件完整性
   twskin restore               恢复 TRAE 原生外观
@@ -105,6 +109,7 @@ export async function getStatus(context: CliContext) {
     },
     watcher: { pid: watcher.pid, running: watcher.alive && watcher.expected, pidAlive: watcher.alive },
     theme: { id: theme, valid: listThemes(context).some((item) => item.id === theme) },
+    themeUpdates: readThemeSyncState(context),
     version: context.packageVersion,
     distribution: context.distribution,
   };
@@ -304,7 +309,7 @@ export function themesCommand(context: CliContext, options: CliOptions): void {
   const current = readTheme(context);
   const width = Math.max(8, ...themes.map((theme) => theme.id.length));
   const human = themes.length
-    ? themes.map((theme) => `${theme.id === current ? "●" : " "} ${theme.id.padEnd(width)}  ${theme.name}${theme.desc ? ` · ${theme.desc}` : ""}`).join("\n")
+    ? themes.map((theme) => `${theme.id === current ? "●" : " "} ${theme.id.padEnd(width)}  ${theme.name} · v${theme.version}${theme.desc ? ` · ${theme.desc}` : ""}`).join("\n")
     : "没有找到可用主题。";
   emit({ command: "themes", directory: context.themesDir, current, themes }, `${human}\n\n主题目录：${context.themesDir}`, options.json);
 }
@@ -350,6 +355,46 @@ export async function downloadThemeCommand(context: CliContext, id: string | und
       options.json,
     );
   });
+}
+
+export async function checkThemeCommand(context: CliContext, options: CliOptions): Promise<void> {
+  const result = await checkThemesCommandState(context, true);
+  const human = result.updates.length
+    ? `发现 ${result.newThemes} 套新主题、${result.updatedThemes} 套可更新主题。\n运行 twskin theme sync 下载并安装。`
+    : "官方主题已是最新。";
+  emit({
+    command: "theme check",
+    catalogVersion: result.catalog.catalogVersion,
+    release: result.catalog.releaseTag,
+    updates: result.updates,
+    newThemes: result.newThemes,
+    updatedThemes: result.updatedThemes,
+    incompatibleThemes: result.incompatibleThemes,
+    checkedFrom: result.checkedFrom,
+  }, human, options.json);
+}
+
+export async function syncThemeCommand(context: CliContext, options: CliOptions): Promise<void> {
+  const result = await syncThemesCommandState(context, true);
+  const installed = result.installed || [];
+  const human = installed.length
+    ? `已同步 ${installed.length} 套官方主题：${installed.join("、")}`
+    : result.updateCount ? "发现主题更新；自动更新已关闭。" : "官方主题已是最新。";
+  emit({ command: "theme sync", ...result }, human, options.json);
+}
+
+export async function autoSyncThemeCommand(context: CliContext, options: CliOptions): Promise<void> {
+  const result = await autoSyncThemesCommandState(context, false);
+  emit({ command: "theme auto-sync", ...result }, "", options.json);
+}
+
+export function autoUpdateThemeCommand(context: CliContext, value: string | undefined, options: CliOptions): void {
+  if (value !== "on" && value !== "off") {
+    throw new CliError("AUTO_UPDATE_VALUE_INVALID", 2, "自动更新选项只能是 on 或 off。", "用法：twskin theme auto-update <on|off>");
+  }
+  const settings = setThemeAutoUpdate(context, value === "on");
+  const state = readThemeSyncState(context);
+  emit({ command: "theme auto-update", ...settings, state }, `官方主题自动更新已${settings.autoUpdateThemes ? "开启" : "关闭"}。`, options.json);
 }
 
 export async function doctorCommand(context: CliContext, options: CliOptions): Promise<void> {

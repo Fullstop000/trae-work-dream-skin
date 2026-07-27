@@ -1,5 +1,7 @@
 {
   "schemaVersion": 3,
+  "version": "1.0.0",
+  "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "aurora",
   "name": "极光",
   "desc": "紫青粉极光渐变（默认）",

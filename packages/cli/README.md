@@ -43,6 +43,9 @@ twskin status [--json]       Show App, CDP, watcher and active-theme status
 twskin themes [--json]       List locally installed themes
 twskin theme <id>            Select a theme
 twskin theme download [id]   Download all or one theme from the latest GitHub Release
+twskin theme check           Check the official theme catalog for updates
+twskin theme sync            Download and install all compatible theme updates
+twskin theme auto-update <on|off> Toggle automatic official-theme updates
 twskin theme load <directory> Install one theme, or immediate child theme directories
 twskin doctor [--json]       Validate Node, TRAE, port and package integrity
 twskin restore               Restore the native TRAE appearance
@@ -56,6 +59,12 @@ the selection is saved and applied by the next `twskin start`. `twskin stop`
 preserves the selected theme and its settings, so a later `twskin start` can
 restore them. It also restores the pre-existing `remote-debugging-port` value
 instead of leaving twskin's persistent CDP configuration behind.
+
+Theme Manager checks the small official catalog at most once every six hours
+while the watcher is active. Its **更新** control performs a forced check; a
+banner shows the result and allows manual installation. Automatic official-theme
+updates are enabled by default and can be changed in Theme Manager's configuration
+view or with `twskin theme auto-update`.
 
 ## Theme directory
 

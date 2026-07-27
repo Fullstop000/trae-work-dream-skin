@@ -21,3 +21,11 @@ test("restore confirmation returns to its default button state after confirmatio
   assert.ok(disarm >= 0, "restore confirmation does not reset its armed state");
   assert.ok(restore > disarm, "restore confirmation must reset before restoring the native theme");
 });
+
+test("Theme Manager exposes Catalog update status and automatic-update control", () => {
+  assert.match(SKIN, /ds-sync-banner/);
+  assert.match(SKIN, /requestThemeSync\("check"\)/);
+  assert.match(SKIN, /requestThemeSync\("sync"\)/);
+  assert.match(SKIN, /自动更新官方主题/);
+  assert.match(SKIN, /trae-dream-skin-sync-state/);
+});

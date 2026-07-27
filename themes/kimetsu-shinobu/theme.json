@@ -1,5 +1,7 @@
 {
   "schemaVersion": 3,
+  "version": "1.0.0",
+  "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "kimetsu-shinobu",
   "name": "鬼灭之刃 · 蝶影药庭",
   "desc": "蝴蝶忍、虫之呼吸、紫藤毒理与蝶翼羽织交织的蟲柱主题",
