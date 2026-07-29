@@ -547,7 +547,7 @@ body.trae-skin-theme-solvay-1927-solarized-light a {
   text-underline-offset: 3px;
 }
 
-/* 侧栏、菜单与设置：延续档案标签和实验记录线。 */
+/* 侧栏、菜单与设置：用档案纸面的浅色状态层区分交互，避免嵌套控件叠出双边线。 */
 body.trae-skin-theme-solvay-1927-solarized-light .task-list-new-task-item,
 body.trae-skin-theme-solvay-1927-solarized-light .task-list-panel button:not([role="tab"]) {
   border-radius: 0 !important;
@@ -557,9 +557,10 @@ body.trae-skin-theme-solvay-1927-solarized-light .task-list-panel button:not([ro
 body.trae-skin-theme-solvay-1927-solarized-light .task-list-panel [tabindex="0"]:hover {
   background:
     linear-gradient(90deg, rgba(181, 137, 0, 0.09), rgba(38, 139, 210, 0.08)) !important;
-  box-shadow:
-    inset 2px 0 var(--solvay-ink),
-    inset -2px 0 var(--solvay-photon) !important;
+  box-shadow: none !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .task-list-shadow-bottom {
+  background: none !important;
 }
 body.trae-skin-theme-solvay-1927-solarized-light .task-list-new-task-item-active,
 body.trae-skin-theme-solvay-1927-solarized-light [aria-current="page"] {
