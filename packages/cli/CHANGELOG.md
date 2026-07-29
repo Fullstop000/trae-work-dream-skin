@@ -5,6 +5,20 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-29
+
+### Added
+
+- Added `--version` and `-V` aliases for printing the CLI version.
+- Added global `--dry-run` (with `--dryrun` compatibility alias). Mutating
+  commands now return a no-side-effect execution plan, while read-only commands
+  mark their JSON response with `dryRun: true`.
+
+### Changed
+
+- Moved CLI command and option parsing to Commander, while retaining the
+  established Chinese diagnostics and JSON error contract.
+
 ## [0.5.10] - 2026-07-29
 
 ### Fixed
