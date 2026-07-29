@@ -198,11 +198,13 @@
         case "invert-hover": return mix(surface.invert, 88, r.appearance === "dark" ? "black" : "white");
         case "invert-active": return mix(surface.invert, 78, r.appearance === "dark" ? "black" : "white");
         case "invert-disabled": return withAlpha(surface.invert, 0.4);
-        case "overlay-l0": return border.subtle;
-        case "overlay-l1": return border.subtle;
-        case "overlay-l2": return border.subtle;
-        case "overlay-l3": return border.default;
-        case "overlay-l4": return border.strong;
+        // Overlay 是叠在当前表面上的中性色阶，不是边框色。
+        // 浅色与深色透明度沿用 App 的原生层级，色相跟随正文中性色。
+        case "overlay-l0": return withAlpha(text.primary, 0);
+        case "overlay-l1": return withAlpha(text.primary, r.appearance === "dark" ? 0.03 : 0.07);
+        case "overlay-l2": return withAlpha(text.primary, r.appearance === "dark" ? 0.05 : 0.11);
+        case "overlay-l3": return withAlpha(text.primary, r.appearance === "dark" ? 0.08 : 0.15);
+        case "overlay-l4": return withAlpha(text.primary, r.appearance === "dark" ? 0.12 : 0.19);
         case "brand": case "brand-old": case "brand-sub": case "brand-design": return accent.base;
         case "brand-hover": case "brand-hover-sub": case "brand-hover-design": return accent.hover;
         case "brand-active": return accent.active;
