@@ -311,6 +311,23 @@ body.trae-skin-v2 [role="menuitem"][data-state="checked"] {
   background: var(--trae-skin-popover-selected) !important;
 }
 
+/* Templates 的 CSS module 固定用纯白 tab strip；让容器回归透明，
+   仅由搜索框与选中态承担控件层级。只匹配含 tabRow 的栏目导航，
+   避免影响其他同前缀的内部 tab 容器。 */
+body.trae-skin-v2 :is([class^="tabsBar-"], [class*=" tabsBar-"]):has(> :is([class^="tabRow-"], [class*=" tabRow-"])) {
+  background: transparent !important;
+}
+
+/* Automation Run History 的筛选条在宿主中强制占用基础背景，形成一整块
+   不透明色带。条本身应融入页面，仅让可操作的筛选控件使用 input 表面。 */
+body.trae-skin-v2 :is([class^="filterBar-"], [class*=" filterBar-"]):has(> :is([class^="statusSelect-"], [class*=" statusSelect-"])) {
+  background: transparent !important;
+}
+body.trae-skin-v2 :is([class^="filterBar-"], [class*=" filterBar-"]):has(> :is([class^="statusSelect-"], [class*=" statusSelect-"]))
+  :is([role="combobox"], [class^="trigger-"], [class*=" trigger-"]) {
+  background: var(--trae-skin-input) !important;
+}
+
 /* Account card：Trae Work 使用独立 CSS module，不走通用 popover。 */
 body.trae-skin-v2 [class*="account-module__card___"],
 body.trae-skin-v2 [class*="account-module__subMenuInner___"] {

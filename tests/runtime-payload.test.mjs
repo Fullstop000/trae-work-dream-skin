@@ -9,6 +9,7 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const RUNTIME = path.join(ROOT, "packages/cli/runtime");
 const THEMES = path.join(ROOT, "themes");
 const SKIN = fs.readFileSync(path.join(RUNTIME, "skin.js"), "utf8");
+const RUNTIME_MANIFEST = JSON.parse(fs.readFileSync(path.join(RUNTIME, "manifest.json"), "utf8"));
 const RUNTIME_STYLES = ["base.css", "manager.css"]
   .map((file) => fs.readFileSync(path.join(RUNTIME, "styles", file), "utf8"))
   .join("\n");
@@ -19,6 +20,13 @@ test("runtime styles are single-source files and produce a valid injection paylo
   assert.doesNotMatch(payload, /__(?:BASE_CSS|MANAGER_CSS|CATALOG|DEFAULT_THEME|VERSION)__/);
   assert.match(payload, /trae-dream-skin-panel/);
   assert.match(payload, /EVA-01\s+\/\s+ENTRY LINK/);
+});
+
+test("runtime payload uses the packaged runtime version", () => {
+  const injector = fs.readFileSync(path.join(RUNTIME, "injector.mjs"), "utf8");
+  const payload = buildPayload({ themesDir: THEMES, defaultTheme: "eva-01" });
+  assert.match(injector, /manifest\.json/);
+  assert.match(payload, new RegExp(`const VERSION = ${JSON.stringify(RUNTIME_MANIFEST.packageVersion)}`));
 });
 
 test("core skin contains no theme-specific selectors", () => {

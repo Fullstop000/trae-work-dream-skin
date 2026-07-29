@@ -416,6 +416,7 @@
     setVar("--trae-skin-success", state.success);
     setVar("--trae-skin-input", surface.input);
     setVar("--trae-skin-menu", surface.menu);
+    setVar("--trae-skin-card", surface.card);
     setVar("--trae-skin-card-hover", surface.cardHover);
     setVar("--trae-skin-border-subtle", border.subtle);
     setVar("--trae-skin-border-default", border.default);

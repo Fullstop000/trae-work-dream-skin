@@ -5,6 +5,23 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.6.3] - 2026-07-29
+
+### Fixed
+
+- Corrected the semantic foreground for TRAE's inverted primary actions. Settings,
+  Automation, Marketplace and their dialogs now use a high-contrast foreground
+  independently from the brand-color foreground in every official theme.
+- Removed the fixed pale strip behind the Templates tabs and the Automation Run
+  History filter bar, while preserving the hierarchy of their interactive controls.
+- Made injected runtime payloads read their version from the packaged manifest,
+  preventing a current runtime from being mistaken for an older injection.
+
+### For contributors
+
+- Added full-catalog regression coverage for primary-action foreground contrast
+  across every official theme and all TRAE token namespaces.
+
 ## [0.6.2] - 2026-07-29
 
 ### Fixed

@@ -179,6 +179,11 @@
   function buildVarMap(tokens, opts) {
     const r = deriveRoles(tokens, opts);
     const { accent, surface, text, icons, border, state } = r;
+    // TRAE 的原生语义并不对称：`*-onbrand` 配对 `bg-bg-brand`，
+    // 而 Marketplace / Automation / Settings 的主操作使用
+    // `bg-bg-invert` + `*-onaccent`。不能把二者都绑定到 accent，
+    // 否则浅色主题的深色 invert 表面会拿到同色文字。
+    const onInvert = pickOnColor(surface.invert);
     const out = {};
 
     // bg 语义（后缀共享：--bg-bg-* / --vscode-icube--bg-bg-* / --ras-bg-bg-*）
@@ -221,7 +226,8 @@
         case "disabled": return text.disabled;
         case "brand": case "brand-sub": case "brand-design": return accent.base;
         case "brand-hover": case "brand-hover-sub": case "brand-hover-design": return accent.hover;
-        case "onaccent": case "onbrand": return accent.onAccent;
+        case "onaccent": return onInvert;
+        case "onbrand": return accent.onAccent;
         case "preformat-foreground": return text.secondary;
         default: return undefined;
       }
@@ -234,7 +240,8 @@
         case "disabled": return icons.disabled;
         case "brand": case "brand-sub": case "brand-design": return accent.base;
         case "brand-hover": case "brand-hover-sub": case "brand-hover-design": return accent.hover;
-        case "onaccent": case "onbrand": return accent.onAccent;
+        case "onaccent": return onInvert;
+        case "onbrand": return accent.onAccent;
         case "white": return "#ffffff";
         default: return undefined;
       }

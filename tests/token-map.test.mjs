@@ -2,7 +2,9 @@
 // token-map.mjs 是 UMD 文本（要内嵌进页面载荷，不能有 ESM 语法），用 vm 加载
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 
 const code = readFileSync(new URL("../packages/cli/runtime/token-map.mjs", import.meta.url), "utf8");
@@ -125,8 +127,59 @@ test("浅色主题推导", () => {
   assert.equal(map["--bg-bg-overlay-l2"], "rgba(23, 23, 23, 0.11)");
   assert.equal(map["--bg-bg-overlay-l3"], "rgba(23, 23, 23, 0.15)");
   assert.equal(map["--bg-bg-overlay-l4"], "rgba(23, 23, 23, 0.19)");
-  // 蓝紫 accent 亮度约 0.37，按 WCAG 黑字对比度(8.3)高于白字(2.5)
-  assert.equal(map["--text-text-onaccent"], "#000000");
+  // `onaccent` 是宿主的 invert-action 前景；浅色主题的深色 invert 上应为白字。
+  assert.equal(map["--text-text-onaccent"], "#ffffff");
+  // `onbrand` 才配对 accent；蓝紫 accent 上黑字的对比度更高。
+  assert.equal(map["--text-text-onbrand"], "#000000");
+});
+
+test("反转主操作的文字与图标始终匹配 invert 表面", () => {
+  const map = TM.buildVarMap({
+    appearance: "light",
+    accent: { base: "#b58900", onAccent: "#002b36" },
+    surface: { base: "#fdf6e3", card: "#fffaf0", invert: "#002b36" },
+    text: { primary: "#657b83" },
+  });
+
+  assert.equal(map["--bg-bg-invert"], "#002b36");
+  assert.equal(map["--text-text-onaccent"], "#ffffff");
+  assert.equal(map["--icon-icon-onaccent"], "#ffffff");
+  assert.equal(map["--vscode-icube--text-text-onaccent"], "#ffffff");
+  assert.equal(map["--vscode-icube--icon-icon-onaccent"], "#ffffff");
+  assert.equal(map["--ras-text-text-onaccent"], "#ffffff");
+  assert.equal(map["--ras-icon-icon-onaccent"], "#ffffff");
+  assert.equal(map["--text-text-onbrand"], "#002b36");
+  assert.ok(TM.contrastRatio(map["--text-text-onaccent"], map["--bg-bg-invert"]) >= 4.5);
+});
+
+test("所有官方主题的反转主操作在全部宿主命名空间中保持可读", () => {
+  const themesDir = fileURLToPath(new URL("../themes/", import.meta.url));
+  const manifests = readdirSync(themesDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => path.join(themesDir, entry.name, "theme.json"));
+
+  assert.ok(manifests.length >= 10, "官方主题目录不应为空");
+  for (const manifest of manifests) {
+    const theme = JSON.parse(readFileSync(manifest, "utf8"));
+    const map = TM.buildVarMap(theme.tokens);
+    const background = map["--bg-bg-invert"];
+    const actionForegrounds = [
+      "--text-text-onaccent",
+      "--icon-icon-onaccent",
+      "--vscode-icube--text-text-onaccent",
+      "--vscode-icube--icon-icon-onaccent",
+      "--ras-text-text-onaccent",
+      "--ras-icon-icon-onaccent",
+    ];
+
+    for (const foregroundName of actionForegrounds) {
+      const ratio = TM.contrastRatio(map[foregroundName], background);
+      assert.ok(
+        ratio >= 4.5,
+        `${theme.id}: ${foregroundName} must contrast with bg-bg-invert (actual ${ratio?.toFixed(2) ?? "unverifiable"})`,
+      );
+    }
+  }
 });
 
 test("对比度护栏：好主题通过，烂主题被抓", () => {

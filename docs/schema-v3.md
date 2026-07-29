@@ -150,6 +150,12 @@ themes/<id>/
 依赖新的运行时能力，应提高下限。没有 `version` 的旧本地主题按 `0.0.0` 处理，
 但官方主题必须声明这两个分发字段。
 
+`accent.onAccent` 是品牌背景（`bg-bg-brand`）上的前景色，对应宿主的
+`text/icon-*-onbrand`。宿主的主操作按钮则使用反转表面
+`bg-bg-invert + text/icon-*-onaccent`；后者由运行时按 `surface.invert` 自动选取
+黑或白，不需要、也不能复用 `accent.onAccent`。这两个宿主别名没有额外的 schema
+字段，避免主题作者为同一前景角色重复声明颜色。
+
 ### 布局表面所有权（必须遵守）
 
 `surfaces` 不是仅供主题挑选的颜色集；它是运行时拥有的布局表面契约。运行时
@@ -268,7 +274,8 @@ body.trae-skin-theme-example {
    保证任何嵌套层级的组件都拿到主题值（修复 Code 落地页输入框与 Work 不一致的问题）。
 
 3. **角色推导**：缺省角色自动补全——hover/active 用 `color-mix` 派生、subtle 用透明度、
-   `onAccent` 按 WCAG 亮度自动选黑/白、text/icons/border/state 有完整默认链。
+   `onAccent` 按 `accent.base` 的 WCAG 亮度自动选黑/白；宿主 `onaccent` 别名则按
+   `surface.invert` 自动选黑/白，text/icons/border/state 有完整默认链。
    `overlay-l0` 至 `overlay-l4` 从 `text.primary` 派生中性透明度阶梯，并按 light/dark
    外观使用各自的透明度，不复用边框或 accent 色。
 

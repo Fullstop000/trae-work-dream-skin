@@ -16,7 +16,14 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
-const VERSION = "0.5.10";
+const VERSION = (() => {
+  if (process.env.TWSKIN_RUNTIME_VERSION) return process.env.TWSKIN_RUNTIME_VERSION;
+  try {
+    const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "manifest.json"), "utf8"));
+    if (typeof manifest.packageVersion === "string" && manifest.packageVersion) return manifest.packageVersion;
+  } catch {}
+  return "development";
+})();
 const DATA_DIR = process.env.TWSKIN_DATA_DIR || path.join(os.homedir(), ".trae-work-skin");
 
 function parseArgs(argv) {

@@ -113,6 +113,28 @@ test("runtime owns maintenance-action styles and maps them to semantic roles", (
 
 });
 
+test("runtime normalizes Templates tab strips and Automation filter surfaces", () => {
+  const templatesSelector = 'body.trae-skin-v2 :is([class^="tabsBar-"], [class*=" tabsBar-"]):has(> :is([class^="tabRow-"], [class*=" tabRow-"]))';
+  const templatesStart = BASE_CSS.indexOf(templatesSelector);
+  const templatesRule = templatesStart >= 0
+    ? BASE_CSS.slice(templatesStart, BASE_CSS.indexOf("\n}", templatesStart) + 2)
+    : "";
+
+  assert.match(
+    BASE_CSS,
+    /:is\(\[class\^="tabsBar-"\], \[class\*=" tabsBar-"\]\):has\(> :is\(\[class\^="tabRow-"\], \[class\*=" tabRow-"\]\)\)/,
+  );
+  assert.match(templatesRule, /background:\s*transparent !important/);
+  assert.match(
+    BASE_CSS,
+    /:is\(\[class\^="filterBar-"\], \[class\*=" filterBar-"\]\):has\(> :is\(\[class\^="statusSelect-"\], \[class\*=" statusSelect-"\]\)\)\s*\{\s*background:\s*transparent !important/s,
+  );
+  assert.match(
+    BASE_CSS,
+    /:is\(\[role="combobox"\], \[class\^="trigger-"\], \[class\*=" trigger-"\]\)\s*\{\s*background:\s*var\(--trae-skin-input\) !important/s,
+  );
+});
+
 test("Solvay composer has one visual boundary", () => {
   const css = fs.readFileSync(
     path.join(THEMES, "solvay-1927-solarized-light", "theme.css"),
