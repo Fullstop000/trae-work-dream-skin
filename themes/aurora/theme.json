@@ -1,36 +1,114 @@
 {
   "schemaVersion": 3,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "aurora",
   "name": "极光",
   "desc": "紫青粉极光渐变（默认）",
   "category": "渐变",
-  "appearance": "light",
+  "appearance": "dark",
+  "background": {
+    "color": "#0b1026",
+    "position": "center center",
+    "size": "cover",
+    "repeat": "no-repeat",
+    "blur": 0,
+    "brightness": 0.96,
+    "saturation": 1.06,
+    "overlay": { "color": "#090d20", "opacity": 0.13 }
+  },
   "surfaces": {
     "colors": {
-      "left": "#ffffff",
-      "chat": "#ffffff",
-      "main": "#ffffff",
-      "landing": "#ffffff"
+      "left": "#151a39",
+      "chat": "#0e1330",
+      "main": "#111636",
+      "landing": "#0e1330"
     },
     "opacity": {
-      "left": 0.55,
-      "chat": 0.78,
-      "main": 0.78,
-      "landing": 0.78
+      "left": 0.86,
+      "chat": 0.76,
+      "main": 0.72,
+      "landing": 0.76
     },
     "blurPx": {
-      "left": 16,
+      "left": 20,
       "chat": 24,
-      "main": 18,
-      "landing": 18
+      "main": 20,
+      "landing": 24
     },
-    "saturation": 1.3
+    "saturation": 1.12,
+    "gap": "#090d20b8",
+    "divider": "#a9b9ff2b"
   },
   "tokens": {
     "accent": {
-      "base": "#7c5cff"
+      "base": "#a99bff",
+      "hover": "#c6bcff",
+      "active": "#8674dc",
+      "subtle": "#a99bff30",
+      "onAccent": "#111329",
+      "disabled": "#a99bff66"
+    },
+    "surface": {
+      "base": "#0e1330",
+      "secondary": "#151a39",
+      "tertiary": "#222651",
+      "card": "#181d42",
+      "cardHover": "#2a2f61",
+      "input": "#090d25",
+      "menu": "#1a1f48",
+      "tooltip": "#272c5b",
+      "invert": "#f6f5ff"
+    },
+    "text": {
+      "primary": "#f4f3ff",
+      "secondary": "#c9c8e7",
+      "tertiary": "#9998c4",
+      "disabled": "#686797"
+    },
+    "icons": {
+      "primary": "#f1f0ff",
+      "secondary": "#cac9ee",
+      "tertiary": "#9896c6",
+      "disabled": "#69679a"
+    },
+    "border": {
+      "subtle": "#c8c7ff20",
+      "default": "#c8c7ff3d",
+      "strong": "#c8c7ff66",
+      "contrast": "#a99bff"
+    },
+    "state": {
+      "success": "#7ee0b2",
+      "warning": "#f3ce79",
+      "error": "#ff9bbd",
+      "info": "#81d9ff"
     }
+  },
+  "typography": {
+    "ui": { "family": "-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif" },
+    "heading": { "family": "-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif", "weight": 650, "letterSpacing": "0.018em" },
+    "code": { "family": "'SFMono-Regular', Consolas, 'Liberation Mono', monospace" }
+  },
+  "shape": { "radius": { "small": 7, "medium": 12, "large": 18, "pill": 999 }, "borderWidth": 1 },
+  "elevation": {
+    "card": "0 10px 26px #03051f35",
+    "floating": "0 20px 52px #02031988",
+    "focusRing": "0 0 0 2px #a99bff80, 0 0 22px #8d7bff40"
+  },
+  "scrollbar": { "track": "#090d25", "thumb": "#65629a", "thumbHover": "#a99bff", "width": 7 },
+  "workbench": { "opacity": { "sidebar": 0.86, "editor": 0.82, "panel": 0.86 } },
+  "components": {
+    "chat": {
+      "userBubble": "#292d60",
+      "userBubbleBorder": "#c8c7ff3d",
+      "assistantMessage": "#ffffff08",
+      "assistantMessageBorder": "#c8c7ff18",
+      "assistantMessageShadow": "none",
+      "code": "#090d25",
+      "card": "#181d42"
+    },
+    "popover": { "background": "#1a1f48", "itemHover": "#2a2f61", "itemSelected": "#a99bff30" },
+    "settings": { "overlay": "#060818cc", "panel": "#1a1f48", "sidebar": "#151a39", "card": "#181d42", "control": "#090d25", "active": "#a99bff30" }
   }
 }

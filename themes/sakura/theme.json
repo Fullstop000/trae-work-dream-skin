@@ -1,36 +1,114 @@
 {
   "schemaVersion": 3,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "sakura",
   "name": "樱夜",
   "desc": "粉紫夜樱",
   "category": "渐变",
-  "appearance": "light",
+  "appearance": "dark",
+  "background": {
+    "color": "#291021",
+    "position": "center center",
+    "size": "cover",
+    "repeat": "no-repeat",
+    "blur": 0,
+    "brightness": 0.95,
+    "saturation": 0.94,
+    "overlay": { "color": "#1b0a17", "opacity": 0.13 }
+  },
   "surfaces": {
     "colors": {
-      "left": "#ffffff",
-      "chat": "#ffffff",
-      "main": "#ffffff",
-      "landing": "#ffffff"
+      "left": "#35162b",
+      "chat": "#251020",
+      "main": "#2d1327",
+      "landing": "#251020"
     },
     "opacity": {
-      "left": 0.55,
+      "left": 0.88,
       "chat": 0.78,
-      "main": 0.78,
+      "main": 0.74,
       "landing": 0.78
     },
     "blurPx": {
-      "left": 16,
+      "left": 18,
       "chat": 24,
-      "main": 18,
-      "landing": 18
+      "main": 20,
+      "landing": 24
     },
-    "saturation": 1.3
+    "saturation": 1.02,
+    "gap": "#190915b8",
+    "divider": "#ffd5e52b"
   },
   "tokens": {
     "accent": {
-      "base": "#ff7ab8"
+      "base": "#ff9bc9",
+      "hover": "#ffc0de",
+      "active": "#dd6da4",
+      "subtle": "#ff9bc930",
+      "onAccent": "#301023",
+      "disabled": "#ff9bc966"
+    },
+    "surface": {
+      "base": "#251020",
+      "secondary": "#35162b",
+      "tertiary": "#51223f",
+      "card": "#421a35",
+      "cardHover": "#64284d",
+      "input": "#190a16",
+      "menu": "#481d3a",
+      "tooltip": "#62284e",
+      "invert": "#fff3f8"
+    },
+    "text": {
+      "primary": "#fff2f8",
+      "secondary": "#ecc6da",
+      "tertiary": "#c592b2",
+      "disabled": "#915f7c"
+    },
+    "icons": {
+      "primary": "#fff0f7",
+      "secondary": "#eec4da",
+      "tertiary": "#c492b3",
+      "disabled": "#925f7d"
+    },
+    "border": {
+      "subtle": "#ffe0ed20",
+      "default": "#ffe0ed3d",
+      "strong": "#ffe0ed66",
+      "contrast": "#ff9bc9"
+    },
+    "state": {
+      "success": "#82d8ad",
+      "warning": "#efcf7c",
+      "error": "#ff9ba5",
+      "info": "#9ac9ff"
     }
+  },
+  "typography": {
+    "ui": { "family": "-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif" },
+    "heading": { "family": "-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif", "weight": 650, "letterSpacing": "0.016em" },
+    "code": { "family": "'SFMono-Regular', Consolas, 'Liberation Mono', monospace" }
+  },
+  "shape": { "radius": { "small": 8, "medium": 14, "large": 20, "pill": 999 }, "borderWidth": 1 },
+  "elevation": {
+    "card": "0 10px 26px #19061235",
+    "floating": "0 20px 52px #19061288",
+    "focusRing": "0 0 0 2px #ff9bc980"
+  },
+  "scrollbar": { "track": "#190a16", "thumb": "#95617e", "thumbHover": "#ff9bc9", "width": 7 },
+  "workbench": { "opacity": { "sidebar": 0.88, "editor": 0.84, "panel": 0.88 } },
+  "components": {
+    "chat": {
+      "userBubble": "#64284d",
+      "userBubbleBorder": "#ffe0ed3d",
+      "assistantMessage": "#ffffff08",
+      "assistantMessageBorder": "#ffe0ed18",
+      "assistantMessageShadow": "none",
+      "code": "#190a16",
+      "card": "#421a35"
+    },
+    "popover": { "background": "#481d3a", "itemHover": "#64284d", "itemSelected": "#ff9bc930" },
+    "settings": { "overlay": "#170713cc", "panel": "#481d3a", "sidebar": "#35162b", "card": "#421a35", "control": "#190a16", "active": "#ff9bc930" }
   }
 }

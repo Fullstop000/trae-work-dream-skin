@@ -1,47 +1,40 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1440" viewBox="0 0 2560 1440">
   <defs>
-    <linearGradient id="base" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#04121f"/>
-      <stop offset="0.45" stop-color="#062a3a"/>
-      <stop offset="1" stop-color="#083344"/>
+    <linearGradient id="base" x1="0" y1="0" x2=".92" y2="1">
+      <stop offset="0" stop-color="#02121c"/>
+      <stop offset=".48" stop-color="#063648"/>
+      <stop offset="1" stop-color="#041d2b"/>
     </linearGradient>
-    <radialGradient id="glow1" cx="0.22" cy="0.28" r="0.55">
-      <stop offset="0" stop-color="#1e90ff" stop-opacity="0.55"/>
-      <stop offset="0.55" stop-color="#1e90ff" stop-opacity="0.18"/>
-      <stop offset="1" stop-color="#1e90ff" stop-opacity="0"/>
+    <radialGradient id="depth" cx=".78" cy=".13" r=".82">
+      <stop offset="0" stop-color="#7be4f2" stop-opacity=".2"/>
+      <stop offset=".43" stop-color="#278eb1" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#278eb1" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="glow2" cx="0.78" cy="0.22" r="0.5">
-      <stop offset="0" stop-color="#39d0d8" stop-opacity="0.45"/>
-      <stop offset="0.55" stop-color="#39d0d8" stop-opacity="0.12"/>
-      <stop offset="1" stop-color="#39d0d8" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="glow3" cx="0.62" cy="0.85" r="0.6">
-      <stop offset="0" stop-color="#2f6bff" stop-opacity="0.4"/>
-      <stop offset="0.55" stop-color="#2f6bff" stop-opacity="0.1"/>
-      <stop offset="1" stop-color="#2f6bff" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="vignette" cx="0.5" cy="0.5" r="0.75">
-      <stop offset="0.55" stop-color="#000" stop-opacity="0"/>
-      <stop offset="1" stop-color="#000" stop-opacity="0.45"/>
-    </radialGradient>
+    <linearGradient id="wave" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#9defff" stop-opacity="0"/>
+      <stop offset=".32" stop-color="#9defff" stop-opacity=".15"/>
+      <stop offset=".62" stop-color="#50c8e8" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#50c8e8" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter>
+    <filter id="softest" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="40"/></filter>
   </defs>
   <rect width="2560" height="1440" fill="url(#base)"/>
-  <rect width="2560" height="1440" fill="url(#glow1)"/>
-  <rect width="2560" height="1440" fill="url(#glow2)"/>
-  <rect width="2560" height="1440" fill="url(#glow3)"/>
-  <g fill="#ffffff" opacity="0.5">
-    <circle cx="320" cy="240" r="1.6"/>
-    <circle cx="890" cy="150" r="1.2"/>
-    <circle cx="1420" cy="330" r="1.8"/>
-    <circle cx="1980" cy="180" r="1.3"/>
-    <circle cx="2280" cy="520" r="1.5"/>
-    <circle cx="170" cy="760" r="1.2"/>
-    <circle cx="640" cy="980" r="1.6"/>
-    <circle cx="1150" cy="720" r="1.1"/>
-    <circle cx="1660" cy="1120" r="1.7"/>
-    <circle cx="2130" cy="900" r="1.2"/>
-    <circle cx="2410" cy="1250" r="1.5"/>
-    <circle cx="980" cy="1240" r="1.3"/>
+  <rect width="2560" height="1440" fill="url(#depth)"/>
+  <g fill="none" filter="url(#soft)" stroke-linecap="round">
+    <path d="M-140 342C265 84 618 104 932 343s658 254 981 11 601-268 822-92" stroke="url(#wave)" stroke-width="19"/>
+    <path d="M-160 602c406-255 761-229 1074 10s654 252 978 12 606-257 835-79" stroke="url(#wave)" stroke-width="14" opacity=".78"/>
+    <path d="M-180 879c416-260 782-226 1094 18s653 256 979 13 589-265 840-72" stroke="url(#wave)" stroke-width="16" opacity=".58"/>
+    <path d="M-150 1170c416-253 773-224 1086 17s652 245 975 11 593-255 832-75" stroke="url(#wave)" stroke-width="12" opacity=".38"/>
   </g>
-  <rect width="2560" height="1440" fill="url(#vignette)"/>
+  <g filter="url(#softest)" fill="#4dd6ea">
+    <ellipse cx="450" cy="395" rx="390" ry="135" opacity=".09"/>
+    <ellipse cx="1860" cy="660" rx="540" ry="170" opacity=".11"/>
+    <ellipse cx="1110" cy="1240" rx="600" ry="130" opacity=".08"/>
+  </g>
+  <g fill="none" stroke="#d6fbff" stroke-opacity=".07">
+    <path d="M-50 403c375-203 699-189 1000 39 297 225 610 226 930 1s610-237 730-104"/>
+    <path d="M-50 950c375-203 699-189 1000 39 297 225 610 226 930 1s610-237 730-104"/>
+  </g>
+  <rect width="2560" height="1440" fill="#020b11" opacity=".1"/>
 </svg>
