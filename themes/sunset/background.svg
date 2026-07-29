@@ -1,47 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1440" viewBox="0 0 2560 1440">
   <defs>
-    <linearGradient id="base" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2b0f14"/>
-      <stop offset="0.45" stop-color="#3a1420"/>
-      <stop offset="1" stop-color="#33101f"/>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#290b18"/>
+      <stop offset=".52" stop-color="#7e2d32"/>
+      <stop offset="1" stop-color="#e3794b"/>
     </linearGradient>
-    <radialGradient id="glow1" cx="0.22" cy="0.28" r="0.55">
-      <stop offset="0" stop-color="#ff8a3d" stop-opacity="0.55"/>
-      <stop offset="0.55" stop-color="#ff8a3d" stop-opacity="0.18"/>
-      <stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="glow2" cx="0.78" cy="0.22" r="0.5">
-      <stop offset="0" stop-color="#ffd166" stop-opacity="0.45"/>
-      <stop offset="0.55" stop-color="#ffd166" stop-opacity="0.12"/>
-      <stop offset="1" stop-color="#ffd166" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="glow3" cx="0.62" cy="0.85" r="0.6">
-      <stop offset="0" stop-color="#ff4d6d" stop-opacity="0.4"/>
-      <stop offset="0.55" stop-color="#ff4d6d" stop-opacity="0.1"/>
-      <stop offset="1" stop-color="#ff4d6d" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="vignette" cx="0.5" cy="0.5" r="0.75">
-      <stop offset="0.55" stop-color="#000" stop-opacity="0"/>
-      <stop offset="1" stop-color="#000" stop-opacity="0.45"/>
-    </radialGradient>
+    <radialGradient id="sunGlow" cx=".77" cy=".37" r=".44"><stop offset="0" stop-color="#ffe8b0" stop-opacity=".52"/><stop offset=".18" stop-color="#ffbd72" stop-opacity=".22"/><stop offset="1" stop-color="#ff9b58" stop-opacity="0"/></radialGradient>
+    <linearGradient id="duneFar" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4c1724"/><stop offset="1" stop-color="#7b2d2d"/></linearGradient>
+    <linearGradient id="duneNear" x1="0" y1="0" x2="1" y2=".2"><stop offset="0" stop-color="#210913"/><stop offset=".55" stop-color="#4a1620"/><stop offset="1" stop-color="#2b0b15"/></linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="26"/></filter>
   </defs>
-  <rect width="2560" height="1440" fill="url(#base)"/>
-  <rect width="2560" height="1440" fill="url(#glow1)"/>
-  <rect width="2560" height="1440" fill="url(#glow2)"/>
-  <rect width="2560" height="1440" fill="url(#glow3)"/>
-  <g fill="#ffffff" opacity="0.5">
-    <circle cx="320" cy="240" r="1.6"/>
-    <circle cx="890" cy="150" r="1.2"/>
-    <circle cx="1420" cy="330" r="1.8"/>
-    <circle cx="1980" cy="180" r="1.3"/>
-    <circle cx="2280" cy="520" r="1.5"/>
-    <circle cx="170" cy="760" r="1.2"/>
-    <circle cx="640" cy="980" r="1.6"/>
-    <circle cx="1150" cy="720" r="1.1"/>
-    <circle cx="1660" cy="1120" r="1.7"/>
-    <circle cx="2130" cy="900" r="1.2"/>
-    <circle cx="2410" cy="1250" r="1.5"/>
-    <circle cx="980" cy="1240" r="1.3"/>
+  <rect width="2560" height="1440" fill="url(#sky)"/>
+  <rect width="2560" height="1440" fill="url(#sunGlow)"/>
+  <circle cx="1930" cy="500" r="142" fill="#ffe7a7" opacity=".5" filter="url(#soft)"/>
+  <circle cx="1930" cy="500" r="87" fill="#ffdf9b" opacity=".82"/>
+  <path d="M0 895c258-150 508-169 746-61 230 104 436 87 685-33 240-116 444-118 698-25 149 55 292 56 431 4v660H0Z" fill="url(#duneFar)" opacity=".86"/>
+  <path d="M0 1090c236-91 428-83 654 23 230 109 456 99 661-30 232-146 472-153 729-26 200 99 367 99 516 9v374H0Z" fill="url(#duneNear)"/>
+  <g fill="none" stroke="#ffc08b" stroke-linecap="round">
+    <path d="M-50 1092c234-87 429-79 656 26" stroke-opacity=".12" stroke-width="4"/>
+    <path d="M801 1150c218-70 389-69 616 4" stroke-opacity=".1" stroke-width="3"/>
+    <path d="M1572 1113c206-57 391-52 620 17" stroke-opacity=".09" stroke-width="3"/>
   </g>
-  <rect width="2560" height="1440" fill="url(#vignette)"/>
+  <rect width="2560" height="1440" fill="#19050d" opacity=".14"/>
 </svg>

@@ -1,47 +1,39 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1440" viewBox="0 0 2560 1440">
   <defs>
     <linearGradient id="base" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2a0f1e"/>
-      <stop offset="0.45" stop-color="#3a1428"/>
-      <stop offset="1" stop-color="#241026"/>
+      <stop offset="0" stop-color="#200a19"/>
+      <stop offset=".5" stop-color="#43192f"/>
+      <stop offset="1" stop-color="#251023"/>
     </linearGradient>
-    <radialGradient id="glow1" cx="0.22" cy="0.28" r="0.55">
-      <stop offset="0" stop-color="#ff7ab8" stop-opacity="0.55"/>
-      <stop offset="0.55" stop-color="#ff7ab8" stop-opacity="0.18"/>
-      <stop offset="1" stop-color="#ff7ab8" stop-opacity="0"/>
+    <radialGradient id="moon" cx=".76" cy=".18" r=".48">
+      <stop offset="0" stop-color="#ffe8f4" stop-opacity=".28"/>
+      <stop offset=".2" stop-color="#ffc5e1" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#ffc5e1" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="glow2" cx="0.78" cy="0.22" r="0.5">
-      <stop offset="0" stop-color="#ffb3d1" stop-opacity="0.45"/>
-      <stop offset="0.55" stop-color="#ffb3d1" stop-opacity="0.12"/>
-      <stop offset="1" stop-color="#ffb3d1" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="glow3" cx="0.62" cy="0.85" r="0.6">
-      <stop offset="0" stop-color="#c084fc" stop-opacity="0.4"/>
-      <stop offset="0.55" stop-color="#c084fc" stop-opacity="0.1"/>
-      <stop offset="1" stop-color="#c084fc" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="vignette" cx="0.5" cy="0.5" r="0.75">
-      <stop offset="0.55" stop-color="#000" stop-opacity="0"/>
-      <stop offset="1" stop-color="#000" stop-opacity="0.45"/>
-    </radialGradient>
+    <linearGradient id="branch" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#160611"/><stop offset="1" stop-color="#40172f"/></linearGradient>
+    <filter id="blur" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="11"/></filter>
+    <filter id="bloom" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="25"/></filter>
   </defs>
   <rect width="2560" height="1440" fill="url(#base)"/>
-  <rect width="2560" height="1440" fill="url(#glow1)"/>
-  <rect width="2560" height="1440" fill="url(#glow2)"/>
-  <rect width="2560" height="1440" fill="url(#glow3)"/>
-  <g fill="#ffffff" opacity="0.5">
-    <circle cx="320" cy="240" r="1.6"/>
-    <circle cx="890" cy="150" r="1.2"/>
-    <circle cx="1420" cy="330" r="1.8"/>
-    <circle cx="1980" cy="180" r="1.3"/>
-    <circle cx="2280" cy="520" r="1.5"/>
-    <circle cx="170" cy="760" r="1.2"/>
-    <circle cx="640" cy="980" r="1.6"/>
-    <circle cx="1150" cy="720" r="1.1"/>
-    <circle cx="1660" cy="1120" r="1.7"/>
-    <circle cx="2130" cy="900" r="1.2"/>
-    <circle cx="2410" cy="1250" r="1.5"/>
-    <circle cx="980" cy="1240" r="1.3"/>
+  <rect width="2560" height="1440" fill="url(#moon)"/>
+  <circle cx="1940" cy="300" r="178" fill="#fff0f8" opacity=".055" filter="url(#bloom)"/>
+  <g fill="none" stroke="url(#branch)" stroke-linecap="round">
+    <path d="M2630 18c-370 117-520 269-695 525-144 210-281 321-530 446" stroke-width="27"/>
+    <path d="M2406 86c-230 146-351 292-448 487" stroke-width="14"/>
+    <path d="M2113 385c-136 9-279 80-412 201" stroke-width="13"/>
+    <path d="M1860 578c-180-9-346 45-505 166" stroke-width="11"/>
   </g>
-  <rect width="2560" height="1440" fill="url(#vignette)"/>
+  <g fill="#ffc2df" filter="url(#blur)">
+    <g opacity=".48"><ellipse cx="2058" cy="437" rx="22" ry="11" transform="rotate(-30 2058 437)"/><ellipse cx="2113" cy="404" rx="18" ry="10" transform="rotate(25 2113 404)"/><ellipse cx="2011" cy="492" rx="17" ry="9" transform="rotate(55 2011 492)"/></g>
+    <g opacity=".42"><ellipse cx="1790" cy="586" rx="24" ry="11" transform="rotate(-12 1790 586)"/><ellipse cx="1737" cy="622" rx="18" ry="9" transform="rotate(43 1737 622)"/><ellipse cx="1841" cy="553" rx="16" ry="9" transform="rotate(66 1841 553)"/></g>
+    <g opacity=".35"><ellipse cx="1514" cy="755" rx="21" ry="10" transform="rotate(-32 1514 755)"/><ellipse cx="1576" cy="726" rx="17" ry="9" transform="rotate(38 1576 726)"/></g>
+    <g opacity=".28"><ellipse cx="2202" cy="318" rx="20" ry="10" transform="rotate(-20 2202 318)"/><ellipse cx="2280" cy="278" rx="15" ry="8" transform="rotate(48 2280 278)"/></g>
+  </g>
+  <g fill="#ffb5d9" opacity=".45">
+    <ellipse cx="1440" cy="430" rx="11" ry="5" transform="rotate(35 1440 430)"/>
+    <ellipse cx="1280" cy="676" rx="9" ry="4" transform="rotate(-28 1280 676)"/>
+    <ellipse cx="1610" cy="1004" rx="11" ry="5" transform="rotate(51 1610 1004)"/>
+    <ellipse cx="1150" cy="1060" rx="8" ry="4" transform="rotate(-41 1150 1060)"/>
+  </g>
+  <rect width="2560" height="1440" fill="#0d0310" opacity=".13"/>
 </svg>
