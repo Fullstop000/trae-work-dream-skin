@@ -269,6 +269,8 @@ body.trae-skin-theme-example {
 
 3. **角色推导**：缺省角色自动补全——hover/active 用 `color-mix` 派生、subtle 用透明度、
    `onAccent` 按 WCAG 亮度自动选黑/白、text/icons/border/state 有完整默认链。
+   `overlay-l0` 至 `overlay-l4` 从 `text.primary` 派生中性透明度阶梯，并按 light/dark
+   外观使用各自的透明度，不复用边框或 accent 色。
 
 4. **对比度护栏**：应用主题时引擎对 9 组关键 fg/bg 角色对做 WCAG 对比度审计，
    不达标在控制台告警并在 apply 返回值里带 `contrastWarnings` 计数（单测里同类审计拦截了浅主题 tooltip 事故）。
