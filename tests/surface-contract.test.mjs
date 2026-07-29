@@ -216,3 +216,21 @@ test("Solvay send action stays inside the composer grid", () => {
   assert.match(sendDecorationRule, /content:\s*none !important/);
   assert.doesNotMatch(css, /solvay-(?:orbit|electron)/);
 });
+
+test("Solvay limits recommendation-card decoration to chat", () => {
+  const css = fs.readFileSync(
+    path.join(THEMES, "solvay-1927-solarized-light", "theme.css"),
+    "utf8",
+  );
+  const cardRule = css.match(
+    /\.core-finish-card__code-card,[\s\S]*?\[class\*="card-QNuQ2F"\]\s*\{([\s\S]*?)\n\}/,
+  )?.[0];
+
+  assert.ok(cardRule, "Solvay needs its archive-card treatment");
+  assert.match(cardRule, /\.solo-lite-chat-panel-container \[class\*="recommendationCard"\]/);
+  assert.doesNotMatch(
+    cardRule.slice(0, cardRule.indexOf("{")),
+    /body\.trae-skin-theme-solvay-1927-solarized-light \[class\*="recommendationCard"\]/,
+    "Marketplace recommendation cards must retain their authored artwork",
+  );
+});

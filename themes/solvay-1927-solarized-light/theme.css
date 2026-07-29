@@ -501,7 +501,10 @@ body.trae-skin-theme-solvay-1927-solarized-light .core-finish-card::before {
   content: none !important;
 }
 body.trae-skin-theme-solvay-1927-solarized-light .core-finish-card__code-card,
-body.trae-skin-theme-solvay-1927-solarized-light [class*="recommendationCard"],
+/* Marketplace uses the same `recommendationCard` module names for its featured
+   banners and skill previews. Keep the archive-grid treatment inside chat so it
+   cannot cover the marketplace's authored imagery or prompt chrome. */
+body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-chat-panel-container [class*="recommendationCard"],
 body.trae-skin-theme-solvay-1927-solarized-light [class*="card-QNuQ2F"] {
   border-radius: 0 !important;
   background:
