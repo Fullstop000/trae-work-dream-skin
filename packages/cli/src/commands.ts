@@ -60,6 +60,38 @@ function emitStartResult(
   p.outro(outro);
 }
 
+function emitStartProgress(
+  options: CliOptions,
+  level: "info" | "success" | "warning",
+  message: string,
+): void {
+  if (options.json || options.dryRun) return;
+  const marker = level === "success" ? "✓" : level === "warning" ? "!" : "→";
+  process.stderr.write(`${marker} ${message}\n`);
+}
+
+function injectedTargets(output: string): string {
+  const match = output.match(/injected\s+(\d+)\/(\d+)\s+target\(s\)/);
+  return match ? `${match[1]}/${match[2]} 个页面` : "已完成";
+}
+
+function persistentCdpMessage(result: { managed: boolean; changed: boolean; port: number }): string {
+  if (!result.managed) return `持久 CDP 已由现有用户配置提供 · 端口 ${result.port}`;
+  return result.changed
+    ? `持久 CDP 已写入 · 端口 ${result.port}`
+    : `持久 CDP 配置已确认 · 端口 ${result.port}`;
+}
+
+function startSummary(context: CliContext): { theme: string; autoUpdateThemes: boolean; message: string } {
+  const theme = readTheme(context);
+  const autoUpdateThemes = readThemeSyncState(context).autoUpdateThemes;
+  return {
+    theme,
+    autoUpdateThemes,
+    message: `当前主题：${theme}`,
+  };
+}
+
 async function downloadWithProgress(context: CliContext, requestedId: string | undefined, options: CliOptions): Promise<ThemeDownloadResult> {
   if (!interactive(options)) return downloadThemes(context, requestedId);
   const progress = p.spinner();
@@ -145,14 +177,20 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
   }
   await withLock(context, "start", async () => {
     let bootstrap = null;
-    if (listThemes(context).filter((theme) => !theme.invalid).length === 0) {
+    const validThemes = listThemes(context).filter((theme) => !theme.invalid);
+    if (validThemes.length === 0) {
+      emitStartProgress(options, "info", "未检测到有效本地主题 · 准备下载官方主题包");
       await confirmThemeDownload(options, context.themesDir);
       bootstrap = await downloadWithProgress(context, undefined, options);
+      emitStartProgress(options, "success", `官方主题已安装 · ${bootstrap.installed.length} 套`);
+    } else {
+      emitStartProgress(options, "success", `主题目录已就绪 · ${validThemes.length} 个有效主题`);
     }
     const port = readPort(context);
     const appBundle = resolveAppBundle(context);
     const cdp = await cdpVersion(port);
     if (cdp) {
+      emitStartProgress(options, "success", `CDP 可用 · 127.0.0.1:${port}`);
       const watcherBefore = watcherStatus(context);
       const watcherMatchesConfiguration = watcherBefore.command.includes(`--port ${port}`)
         && watcherBefore.command.includes(`--themes ${context.themesDir}`)
@@ -161,8 +199,13 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
         ? managerStatus(context, port)
         : { ready: false, version: null };
       if (managerBefore.ready && managerBefore.version === context.packageVersion) {
+        emitStartProgress(options, "info", "启动模式 · already-running");
+        emitStartProgress(options, "success", `Theme Manager 已就绪 · runtime ${managerBefore.version}`);
+        emitStartProgress(options, "success", `watcher 正在运行 · PID ${watcherBefore.pid}`);
         const persistentCdp = enablePersistentCdp(context, appBundle, port);
-        const theme = readTheme(context);
+        emitStartProgress(options, "success", persistentCdpMessage(persistentCdp));
+        const summary = startSummary(context);
+        emitStartProgress(options, "success", `主题自动更新 · ${summary.autoUpdateThemes ? "已开启" : "已关闭"}`);
         emitStartResult(
           {
             command: "start",
@@ -170,20 +213,33 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
             mode: "already-running",
             port,
             watcherPid: watcherBefore.pid,
-            theme,
+            theme: summary.theme,
+            autoUpdateThemes: summary.autoUpdateThemes,
             persistentCdp,
-            guide: { managerEntry: "TRAE Work 右下角的调色盘图标" },
           },
           "TRAE Work Skin 已经在运行",
-          `入口：回到 TRAE Work，点击右下角的调色盘图标打开 Theme Manager。\n当前主题：${theme}`,
+          summary.message,
           "无需重复启动",
           options,
         );
         return;
       }
-      runInjector(context, ["--once", "--port", String(port)]);
+      emitStartProgress(options, "info", "启动模式 · refresh");
+      const injectionOutput = runInjector(context, ["--once", "--port", String(port)]);
+      const managerAfter = managerStatus(context, port);
+      emitStartProgress(
+        options,
+        managerAfter.ready ? "success" : "warning",
+        managerAfter.ready
+          ? `Theme Manager 已重新注入 · ${injectedTargets(injectionOutput)} · runtime ${managerAfter.version || "unknown"}`
+          : `Theme Manager 注入已执行 · ${injectedTargets(injectionOutput)} · 页面仍在初始化`,
+      );
       const pid = startWatcher(context, port);
+      emitStartProgress(options, "success", `watcher 已启动 · PID ${pid}`);
       const persistentCdp = enablePersistentCdp(context, appBundle, port);
+      emitStartProgress(options, "success", persistentCdpMessage(persistentCdp));
+      const summary = startSummary(context);
+      emitStartProgress(options, "success", `主题自动更新 · ${summary.autoUpdateThemes ? "已开启" : "已关闭"}`);
       const state = bootstrap ? "ready" : "recovered";
       const headline = bootstrap
         ? `首次启动完成，已安装 ${bootstrap.installed.length} 套官方主题。`
@@ -196,30 +252,59 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
           port,
           watcherPid: pid,
           persistentCdp,
+          theme: summary.theme,
+          autoUpdateThemes: summary.autoUpdateThemes,
           bootstrappedThemes: bootstrap?.installed.map((theme) => theme.id) || [],
-          guide: { managerEntry: "TRAE Work 右下角的调色盘图标" },
         },
         headline,
-        "下一步：回到 TRAE Work，点击右下角的调色盘图标打开 Theme Manager。\n如暂时未看到图标，请等待页面加载完成。",
+        summary.message,
         "Theme Manager 已就绪",
         options,
       );
       return;
     }
 
+    emitStartProgress(options, "warning", `CDP 不可用 · 127.0.0.1:${port}`);
+    emitStartProgress(options, "info", "启动模式 · launch");
     const owner = portOwner(context, port);
     if (owner && !owner.command.includes(context.app.processMatch)) {
       throw new CliError("PORT_IN_USE", 4, `端口 ${port} 被其他进程占用：${owner.command}`, "请退出占用端口的程序后重试。");
     }
+    const wasRunning = appRunning(context, appBundle);
+    if (wasRunning) emitStartProgress(options, "info", "TRAE Work 正在运行 · 需要重启以启用 CDP");
     await confirmAppRestart(context, appBundle, options);
-    runScript(context, "start.sh", {
+    emitStartProgress(options, "info", `${wasRunning ? "正在重启" : "正在启动"} TRAE Work 并等待 CDP`);
+    const launchOutput = runScript(context, "start.sh", {
       PORT: String(port),
       NODE_BIN: process.execPath,
       APP_BUNDLE: appBundle,
       APP_BUNDLE_ID: context.app.bundleId,
       APP_PROC_MATCH: context.app.processMatch,
-    });
+    }, { inherit: false });
+    if (launchOutput.includes("falling back to direct exec")) {
+      emitStartProgress(options, "warning", "open 启动未建立 CDP · 已使用应用二进制兜底");
+    }
+    emitStartProgress(options, "success", `TRAE Work 与 CDP 已就绪 · 127.0.0.1:${port}`);
+    const watcher = watcherStatus(context);
+    emitStartProgress(
+      options,
+      watcher.alive && watcher.expected ? "success" : "warning",
+      watcher.alive && watcher.expected
+        ? `watcher 已启动 · PID ${watcher.pid}`
+        : "watcher 启动状态尚未确认",
+    );
+    const manager = managerStatus(context, port);
+    emitStartProgress(
+      options,
+      manager.ready ? "success" : "warning",
+      manager.ready
+        ? `Theme Manager 已注入 · runtime ${manager.version || "unknown"}`
+        : "Theme Manager 正在由 watcher 注入",
+    );
     const persistentCdp = enablePersistentCdp(context, appBundle, port);
+    emitStartProgress(options, "success", persistentCdpMessage(persistentCdp));
+    const summary = startSummary(context);
+    emitStartProgress(options, "success", `主题自动更新 · ${summary.autoUpdateThemes ? "已开启" : "已关闭"}`);
     const headline = bootstrap
       ? `首次启动完成，已安装 ${bootstrap.installed.length} 套官方主题。`
       : "TRAE Work Skin 已启动。";
@@ -229,12 +314,14 @@ export async function startCommand(context: CliContext, options: CliOptions): Pr
         state: "ready",
         mode: "launch",
         port,
+        watcherPid: watcher.pid,
         persistentCdp,
+        theme: summary.theme,
+        autoUpdateThemes: summary.autoUpdateThemes,
         bootstrappedThemes: bootstrap?.installed.map((theme) => theme.id) || [],
-        guide: { managerEntry: "TRAE Work 右下角的调色盘图标" },
       },
       headline,
-      "下一步：等待 TRAE Work 打开，然后点击右下角的调色盘图标进入 Theme Manager。",
+      summary.message,
       "TRAE Work Skin 已启动",
       options,
     );

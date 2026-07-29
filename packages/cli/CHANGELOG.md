@@ -5,6 +5,27 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.6.6] - 2026-07-29
+
+### Changed
+
+- Made `twskin start` report the essential startup lifecycle: local theme
+  readiness, CDP state, selected launch mode, runtime injection, watcher,
+  persistent CDP configuration, automatic theme updates and the active theme.
+- Kept progress on stderr so `--json` remains a single machine-readable
+  document, and removed the log-file path and Theme Manager entry guidance from
+  normal startup output.
+
+### Fixed
+
+- Passed the current CLI version into the runtime environment so development and
+  packaged launches report the same injected runtime version.
+
+### For contributors
+
+- Added lifecycle regression coverage for human-readable startup progress,
+  silent JSON progress and runtime-version propagation.
+
 ## [0.6.5] - 2026-07-29
 
 ### Fixed
