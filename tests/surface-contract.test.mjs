@@ -153,6 +153,26 @@ test("Solvay assistant messages do not render a decorative rail", () => {
   assert.match(assistantDecorationRule, /content:\s*none !important/);
 });
 
+test("Solvay task-list hover uses one background state without decorative rails", () => {
+  const css = fs.readFileSync(
+    path.join(THEMES, "solvay-1927-solarized-light", "theme.css"),
+    "utf8",
+  );
+  const hoverRule = css.match(
+    /\.task-list-new-task-item:hover,[\s\S]*?\.task-list-panel \[tabindex="0"\]:hover\s*\{([\s\S]*?)\n\}/,
+  )?.[1];
+  const bottomFadeRule = css.match(
+    /\.task-list-shadow-bottom\s*\{([\s\S]*?)\n\}/,
+  )?.[1];
+
+  assert.ok(hoverRule, "Solvay needs an explicit task-list hover state");
+  assert.match(hoverRule, /linear-gradient\(90deg/);
+  assert.match(hoverRule, /box-shadow:\s*none !important/);
+  assert.doesNotMatch(hoverRule, /\binset\b/, "nested task controls must not stack edge rails");
+  assert.ok(bottomFadeRule, "Solvay needs an explicit task-list bottom-fade reset");
+  assert.match(bottomFadeRule, /background:\s*none !important/);
+});
+
 test("Solvay send action stays inside the composer grid", () => {
   const css = fs.readFileSync(
     path.join(THEMES, "solvay-1927-solarized-light", "theme.css"),
