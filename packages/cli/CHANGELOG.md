@@ -5,6 +5,24 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.5.10] - 2026-07-29
+
+### Fixed
+
+- Updated `Solvay 1927 · Solarized Light` to theme version `1.0.11`. Task
+  previews now remain on a readable light-paper surface, user messages use a
+  tighter index-card layout, and the composer has one coherent archive frame
+  instead of competing inner and outer borders.
+- Made the sidebar and update-banner actions follow every theme's semantic
+  popover, text, border and interaction colors, preventing unreadable dark
+  fills in light themes.
+
+### For contributors
+
+- Documented the token, component and host-adapter mapping chain, and added
+  regression checks for unmapped runtime variables and theme overrides of
+  runtime-owned update actions.
+
 ## [0.5.9] - 2026-07-29
 
 ### Fixed

@@ -229,6 +229,42 @@ body.trae-skin-v2 [role="textbox"]:focus-visible {
   outline: none !important;
   box-shadow: none !important;
 }
+
+/* 维护操作是宿主固定入口，不会继承 VS Code 的 button token。
+   统一以语义浮层表现 Update / Restart / Download，避免每套主题各自硬编码颜色。 */
+body.trae-skin-v2 .task-list-panel button:has(.progressCircleContainer),
+body.trae-skin-v2 .soloUpdateStatusWrapper .updateAlertActions > button {
+  color: var(--trae-skin-text-secondary) !important;
+  border: 1px solid var(--trae-skin-border-default) !important;
+  border-radius: var(--trae-skin-radius-medium) !important;
+  background: var(--trae-skin-popover) !important;
+  box-shadow: none !important;
+}
+body.trae-skin-v2 .task-list-panel button:has(.progressCircleContainer) *,
+body.trae-skin-v2 .soloUpdateStatusWrapper .updateAlertActions > button * {
+  color: inherit !important;
+}
+body.trae-skin-v2 .task-list-panel button:has(.progressCircleContainer) .progressCircleContainer,
+body.trae-skin-v2 .task-list-panel button:has(.progressCircleContainer) .progressCircleContainer * {
+  color: var(--trae-skin-accent) !important;
+}
+body.trae-skin-v2 .task-list-panel button:has(.progressCircleContainer):hover:not(:disabled),
+body.trae-skin-v2 .soloUpdateStatusWrapper .updateAlertActions > button:hover:not(:disabled) {
+  color: var(--trae-skin-text-primary) !important;
+  border-color: var(--trae-skin-border-strong) !important;
+  background: var(--trae-skin-popover-hover) !important;
+}
+body.trae-skin-v2 .task-list-panel button:has(.progressCircleContainer):active:not(:disabled),
+body.trae-skin-v2 .soloUpdateStatusWrapper .updateAlertActions > button:active:not(:disabled) {
+  background: var(--trae-skin-card-hover) !important;
+}
+body.trae-skin-v2 .task-list-panel button:has(.progressCircleContainer):disabled,
+body.trae-skin-v2 .soloUpdateStatusWrapper .updateAlertActions > button:disabled,
+body.trae-skin-v2 .soloUpdateStatusWrapper .updateAlertActions > button[aria-disabled="true"] {
+  color: var(--trae-skin-text-disabled) !important;
+  border-color: var(--trae-skin-border-subtle) !important;
+  background: var(--trae-skin-input) !important;
+}
 body.trae-skin-v2 button[role="tab"][aria-selected="true"] {
   color: var(--trae-skin-accent) !important;
 }

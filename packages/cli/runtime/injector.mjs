@@ -16,7 +16,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
-const VERSION = "0.5.9";
+const VERSION = "0.5.10";
 const DATA_DIR = process.env.TWSKIN_DATA_DIR || path.join(os.homedir(), ".trae-work-skin");
 
 function parseArgs(argv) {
