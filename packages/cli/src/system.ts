@@ -143,6 +143,7 @@ function runtimeEnvironment(context: CliContext, extra: NodeJS.ProcessEnv = {}):
   return {
     TWSKIN_STATE_DIR: context.stateDir,
     TWSKIN_THEMES_DIR: context.themesDir,
+    TWSKIN_RUNTIME_VERSION: context.packageVersion,
     ...extra,
   };
 }
@@ -216,15 +217,27 @@ export function startWatcher(context: CliContext, port: number): number {
   return child.pid;
 }
 
-export function runScript(context: CliContext, script: string, extraEnv: NodeJS.ProcessEnv = {}): void {
+export function runScript(
+  context: CliContext,
+  script: string,
+  extraEnv: NodeJS.ProcessEnv = {},
+  options: { inherit?: boolean } = {},
+): string {
   const file = path.join(context.runtimeRoot, script);
   const result = commandResult(context, file, [], {
-    inherit: true,
+    inherit: options.inherit ?? true,
     env: runtimeEnvironment(context, extraEnv),
   });
   if (result.status !== 0) {
-    throw new CliError("SCRIPT_FAILED", 5, `${script} 执行失败。`, "运行 twskin doctor 检查环境。", { status: result.status });
+    throw new CliError(
+      "SCRIPT_FAILED",
+      5,
+      `${script} 执行失败。`,
+      "运行 twskin doctor 检查环境。",
+      { status: result.status, output: `${result.stdout || ""}${result.stderr || ""}`.trim() },
+    );
   }
+  return `${result.stdout || ""}${result.stderr || ""}`.trim();
 }
 
 export function verifyRuntimeIntegrity(context: CliContext): {

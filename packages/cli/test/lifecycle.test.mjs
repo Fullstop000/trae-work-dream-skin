@@ -78,9 +78,14 @@ function runAsync(args, env = {}) {
 
 test("production watcher waits for TRAE to return after CDP disconnects", () => {
   const source = fs.readFileSync(path.join(PACKAGE_ROOT, "runtime/injector.mjs"), "utf8");
+  const systemSource = fs.readFileSync(path.join(PACKAGE_ROOT, "src/system.ts"), "utf8");
   assert.match(source, /cdp unreachable/);
   assert.doesNotMatch(source, /cdp gone for .*watcher exits/);
   assert.match(source, /setInterval\(tick, 2000\)/);
+  assert.match(source, /manifest\.json/);
+  assert.doesNotMatch(source, /const VERSION = "0\.5\.10"/);
+  assert.match(systemSource, /TWSKIN_RUNTIME_VERSION:\s*context\.packageVersion/);
+  assert.doesNotMatch(fs.readFileSync(path.join(PACKAGE_ROOT, "runtime/start.sh"), "utf8"), /Logs:/);
 });
 
 test("theme selection while stopped persists without launching the App", async () => {
@@ -140,8 +145,22 @@ test("start repairs the manager once, then reports it as already running", async
     assert.equal(repeatedOutput.state, "already_running");
     assert.equal(repeatedOutput.mode, "already-running");
     assert.equal(repeatedOutput.watcherPid, watcherPid);
+    assert.equal(repeated.stderr, "");
+    assert.equal("guide" in repeatedOutput, false);
     assert.equal(Number(fs.readFileSync(path.join(DATA, "run/injector.pid"), "utf8")), watcherPid);
     process.kill(watcherPid, 0);
+
+    const human = await runAsync(["start"], { PORT: String(port) });
+    assert.equal(human.status, 0, human.stderr);
+    assert.match(human.stderr, /主题目录已就绪/);
+    assert.match(human.stderr, /CDP 可用/);
+    assert.match(human.stderr, /启动模式 · already-running/);
+    assert.match(human.stderr, /Theme Manager 已就绪/);
+    assert.match(human.stderr, /watcher 正在运行 · PID/);
+    assert.match(human.stderr, /持久 CDP 配置已确认/);
+    assert.match(human.stderr, /主题自动更新 · 已开启/);
+    assert.match(human.stdout, /当前主题：aurora/);
+    assert.doesNotMatch(`${human.stdout}\n${human.stderr}`, /调色盘|injector\.log/);
 
     const stopped = await runAsync(["stop", "--json"], { PORT: String(port) });
     assert.equal(stopped.status, 0, stopped.stderr);

@@ -83,4 +83,3 @@ fi
 echo "$!" > "$RUN_DIR/injector.pid"
 echo "$PORT" > "$RUN_DIR/port"
 printf 'Dream skin running: injector pid %s, CDP port %s\n' "$(/bin/cat "$RUN_DIR/injector.pid")" "$PORT"
-printf 'Logs: %s\n' "$RUN_DIR/injector.log"
