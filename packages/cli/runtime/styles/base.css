@@ -73,10 +73,12 @@ body.trae-skin-v2 {
 }
 body.trae-skin-v2 .task-list-panel {
   background-color: var(--trae-skin-left-surface) !important;
-  background-image: var(--trae-skin-left-art-layer, none) !important;
-  background-position: center, var(--trae-skin-left-art-position, center) !important;
-  background-size: cover, var(--trae-skin-left-art-size, cover) !important;
-  background-repeat: no-repeat !important;
+  background-image:
+    var(--trae-skin-left-decoration, none),
+    var(--trae-skin-left-art-layer, none) !important;
+  background-position: var(--trae-skin-left-decoration-position, center), center, var(--trae-skin-left-art-position, center) !important;
+  background-size: var(--trae-skin-left-decoration-size, 100% 100%), 100% 100%, var(--trae-skin-left-art-size, cover) !important;
+  background-repeat: var(--trae-skin-left-decoration-repeat, no-repeat), no-repeat, no-repeat !important;
   border-right: 1px solid var(--trae-skin-divider) !important;
   backdrop-filter:
     blur(var(--trae-skin-left-blur))
@@ -86,7 +88,11 @@ body.trae-skin-v2 .task-list-panel {
     saturate(var(--trae-skin-left-saturation)) !important;
 }
 body.trae-skin-v2 .solo-lite-chat-panel-container {
-  background: var(--trae-skin-chat-surface) !important;
+  background-color: var(--trae-skin-chat-surface) !important;
+  background-image: var(--trae-skin-chat-decoration, none) !important;
+  background-position: var(--trae-skin-chat-decoration-position, center) !important;
+  background-size: var(--trae-skin-chat-decoration-size, 100% 100%) !important;
+  background-repeat: var(--trae-skin-chat-decoration-repeat, no-repeat) !important;
   border-right: 1px solid var(--trae-skin-divider) !important;
   backdrop-filter:
     blur(var(--trae-skin-chat-blur))
@@ -97,10 +103,12 @@ body.trae-skin-v2 .solo-lite-chat-panel-container {
 }
 body.trae-skin-v2 .solo-lite-main-area {
   background-color: var(--trae-skin-main-surface) !important;
-  background-image: var(--trae-skin-right-art-layer, none) !important;
-  background-position: center, var(--trae-skin-right-art-position, right center) !important;
-  background-size: cover, var(--trae-skin-right-art-size, auto 100%) !important;
-  background-repeat: no-repeat !important;
+  background-image:
+    var(--trae-skin-main-decoration, none),
+    var(--trae-skin-right-art-layer, none) !important;
+  background-position: var(--trae-skin-main-decoration-position, center), center, var(--trae-skin-right-art-position, right center) !important;
+  background-size: var(--trae-skin-main-decoration-size, 100% 100%), 100% 100%, var(--trae-skin-right-art-size, auto 100%) !important;
+  background-repeat: var(--trae-skin-main-decoration-repeat, no-repeat), no-repeat, no-repeat !important;
   backdrop-filter:
     blur(var(--trae-skin-main-blur))
     saturate(var(--trae-skin-main-saturation)) !important;
@@ -109,7 +117,11 @@ body.trae-skin-v2 .solo-lite-main-area {
     saturate(var(--trae-skin-main-saturation)) !important;
 }
 body.trae-skin-v2 .panel-container > .panel-content {
-  background: var(--trae-skin-landing-surface) !important;
+  background-color: var(--trae-skin-landing-surface) !important;
+  background-image: var(--trae-skin-landing-decoration, none) !important;
+  background-position: var(--trae-skin-landing-decoration-position, center) !important;
+  background-size: var(--trae-skin-landing-decoration-size, 100% 100%) !important;
+  background-repeat: var(--trae-skin-landing-decoration-repeat, no-repeat) !important;
   backdrop-filter:
     blur(var(--trae-skin-landing-blur))
     saturate(var(--trae-skin-landing-saturation)) !important;

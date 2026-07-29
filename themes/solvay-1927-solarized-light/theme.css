@@ -11,6 +11,15 @@ body.trae-skin-theme-solvay-1927-solarized-light {
   --solvay-photon-soft: rgba(38, 139, 210, 0.2);
   --solvay-grid: rgba(38, 139, 210, 0.055);
   --solvay-collapse: cubic-bezier(0.22, 1, 0.36, 1);
+  --trae-skin-left-decoration:
+    linear-gradient(90deg, transparent 0 24px, rgba(181, 137, 0, 0.2) 24px 25px, transparent 25px),
+    linear-gradient(90deg, transparent 0 calc(100% - 25px), rgba(38, 139, 210, 0.16) calc(100% - 25px) calc(100% - 24px), transparent calc(100% - 24px)),
+    linear-gradient(rgba(38, 139, 210, 0.035) 1px, transparent 1px);
+  --trae-skin-left-decoration-size: 100% 100%, 100% 100%, 100% 24px;
+  --trae-skin-left-decoration-repeat: no-repeat, no-repeat, repeat-y;
+  --trae-skin-chat-decoration: linear-gradient(90deg, rgba(253, 246, 227, 0.64) 0, rgba(238, 232, 213, 0.34) 150px, rgba(253, 246, 227, 0.12) 360px);
+  --trae-skin-main-decoration: linear-gradient(90deg, rgba(253, 246, 227, 0.12), transparent 42%, rgba(38, 139, 210, 0.035));
+  --trae-skin-landing-decoration: linear-gradient(90deg, rgba(253, 246, 227, 0.64) 0, rgba(238, 232, 213, 0.34) 150px, rgba(253, 246, 227, 0.12) 360px);
 }
 
 /* 主照片只由固定根层绘制；暖纸晕染与蓝色坐标线模拟档案室灯箱。 */
@@ -25,29 +34,7 @@ body.trae-skin-theme-solvay-1927-solarized-light::after {
   background-position: center !important;
 }
 
-body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-chat-panel-container,
-body.trae-skin-theme-solvay-1927-solarized-light .panel-container > .panel-content {
-  background-color: transparent !important;
-  background-image:
-    linear-gradient(90deg, rgba(253, 246, 227, 0.64) 0, rgba(238, 232, 213, 0.34) 150px, rgba(253, 246, 227, 0.12) 360px),
-    linear-gradient(var(--trae-skin-landing-surface), var(--trae-skin-landing-surface)) !important;
-  background-size: 100% 100% !important;
-  background-repeat: no-repeat !important;
-}
-body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-chat-panel-container {
-  background-image:
-    linear-gradient(90deg, rgba(253, 246, 227, 0.64) 0, rgba(238, 232, 213, 0.34) 150px, rgba(253, 246, 227, 0.12) 360px),
-    linear-gradient(var(--trae-skin-chat-surface), var(--trae-skin-chat-surface)) !important;
-}
-body.trae-skin-theme-solvay-1927-solarized-light .solo-lite-main-area {
-  background: rgba(253, 246, 227, 0.12) !important;
-}
 body.trae-skin-theme-solvay-1927-solarized-light .task-list-panel {
-  background-image:
-    linear-gradient(90deg, transparent 0 24px, rgba(181, 137, 0, 0.2) 24px 25px, transparent 25px),
-    linear-gradient(90deg, transparent 0 calc(100% - 25px), rgba(38, 139, 210, 0.16) calc(100% - 25px) calc(100% - 24px), transparent calc(100% - 24px)),
-    linear-gradient(rgba(38, 139, 210, 0.035) 1px, transparent 1px) !important;
-  background-size: 100% 100%, 100% 100%, 100% 24px !important;
   border-right-color: rgba(38, 139, 210, 0.24) !important;
   box-shadow: inset -1px 0 rgba(181, 137, 0, 0.11) !important;
 }

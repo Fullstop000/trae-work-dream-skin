@@ -78,7 +78,7 @@ test("themes --json returns the official catalog", () => {
   assert.ok(output.themes.some((theme) => theme.id === "eva-01"));
   assert.ok(output.themes.some((theme) => theme.id === "eva-01-light"));
   assert.ok(output.themes.length >= 10);
-  assert.equal(output.themes.find((theme) => theme.id === "eva-01")?.version, "1.0.0");
+  assert.equal(output.themes.find((theme) => theme.id === "eva-01")?.version, "1.0.1");
 });
 
 test("status --json is read-only and covers the four core states", () => {

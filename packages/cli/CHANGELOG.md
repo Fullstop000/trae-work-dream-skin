@@ -5,6 +5,23 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.5.7] - 2026-07-29
+
+### Fixed
+
+- Prevented theme artwork from bleeding through right-side working content by
+  making layout-surface ownership a runtime contract. The main workspace now
+  retains its declared surface color, opacity, and blur beneath Markdown,
+  Task Summary, and Code/Design content.
+- Updated `Solvay 1927 · Solarized Light` to theme version `1.0.4`, restoring
+  a readable warm-paper surface in the right workspace and Monaco editor.
+
+### Changed
+
+- Added catalog validation that rejects official theme CSS which overrides a
+  runtime-owned layout surface directly; themes use surface-decoration
+  variables for optional texture instead.
+
 ## [0.5.6] - 2026-07-27
 
 ### Changed
