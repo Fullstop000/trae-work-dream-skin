@@ -129,6 +129,7 @@ test("浅色主题推导", () => {
   assert.equal(map["--bg-bg-overlay-l4"], "rgba(23, 23, 23, 0.19)");
   // `onaccent` 是宿主的 invert-action 前景；浅色主题的深色 invert 上应为白字。
   assert.equal(map["--text-text-onaccent"], "#ffffff");
+  assert.equal(map["--text-text-default-reverse"], "#ffffff");
   // `onbrand` 才配对 accent；蓝紫 accent 上黑字的对比度更高。
   assert.equal(map["--text-text-onbrand"], "#000000");
 });
@@ -148,6 +149,7 @@ test("反转主操作的文字与图标始终匹配 invert 表面", () => {
   assert.equal(map["--vscode-icube--icon-icon-onaccent"], "#ffffff");
   assert.equal(map["--ras-text-text-onaccent"], "#ffffff");
   assert.equal(map["--ras-icon-icon-onaccent"], "#ffffff");
+  assert.equal(map["--text-text-default-reverse"], "#ffffff");
   assert.equal(map["--text-text-onbrand"], "#002b36");
   assert.ok(TM.contrastRatio(map["--text-text-onaccent"], map["--bg-bg-invert"]) >= 4.5);
 });
@@ -165,6 +167,7 @@ test("所有官方主题的反转主操作在全部宿主命名空间中保持�
     const background = map["--bg-bg-invert"];
     const actionForegrounds = [
       "--text-text-onaccent",
+      "--text-text-default-reverse",
       "--icon-icon-onaccent",
       "--vscode-icube--text-text-onaccent",
       "--vscode-icube--icon-icon-onaccent",

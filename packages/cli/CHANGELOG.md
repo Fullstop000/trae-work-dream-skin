@@ -5,6 +5,19 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.6.4] - 2026-07-29
+
+### Fixed
+
+- Mapped the legacy `text-text-default-reverse` alias to the foreground derived
+  from `surface.invert`. Older host primary buttons now retain readable text on
+  both light and dark inverse surfaces.
+
+### For contributors
+
+- Extended the official-theme action-contrast audit to cover this legacy
+  inverse-action foreground alias.
+
 ## [0.6.3] - 2026-07-29
 
 ### Fixed

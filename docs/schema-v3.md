@@ -11,7 +11,7 @@ TRAE Work 的令牌架构（详见 `fixtures/`）：
 
 | 层 | 命名空间 | 数量 | 说明 |
 |---|---|---|---|
-| 语义令牌 | `--bg-bg-*` `--text-text-*` `--icon-icon-*` `--border-border-*` | 29/15/15/6 | 组件直接消费 |
+| 语义令牌 | `--bg-bg-*` `--text-text-*` `--icon-icon-*` `--border-border-*` | 29/16/15/6 | 组件直接消费 |
 | 别名层 | `--vscode-icube--*` | 107 | **大量组件实际消费这层**，:root 静态值，随 `data-theme` 切换 |
 | VS Code 核心兼容层 | `--vscode-*` | 59 | IM Channel 等非 Workbench 页面仍直接消费的通用表面、文本、控件与状态色 |
 | 镜像层 | `--ras-bg-bg-*` | 25 | 设置页等组件消费 |
@@ -156,6 +156,9 @@ themes/<id>/
 黑或白，不需要、也不能复用 `accent.onAccent`。这两个宿主别名没有额外的 schema
 字段，避免主题作者为同一前景角色重复声明颜色。
 
+旧 CSS module 的 `text-text-default-reverse` 也是 `bg-bg-invert` 的前景别名，
+由运行时同样按 `surface.invert` 推导；它不是新的主题字段。
+
 ### 布局表面所有权（必须遵守）
 
 `surfaces` 不是仅供主题挑选的颜色集；它是运行时拥有的布局表面契约。运行时
@@ -254,7 +257,7 @@ body.trae-skin-theme-example {
    用户在 App 设置里手动切主题时引擎监听 `data-theme` 并重断言。恢复默认时，App 原始外观被精确还原。
 
 2. **全命名空间扇出**：角色被写到 `<html>` 的内联样式上（优先级高于 `:root` 和 `[data-theme]` 定义），覆盖：
-   `--bg-bg-*`(29) `--text-text-*`(15) `--icon-icon-*`(15) `--border-border-*`(6)
+   `--bg-bg-*`(29) `--text-text-*`(16) `--icon-icon-*`(15) `--border-border-*`(6)
    `--vscode-icube--*`(bg/text/icon/border/status 30/diff 5)
    `--vscode-*` 核心兼容层（59 个通用表面、文本、控件与状态变量）
    `--ras-bg-bg-*`(25) `--brand-brand-*`+grey(22，用 `color-mix` 从 accent 派生整条色阶)
@@ -274,8 +277,9 @@ body.trae-skin-theme-example {
    保证任何嵌套层级的组件都拿到主题值（修复 Code 落地页输入框与 Work 不一致的问题）。
 
 3. **角色推导**：缺省角色自动补全——hover/active 用 `color-mix` 派生、subtle 用透明度、
-   `onAccent` 按 `accent.base` 的 WCAG 亮度自动选黑/白；宿主 `onaccent` 别名则按
-   `surface.invert` 自动选黑/白，text/icons/border/state 有完整默认链。
+   `onAccent` 按 `accent.base` 的 WCAG 亮度自动选黑/白；宿主 `onaccent` 与
+   `default-reverse` 别名则按 `surface.invert` 自动选黑/白，text/icons/border/state
+   有完整默认链。
    `overlay-l0` 至 `overlay-l4` 从 `text.primary` 派生中性透明度阶梯，并按 light/dark
    外观使用各自的透明度，不复用边框或 accent 色。
 

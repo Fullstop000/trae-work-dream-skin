@@ -78,7 +78,7 @@
 
   // ---------- 命名空间普查清单（2026-07 实地盘点，见 docs/验证记录）----------
   const NS_BG = ["base-default", "base-secondary", "base-tertiary", "brand", "brand-active", "brand-disabled", "brand-disabled-sub", "brand-hover", "brand-hover-sub", "brand-old", "brand-popup", "brand-popup-sub", "brand-sub", "card", "card-hover", "input", "invert", "invert-active", "invert-disabled", "invert-hover", "menu", "menu-old", "overlay-l0", "overlay-l1", "overlay-l2", "overlay-l3", "overlay-l4", "tooltip", "white"];
-  const NS_TEXT = ["brand", "brand-hover", "brand-hover-sub", "brand-sub", "default", "default-active", "default-hover", "disabled", "onaccent", "onbrand", "preformat-foreground", "secondary", "secondary-active", "secondary-hover", "tertiary"];
+  const NS_TEXT = ["brand", "brand-hover", "brand-hover-sub", "brand-sub", "default", "default-active", "default-hover", "default-reverse", "disabled", "onaccent", "onbrand", "preformat-foreground", "secondary", "secondary-active", "secondary-hover", "tertiary"];
   const NS_ICON = ["brand", "brand-hover", "brand-hover-sub", "brand-sub", "default", "default-active", "default-hover", "disabled", "onaccent", "onbrand", "secondary", "secondary-active", "secondary-hover", "tertiary", "white"];
   const NS_BORDER = ["brand", "brand-sub", "contrast", "neutral-l1", "neutral-l2", "neutral-l3"];
   // --vscode-icube-- 别名层（组件真正消费的那层）
@@ -221,6 +221,9 @@
     const textValue = (suffix) => {
       switch (suffix) {
         case "default": case "default-hover": case "default-active": return text.primary;
+        // 少数旧 CSS module 使用这个别名配对 bg-bg-invert；它不是“正文反色”，
+        // 仍须从实际 invert 表面推导，避免浅色 invert 按钮得到白字。
+        case "default-reverse": return onInvert;
         case "secondary": case "secondary-hover": case "secondary-active": return text.secondary;
         case "tertiary": return text.tertiary;
         case "disabled": return text.disabled;
