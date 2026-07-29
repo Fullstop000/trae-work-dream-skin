@@ -5,6 +5,22 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-07-29
+
+### Fixed
+
+- Updated `Solvay 1927 · Solarized Light` to theme version `1.0.12`. Assistant
+  replies now use an unframed reading layout, and the composer action is a
+  compact archive control without the oversized orbit decoration.
+- Made overlay surfaces use neutral light/dark alpha ramps instead of border
+  colors, keeping recommendation cards and shared hover surfaces brighter and
+  free from unintended accent-color casts.
+
+### For contributors
+
+- Added regression coverage for Solvay assistant-message and composer-action
+  boundaries, plus explicit dark and light overlay-token mappings.
+
 ## [0.6.0] - 2026-07-29
 
 ### Added

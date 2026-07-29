@@ -114,6 +114,8 @@ npm pack --dry-run
 TypeScript compiles to `dist/`. The tracked `runtime/` directory is the single
 source of truth for the injection engine; `prepare:runtime` only generates its
 SHA-256 manifest. npm publishes both outputs, while themes remain external.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the complete contributor and release
+checklist.
 
 ## Security
 

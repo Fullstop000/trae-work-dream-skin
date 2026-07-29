@@ -34,4 +34,5 @@ npm pack --dry-run
 
 Versions follow Semantic Versioning. Publishing is performed from CI with npm
 trusted publishing/provenance; maintainers should not publish ad hoc local
-tarballs to the public registry.
+tarballs to the public registry. Follow the
+[publishing guide](docs/publishing.md) for the tagged release workflow.

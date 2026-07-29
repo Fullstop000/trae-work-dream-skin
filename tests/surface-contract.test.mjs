@@ -132,3 +132,45 @@ test("Solvay composer has one visual boundary", () => {
   assert.ok(focusRule, "Solvay needs a composer focus state");
   assert.doesNotMatch(focusRule, /0 0 0 \d+px/, "focus must not add a second outline");
 });
+
+test("Solvay assistant messages do not render a decorative rail", () => {
+  const css = fs.readFileSync(
+    path.join(THEMES, "solvay-1927-solarized-light", "theme.css"),
+    "utf8",
+  );
+  const assistantRule = css.match(
+    /\.core-finish-card\s*\{([\s\S]*?)\n\}/,
+  )?.[1];
+  const assistantDecorationRule = css.match(
+    /\.core-finish-card::before\s*\{([\s\S]*?)\n\}/,
+  )?.[1];
+
+  assert.ok(assistantRule, "Solvay needs an explicit assistant-message reset");
+  assert.match(assistantRule, /padding-left:\s*0 !important/);
+  assert.match(assistantRule, /border:\s*0 !important/);
+  assert.match(assistantRule, /background:\s*transparent !important/);
+  assert.ok(assistantDecorationRule, "Solvay needs an explicit assistant-decoration reset");
+  assert.match(assistantDecorationRule, /content:\s*none !important/);
+});
+
+test("Solvay send action stays inside the composer grid", () => {
+  const css = fs.readFileSync(
+    path.join(THEMES, "solvay-1927-solarized-light", "theme.css"),
+    "utf8",
+  );
+  const sendRule = css.match(
+    /\.chat-input-v2-send-button\s*\{([\s\S]*?)\n\}/,
+  )?.[1];
+  const sendDecorationRule = css.match(
+    /\.chat-input-v2-send-button::before,\s*\nbody[^{}]+\.chat-input-v2-send-button::after\s*\{([\s\S]*?)\n\}/,
+  )?.[1];
+
+  assert.ok(sendRule, "Solvay needs an explicit send-action treatment");
+  assert.match(sendRule, /width:\s*32px !important/);
+  assert.match(sendRule, /height:\s*32px !important/);
+  assert.match(sendRule, /border-radius:\s*2px !important/);
+  assert.match(sendRule, /box-shadow:\s*none !important/);
+  assert.ok(sendDecorationRule, "Solvay needs an explicit send-decoration reset");
+  assert.match(sendDecorationRule, /content:\s*none !important/);
+  assert.doesNotMatch(css, /solvay-(?:orbit|electron)/);
+});

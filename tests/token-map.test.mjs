@@ -91,7 +91,12 @@ test("关键映射值正确", () => {
   assert.match(map["--brand-brand-900"], /^color-mix\(in srgb, #f4e900 34%, black\)$/);
   assert.equal(map["--vscode-icube--status-primary-default"], "#f4e900");
   assert.equal(map["--vscode-icube--status-error-default"], "#ff244d");
-  assert.equal(map["--border-border-neutral-l3"], map["--bg-bg-overlay-l4"]);
+  assert.equal(map["--bg-bg-overlay-l0"], "rgba(237, 244, 247, 0)");
+  assert.equal(map["--bg-bg-overlay-l1"], "rgba(237, 244, 247, 0.03)");
+  assert.equal(map["--bg-bg-overlay-l2"], "rgba(237, 244, 247, 0.05)");
+  assert.equal(map["--bg-bg-overlay-l3"], "rgba(237, 244, 247, 0.08)");
+  assert.equal(map["--bg-bg-overlay-l4"], "rgba(237, 244, 247, 0.12)");
+  assert.notEqual(map["--border-border-neutral-l3"], map["--bg-bg-overlay-l4"]);
 });
 
 test("旧版 VS Code 核心变量桥接到 V3 语义角色", () => {
@@ -115,6 +120,11 @@ test("浅色主题推导", () => {
   assert.equal(map["--bg-bg-base-default"], "#ffffff");
   assert.equal(map["--text-text-default"], "#171717");
   assert.equal(map["--bg-bg-invert"], "#171717");
+  assert.equal(map["--bg-bg-overlay-l0"], "rgba(23, 23, 23, 0)");
+  assert.equal(map["--bg-bg-overlay-l1"], "rgba(23, 23, 23, 0.07)");
+  assert.equal(map["--bg-bg-overlay-l2"], "rgba(23, 23, 23, 0.11)");
+  assert.equal(map["--bg-bg-overlay-l3"], "rgba(23, 23, 23, 0.15)");
+  assert.equal(map["--bg-bg-overlay-l4"], "rgba(23, 23, 23, 0.19)");
   // 蓝紫 accent 亮度约 0.37，按 WCAG 黑字对比度(8.3)高于白字(2.5)
   assert.equal(map["--text-text-onaccent"], "#000000");
 });
