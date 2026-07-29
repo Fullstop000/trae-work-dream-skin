@@ -12,6 +12,7 @@ const REPO_ROOT = path.resolve(PACKAGE_ROOT, "../..");
 const RUNTIME_ROOT = path.join(PACKAGE_ROOT, "runtime");
 const CLI = path.join(PACKAGE_ROOT, "dist/bin/twskin.js");
 const DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), "twskin-cli-test-"));
+const DRY_RUN_DATA_DIR = path.join(os.tmpdir(), `twskin-cli-dry-run-${process.pid}-${Date.now()}`);
 const THEME_CONF = path.join(DATA_DIR, "run/theme.conf");
 const PACKAGE_METADATA = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, "package.json"), "utf8"));
 
@@ -67,6 +68,14 @@ test("help and version expose the stable public command surface", () => {
   const version = run(["version"]);
   assert.equal(version.status, 0);
   assert.equal(version.stdout, `twskin ${PACKAGE_METADATA.version}\n`);
+
+  const versionOption = run(["--version"]);
+  assert.equal(versionOption.status, 0);
+  assert.equal(versionOption.stdout, `twskin ${PACKAGE_METADATA.version}\n`);
+
+  const versionShortOption = run(["-V"]);
+  assert.equal(versionShortOption.status, 0);
+  assert.equal(versionShortOption.stdout, `twskin ${PACKAGE_METADATA.version}\n`);
 });
 
 test("themes --json returns the official catalog", () => {
@@ -120,6 +129,56 @@ test("unknown commands and extra arguments follow the contract", () => {
   const typo = run(["unisntall", "--json"]);
   assert.equal(typo.status, 2);
   assert.equal(JSON.parse(typo.stdout).error.code, "UNKNOWN_COMMAND");
+
+  const option = run(["--not-an-option"]);
+  assert.equal(option.status, 2);
+  assert.match(option.stderr, /未知选项：--not-an-option/);
+});
+
+test("dry-run plans every mutating command without creating state", () => {
+  const mutatingCommands = [
+    ["start"],
+    ["stop"],
+    ["theme", "eva-01"],
+    ["theme", "download"],
+    ["theme", "check"],
+    ["theme", "sync"],
+    ["theme", "auto-sync"],
+    ["theme", "auto-update", "on"],
+    ["theme", "load", path.join(REPO_ROOT, "themes")],
+    ["restore"],
+    ["uninstall"],
+  ];
+  for (const args of mutatingCommands) {
+    const result = run([...args, "--dry-run", "--json"], { TWSKIN_DATA_DIR: DRY_RUN_DATA_DIR });
+    assert.equal(result.status, 0, `${args.join(" ")}: ${result.stderr}`);
+    const output = JSON.parse(result.stdout);
+    assert.equal(output.ok, true);
+    assert.equal(output.dryRun, true);
+    assert.ok(output.plan);
+  }
+
+  const status = run(["status", "--dryrun", "--json"], { TWSKIN_DATA_DIR: DRY_RUN_DATA_DIR });
+  assert.equal(status.status, 0, status.stderr);
+  assert.equal(JSON.parse(status.stdout).dryRun, true);
+
+  const themes = run(["themes", "--dry-run", "--json"], { TWSKIN_DATA_DIR: DRY_RUN_DATA_DIR });
+  assert.equal(themes.status, 0, themes.stderr);
+  assert.equal(JSON.parse(themes.stdout).dryRun, true);
+
+  const version = run(["--version", "--dry-run", "--json"], { TWSKIN_DATA_DIR: DRY_RUN_DATA_DIR });
+  assert.equal(version.status, 0, version.stderr);
+  assert.equal(JSON.parse(version.stdout).dryRun, true);
+
+  const doctor = run(["doctor", "--dry-run", "--json"], {
+    TWSKIN_DATA_DIR: DRY_RUN_DATA_DIR,
+    APP_BUNDLE: "/tmp/TRAE-dry-run-does-not-exist.app",
+    APP_BUNDLE_ID: "invalid.twskin.dry-run.bundle",
+    APP_PROC_MATCH: "invalid-twskin-dry-run-process",
+  });
+  assert.equal(doctor.status, 3, doctor.stderr);
+  assert.equal(JSON.parse(doctor.stdout).dryRun, true);
+  assert.equal(fs.existsSync(DRY_RUN_DATA_DIR), false);
 });
 
 test("doctor --json emits one valid error document when TRAE is missing", () => {

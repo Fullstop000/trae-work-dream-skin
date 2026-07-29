@@ -39,6 +39,7 @@ export interface CliOptions {
   json: boolean;
   yes: boolean;
   help: boolean;
+  dryRun: boolean;
 }
 
 export interface ThemeManifest extends Record<string, unknown> {

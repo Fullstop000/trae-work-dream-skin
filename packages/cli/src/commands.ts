@@ -38,7 +38,11 @@ interface DoctorCheck {
 }
 
 function interactive(options: CliOptions): boolean {
-  return !options.json && Boolean(process.stdin.isTTY && process.stdout.isTTY);
+  return !options.json && !options.dryRun && Boolean(process.stdin.isTTY && process.stdout.isTTY);
+}
+
+function emitDryRun(payload: Record<string, unknown>, human: string, options: CliOptions): void {
+  emit({ ...payload, dryRun: true }, `演练模式：${human}`, options.json);
 }
 
 function emitStartResult(
@@ -87,8 +91,12 @@ Usage:
   twskin doctor [--json]       检查 Node、TRAE、端口和文件完整性
   twskin restore               恢复 TRAE 原生外观
   twskin uninstall [--yes]     恢复外观并卸载 TRAE Work Skin
-  twskin version               显示版本
+  twskin version, -V, --version 显示版本
   twskin help                  显示帮助
+
+Global options:
+  --json                       输出 JSON
+  --dry-run, --dryrun          仅显示执行计划，不修改系统
 `;
 }
 
@@ -116,6 +124,25 @@ export async function getStatus(context: CliContext) {
 }
 
 export async function startCommand(context: CliContext, options: CliOptions): Promise<void> {
+  if (options.dryRun) {
+    const themesInstalled = listThemes(context).some((theme) => !theme.invalid);
+    const port = readPort(context);
+    const cdpReachable = Boolean(await cdpVersion(port));
+    const appBundle = resolveAppBundle(context);
+    const owner = cdpReachable ? null : portOwner(context, port);
+    const actions = [
+      ...(themesInstalled ? [] : ["download_official_themes"]),
+      cdpReachable ? "refresh_theme_manager" : "launch_trae_with_cdp",
+      "start_watcher",
+      "enable_persistent_cdp",
+    ];
+    emitDryRun(
+      { command: "start", plan: { actions, mode: cdpReachable ? "refresh" : "launch", port, appBundle, themesInstalled, portOwner: owner } },
+      `不会下载主题、启动 TRAE 或写入配置；将以 ${cdpReachable ? "刷新" : "启动"} 模式执行 ${actions.join("、")}。`,
+      options,
+    );
+    return;
+  }
   await withLock(context, "start", async () => {
     let bootstrap = null;
     if (listThemes(context).filter((theme) => !theme.invalid).length === 0) {
@@ -266,10 +293,27 @@ export async function statusCommand(context: CliContext, options: CliOptions): P
     `守护进程 ${status.watcher.running ? `运行中 (PID ${status.watcher.pid})` : "未运行"}`,
     `当前主题 ${status.theme.id}${status.theme.valid ? "" : "（主题不存在）"}`,
   ].join("\n");
-  emit({ command: "status", status }, human, options.json);
+  emit({ command: "status", status, ...(options.dryRun ? { dryRun: true } : {}) }, options.dryRun ? `演练模式（只读）：\n${human}` : human, options.json);
 }
 
 export async function stopCommand(context: CliContext, options: CliOptions): Promise<void> {
+  if (options.dryRun) {
+    const port = readPort(context);
+    const cdpReachable = Boolean(await cdpVersion(port));
+    const watcher = watcherStatus(context);
+    const persistentCdpConfigured = fs.existsSync(context.paths.cdpConfigState);
+    const actions = [
+      ...(watcher.alive && watcher.expected ? ["stop_watcher"] : []),
+      ...(cdpReachable ? ["restore_injected_targets"] : []),
+      ...(persistentCdpConfigured ? ["disable_persistent_cdp"] : []),
+    ];
+    emitDryRun(
+      { command: "stop", plan: { actions, port, cdpReachable, watcher: { running: watcher.alive && watcher.expected, pid: watcher.pid }, persistentCdpConfigured } },
+      actions.length ? `不会停止进程或修改配置；将执行 ${actions.join("、")}。` : "当前没有需要停止或恢复的组件。",
+      options,
+    );
+    return;
+  }
   await withLock(context, "stop", async () => {
     const port = readPort(context);
     const cdpReachable = Boolean(await cdpVersion(port));
@@ -311,11 +355,24 @@ export function themesCommand(context: CliContext, options: CliOptions): void {
   const human = themes.length
     ? themes.map((theme) => `${theme.id === current ? "●" : " "} ${theme.id.padEnd(width)}  ${theme.name} · v${theme.version}${theme.desc ? ` · ${theme.desc}` : ""}`).join("\n")
     : "没有找到可用主题。";
-  emit({ command: "themes", directory: context.themesDir, current, themes }, `${human}\n\n主题目录：${context.themesDir}`, options.json);
+  const output = `${human}\n\n主题目录：${context.themesDir}`;
+  emit({ command: "themes", directory: context.themesDir, current, themes, ...(options.dryRun ? { dryRun: true } : {}) }, options.dryRun ? `演练模式（只读）：\n${output}` : output, options.json);
 }
 
 export async function themeCommand(context: CliContext, id: string | undefined, options: CliOptions): Promise<void> {
   if (!id) throw new CliError("THEME_REQUIRED", 2, "缺少主题 ID。", "先运行 twskin themes 查看可用主题。");
+  if (options.dryRun) {
+    const theme = listThemes(context).find((item) => item.id === id && !item.invalid);
+    if (!theme) throw new CliError("THEME_NOT_FOUND", 2, `找不到主题：${id}`, "运行 twskin themes 查看可用主题。");
+    const port = readPort(context);
+    const applied = Boolean(await cdpVersion(port));
+    emitDryRun(
+      { command: "theme", theme, plan: { action: applied ? "apply_theme" : "set_selected_theme", id, port, applied } },
+      `不会切换主题；将${applied ? "热更新应用" : "保存下次启动时应用"}主题 ${id}。`,
+      options,
+    );
+    return;
+  }
   await withLock(context, "theme", async () => {
     const theme = listThemes(context).find((item) => item.id === id && !item.invalid);
     if (!theme) throw new CliError("THEME_NOT_FOUND", 2, `找不到主题：${id}`, "运行 twskin themes 查看可用主题。");
@@ -333,6 +390,16 @@ export async function themeCommand(context: CliContext, id: string | undefined, 
 
 export async function loadThemeCommand(context: CliContext, sourceDirectory: string | undefined, options: CliOptions): Promise<void> {
   if (!sourceDirectory) throw new CliError("THEME_SOURCE_REQUIRED", 2, "缺少本地主题目录。", "用法：twskin theme load <directory>");
+  if (options.dryRun) {
+    const themes = discoverThemeDirectories(sourceDirectory);
+    const ids = themes.map((theme) => theme.id);
+    emitDryRun(
+      { command: "theme load", plan: { action: "install_themes", sourceDirectory, directory: context.themesDir, themes: ids } },
+      `不会复制文件；将安装 ${ids.length} 套主题：${ids.join("、")}。`,
+      options,
+    );
+    return;
+  }
   await withLock(context, "theme-load", async () => {
     const themes = discoverThemeDirectories(sourceDirectory);
     const installed = themes.map((theme) => installThemeDirectory(context, theme.source));
@@ -346,6 +413,14 @@ export async function loadThemeCommand(context: CliContext, sourceDirectory: str
 }
 
 export async function downloadThemeCommand(context: CliContext, id: string | undefined, options: CliOptions): Promise<void> {
+  if (options.dryRun) {
+    emitDryRun(
+      { command: "theme download", plan: { action: "download_official_themes", requestedId: id || null, directory: context.themesDir } },
+      `不会访问 GitHub 或写入文件；将下载${id ? `主题 ${id}` : "全部官方主题"}。`,
+      options,
+    );
+    return;
+  }
   await withLock(context, "theme-download", async () => {
     const result = await downloadWithProgress(context, id, options);
     const ids = result.installed.map((theme) => theme.id);
@@ -358,6 +433,14 @@ export async function downloadThemeCommand(context: CliContext, id: string | und
 }
 
 export async function checkThemeCommand(context: CliContext, options: CliOptions): Promise<void> {
+  if (options.dryRun) {
+    emitDryRun(
+      { command: "theme check", plan: { action: "fetch_theme_catalog", cache: context.paths.catalogCache } },
+      "不会请求 Catalog 或更新缓存；将检查官方主题是否有更新。",
+      options,
+    );
+    return;
+  }
   const result = await checkThemesCommandState(context, true);
   const human = result.updates.length
     ? `发现 ${result.newThemes} 套新主题、${result.updatedThemes} 套可更新主题。\n运行 twskin theme sync 下载并安装。`
@@ -375,6 +458,14 @@ export async function checkThemeCommand(context: CliContext, options: CliOptions
 }
 
 export async function syncThemeCommand(context: CliContext, options: CliOptions): Promise<void> {
+  if (options.dryRun) {
+    emitDryRun(
+      { command: "theme sync", plan: { actions: ["fetch_theme_catalog", "download_and_install_compatible_updates"], directory: context.themesDir } },
+      "不会请求网络或安装主题；将检查并同步兼容的主题更新。",
+      options,
+    );
+    return;
+  }
   const result = await syncThemesCommandState(context, true);
   const installed = result.installed || [];
   const human = installed.length
@@ -384,6 +475,14 @@ export async function syncThemeCommand(context: CliContext, options: CliOptions)
 }
 
 export async function autoSyncThemeCommand(context: CliContext, options: CliOptions): Promise<void> {
+  if (options.dryRun) {
+    emitDryRun(
+      { command: "theme auto-sync", plan: { action: "sync_themes_when_auto_update_enabled", directory: context.themesDir } },
+      "不会请求网络或安装主题；将按自动更新设置同步主题。",
+      options,
+    );
+    return;
+  }
   const result = await autoSyncThemesCommandState(context, false);
   emit({ command: "theme auto-sync", ...result }, "", options.json);
 }
@@ -391,6 +490,14 @@ export async function autoSyncThemeCommand(context: CliContext, options: CliOpti
 export function autoUpdateThemeCommand(context: CliContext, value: string | undefined, options: CliOptions): void {
   if (value !== "on" && value !== "off") {
     throw new CliError("AUTO_UPDATE_VALUE_INVALID", 2, "自动更新选项只能是 on 或 off。", "用法：twskin theme auto-update <on|off>");
+  }
+  if (options.dryRun) {
+    emitDryRun(
+      { command: "theme auto-update", plan: { action: "set_auto_update", enabled: value === "on", settingsFile: context.paths.themeUpdateSettings } },
+      `不会写入设置；将${value === "on" ? "开启" : "关闭"}官方主题自动更新。`,
+      options,
+    );
+    return;
   }
   const settings = setThemeAutoUpdate(context, value === "on");
   const state = readThemeSyncState(context);
@@ -440,18 +547,26 @@ export async function doctorCommand(context: CliContext, options: CliOptions): P
   if (failures.length) {
     const message = `检查发现 ${failures.length} 个必须修复的问题。`;
     if (options.json) {
-      console.log(JSON.stringify({ schemaVersion: 1, ok: false, command: "doctor", healthy: false, checks, error: { code: "DOCTOR_FAILED", message } }, null, 2));
+      console.log(JSON.stringify({ schemaVersion: 1, ok: false, command: "doctor", healthy: false, checks, ...(options.dryRun ? { dryRun: true } : {}), error: { code: "DOCTOR_FAILED", message } }, null, 2));
     } else {
-      console.log(human);
+      console.log(options.dryRun ? `演练模式（只读）：\n${human}` : human);
       console.error(`twskin: ${message}`);
     }
     process.exitCode = 3;
     return;
   }
-  emit({ command: "doctor", healthy: true, checks }, human, options.json);
+  emit({ command: "doctor", healthy: true, checks, ...(options.dryRun ? { dryRun: true } : {}) }, options.dryRun ? `演练模式（只读）：\n${human}` : human, options.json);
 }
 
 export async function restoreCommand(context: CliContext, options: CliOptions): Promise<void> {
+  if (options.dryRun) {
+    emitDryRun(
+      { command: "restore", plan: { actions: ["disable_persistent_cdp", "run_restore_script"], appBundle: resolveAppBundle(context) } },
+      "不会修改 TRAE 或配置；将恢复原生外观。",
+      options,
+    );
+    return;
+  }
   await withLock(context, "restore", async () => {
     disablePersistentCdp(context);
     runScript(context, "restore.sh", { APP_BUNDLE: resolveAppBundle(context), APP_BUNDLE_ID: context.app.bundleId });
@@ -505,6 +620,24 @@ function removeGlobalNpmPackage(context: CliContext): { attempted: boolean; remo
 }
 
 export async function uninstallCommand(context: CliContext, options: CliOptions): Promise<void> {
+  if (options.dryRun) {
+    const executable = context.distribution !== "development";
+    emitDryRun(
+      {
+        command: "uninstall",
+        plan: {
+          actions: ["disable_persistent_cdp", "restore_or_stop_watcher", "remove_managed_entrypoints", "remove_package_when_globally_installed", "remove_data_directory"],
+          dataDir: context.dataDir,
+          distribution: context.distribution,
+          executable,
+          ...(executable ? {} : { blocker: "DEVELOPMENT_INSTALL" }),
+        },
+      },
+      executable ? "不会删除文件或卸载软件；将恢复外观并移除受管理的文件。" : "不会删除文件；实际卸载会被拒绝，因为当前是源码工作区。",
+      options,
+    );
+    return;
+  }
   await confirmUninstall(options.yes);
   if (context.distribution === "development") {
     throw new CliError("DEVELOPMENT_INSTALL", 2, "不能从源码工作区执行卸载。", "请使用已经安装的 twskin uninstall。");
