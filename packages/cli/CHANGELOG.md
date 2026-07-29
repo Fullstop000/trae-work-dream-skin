@@ -5,6 +5,14 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.5.9] - 2026-07-29
+
+### Fixed
+
+- Updated `Solvay 1927 · Solarized Light` to theme version `1.0.5`. Its
+  Markdown text now follows the original Solarized Light content hierarchy:
+  Base00 body text, Base01 headings and emphasis, and Base0 auxiliary text.
+
 ## [0.5.8] - 2026-07-29
 
 ### Fixed

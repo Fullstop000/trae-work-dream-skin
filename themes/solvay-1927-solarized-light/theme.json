@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "id": "solvay-1927-solarized-light",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "name": "索尔维 1927 · Solarized Light",
   "desc": "以暖纸、黄色光量子标记与实验档案重现第五届索尔维会议",
@@ -63,10 +63,10 @@
       "invert": "#002b36"
     },
     "text": {
-      "primary": "#002b36",
-      "secondary": "#586e75",
-      "tertiary": "#657b83",
-      "disabled": "#839496"
+      "primary": "#657b83",
+      "secondary": "#839496",
+      "tertiary": "#93a1a1",
+      "disabled": "#93a1a1"
     },
     "icons": {
       "primary": "#073642",

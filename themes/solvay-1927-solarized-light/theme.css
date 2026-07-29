@@ -484,6 +484,16 @@ body.trae-skin-theme-solvay-1927-solarized-light .core-finish-card {
   background:
     linear-gradient(90deg, rgba(38, 139, 210, 0.04), transparent 24%) !important;
 }
+/* Solarized Light：正文使用 Base00；标题与强调使用更深一阶的 Base01。 */
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer h1,
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer h2,
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer h3,
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer h4,
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer h5,
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer h6,
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer strong {
+  color: var(--solvay-muted) !important;
+}
 body.trae-skin-theme-solvay-1927-solarized-light .core-finish-card::before {
   content: "";
   position: absolute;
