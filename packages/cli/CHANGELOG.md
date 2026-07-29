@@ -5,6 +5,20 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-07-29
+
+### Fixed
+
+- Updated `Solvay 1927 · Solarized Light` to theme version `1.0.13`. Sidebar
+  task states now use a single quiet background treatment without nested
+  gold-and-blue edge rails, and the task-list bottom no longer renders an
+  opaque glow over the translucent panel.
+
+### For contributors
+
+- Added regression coverage for Solvay task-list hover boundaries and its
+  bottom scroll-fade reset.
+
 ## [0.6.1] - 2026-07-29
 
 ### Fixed
