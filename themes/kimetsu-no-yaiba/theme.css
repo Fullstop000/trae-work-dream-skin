@@ -10,35 +10,11 @@ body.trae-skin-theme-kimetsu-no-yaiba {
   --kimetsu-walnut-deep: #120d0a;
   --kimetsu-sun: #f0c56c;
   --kimetsu-flame: #e05a3f;
+  --trae-skin-chat-decoration: linear-gradient(90deg, rgba(9, 8, 8, 0.96) 0, rgba(9, 8, 8, 0.84) 92px, transparent 210px);
+  --trae-skin-landing-decoration: linear-gradient(90deg, rgba(9, 8, 8, 0.96) 0, rgba(9, 8, 8, 0.84) 92px, transparent 210px);
 }
 
-/* 跨栏构图适配：插画只由固定的窗口背景绘制，面板开合不再重排背景。 */
-body.trae-skin-theme-kimetsu-no-yaiba .solo-lite-chat-panel-container {
-  background-color: transparent !important;
-  background-image:
-    linear-gradient(90deg, rgba(9, 8, 8, 0.96) 0, rgba(9, 8, 8, 0.84) 92px, transparent 210px),
-    linear-gradient(var(--trae-skin-chat-surface), var(--trae-skin-chat-surface)) !important;
-  background-position: left center, center !important;
-  background-size: 100% 100%, cover !important;
-  background-repeat: no-repeat !important;
-}
-body.trae-skin-theme-kimetsu-no-yaiba .panel-container > .panel-content {
-  background-color: transparent !important;
-  background-image:
-    linear-gradient(90deg, rgba(9, 8, 8, 0.96) 0, rgba(9, 8, 8, 0.84) 92px, transparent 210px),
-    linear-gradient(var(--trae-skin-landing-surface), var(--trae-skin-landing-surface)) !important;
-  background-position: left center, center !important;
-  background-size: 100% 100%, cover !important;
-  background-repeat: no-repeat !important;
-}
-
-/* 右侧任务栏透明覆盖在同一张固定背景上。 */
-body.trae-skin-theme-kimetsu-no-yaiba .solo-lite-main-area {
-  background-color: transparent !important;
-  background-image: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
+/* 跨栏构图适配：插画只由固定的窗口背景绘制；布局表面由运行时统一承载。 */
 
 /* Banner：大正洋馆的彩玻璃门楣 + 鬼杀队任务账簿。 */
 body.trae-skin-theme-kimetsu-no-yaiba[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper {

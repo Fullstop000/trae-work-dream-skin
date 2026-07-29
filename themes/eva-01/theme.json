@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "eva-01",
   "name": "EVA 初号机 · 终局警报",
@@ -36,7 +36,7 @@
     "blurPx": {
       "left": 4,
       "chat": 3,
-      "main": 20,
+      "main": 18,
       "landing": 18
     },
     "saturation": 1.12,

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "kimetsu-no-yaiba",
   "name": "鬼灭之刃 · 墨刃日轮",

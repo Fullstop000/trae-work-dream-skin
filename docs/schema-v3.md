@@ -150,6 +150,42 @@ themes/<id>/
 依赖新的运行时能力，应提高下限。没有 `version` 的旧本地主题按 `0.0.0` 处理，
 但官方主题必须声明这两个分发字段。
 
+### 布局表面所有权（必须遵守）
+
+`surfaces` 不是仅供主题挑选的颜色集；它是运行时拥有的布局表面契约。运行时
+负责把下列宿主节点和对应的颜色、透明度、模糊组合起来，确保主背景只在根层
+绘制，而长文本始终有稳定的阅读底。
+
+| 布局表面 | 宿主节点 | 主题配置 | 典型内容 |
+|---|---|---|---|
+| 左栏 | `.task-list-panel` | `surfaces.left` | 任务、导航、Skills |
+| 对话 | `.solo-lite-chat-panel-container` | `surfaces.chat` | Work 对话和输入区 |
+| 主工作区 | `.solo-lite-main-area` | `surfaces.main` | Task Summary、Markdown 预览、Code/Design 工作区 |
+| 落地页 | `.panel-container > .panel-content` | `surfaces.landing` | Work、Code、Design 初始页 |
+| IDE 编辑器 | `.monaco-workbench …` | `workbench.opacity.*` | 文件编辑器、终端、侧栏 |
+
+特别地，`surfaces.main` 负责右侧工作区的可读性；`workbench.opacity.editor`
+只负责其中已挂载的 Monaco 编辑器，不能替代 `main` 表面。主题 CSS 不得在前四个
+宿主节点上设置 `background`、任何 `background-*`、`backdrop-filter` 或
+`-webkit-backdrop-filter`，否则会绕过协议并让根背景穿透内容层。
+
+如需在表面上加纸纹、边缘渐变或网格，主题在自己的根类上声明装饰变量，而不是
+重写宿主节点。例如：
+
+```css
+body.trae-skin-theme-example {
+  --trae-skin-main-decoration: linear-gradient(90deg, #ffffff12, transparent);
+  --trae-skin-left-decoration: repeating-linear-gradient(0deg, transparent 0 23px, #268bd210 23px 24px);
+  --trae-skin-left-decoration-size: 100% 24px;
+  --trae-skin-left-decoration-repeat: repeat-y;
+}
+```
+
+可用槽位为 `left`、`chat`、`main`、`landing`；每个槽位支持
+`--trae-skin-<slot>-decoration`，以及可选的 `-position`、`-size`、`-repeat`。
+运行时把装饰图层叠在语义表面之上，仍由 `surfaces.*` 保留底色和模糊。官方主题
+在 CI 中会检查这条限制；第三方主题也应遵守，避免升级时出现表面不连续或正文失读。
+
 ### Landing banner 与模式 Tab
 
 - `components.landing.banner` 控制 Work / Code / Design 初始页共用的欢迎标识。`default` 完全保留 App 原生外观；`system-plate` 提供结构化模式牌、图标舱、模式编号与状态标识。
@@ -159,7 +195,7 @@ themes/<id>/
 - 未声明组件或未知 `variant` 均回退原生 `default`；旧引擎可忽略这些字段，主题其余部分继续生效，不提供 `minEngine` 式整主题阻断。
 - `colors` 的主题显式值只接受 `#RGB`、`#RRGGBB`、`#RRGGBBAA`、数值型 `rgb()/rgba()` 或 `transparent`。非法值回退到角色颜色；主题不能传入 `url()`、`var()` 或 `color-mix()`。
 - `effects.shadow` 是受限的声明式 `box-shadow` 值：支持 `none`、可选前置 `inset`、2–4 个 `px/rem/em` 长度与可选末尾安全颜色；拒绝 `url/var/attr/expression`、分号、花括号和注释。
-- 主题只声明语义参数；DOM 选择器和兼容 TRAE 哈希类名的规则集中维护在 `skin.js`，避免主题目录携带任意 CSS。
+- 通用布局表面的 DOM 选择器和合成规则集中维护在运行时；主题 CSS 只为主题特有组件使用稳定选择器，并通过表面装饰变量叠加纹理，避免越过 `surfaces` 契约。
 
 ### 尺寸与文本限制
 

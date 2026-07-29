@@ -5,21 +5,7 @@ body.trae-skin-theme-eva-01 .solo-lite-main-area,
 body.trae-skin-theme-eva-01 .panel-container > .panel-content {
   border-color: rgba(157, 98, 189, 0.26) !important;
 }
-body.trae-skin-theme-eva-01 .task-list-panel {
-  backdrop-filter: blur(4px) saturate(1.08) !important;
-  -webkit-backdrop-filter: blur(4px) saturate(1.08) !important;
-}
 body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container {
-  backdrop-filter: blur(3px) saturate(1.08) !important;
-  -webkit-backdrop-filter: blur(3px) saturate(1.08) !important;
-}
-body.trae-skin-theme-eva-01 .solo-lite-main-area,
-body.trae-skin-theme-eva-01 .panel-container > .panel-content {
-  backdrop-filter: blur(18px) saturate(1.12) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(1.12) !important;
-}
-body.trae-skin-theme-eva-01 .solo-lite-chat-panel-container {
-  background: rgba(13, 11, 15, 0.54) !important;
   box-shadow:
     inset 0 1px rgba(255, 255, 255, 0.04),
     inset 0 -1px rgba(182, 245, 44, 0.13) !important;

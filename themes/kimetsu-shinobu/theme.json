@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engines": { "twskin": ">=0.5.4 <1.0.0" },
   "id": "kimetsu-shinobu",
   "name": "鬼灭之刃 · 蝶影药庭",
@@ -36,7 +36,7 @@
     "blurPx": {
       "left": 10,
       "chat": 12,
-      "main": 8,
+      "main": 6,
       "landing": 10
     },
     "saturation": 1.1,

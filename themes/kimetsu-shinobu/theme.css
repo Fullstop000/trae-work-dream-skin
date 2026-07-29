@@ -11,6 +11,11 @@ body.trae-skin-theme-kimetsu-shinobu {
   /* 16:9 画布匹配主窗口；根背景居中固定，侧栏开合时不重排、不露底。 */
   --trae-skin-background-size: cover !important;
   --trae-skin-background-position: center center !important;
+  --trae-skin-landing-decoration: linear-gradient(90deg,
+    rgba(9, 10, 20, calc(var(--trae-skin-landing-overlay-opacity, 0.38) * 2.32)) 0 34%,
+    rgba(9, 10, 20, calc(var(--trae-skin-landing-overlay-opacity, 0.38) * 1.53)) 52%,
+    rgba(9, 10, 20, calc(var(--trae-skin-landing-overlay-opacity, 0.38) * 0.37)) 78%,
+    rgba(9, 10, 20, calc(var(--trae-skin-landing-overlay-opacity, 0.38) * 0.11)) 100%);
 }
 
 /* 让主视觉贯穿工作区；交互区域仍由半透明深色表面托住。 */
@@ -21,26 +26,10 @@ body.trae-skin-theme-kimetsu-shinobu .panel-container > .panel-content {
   border-color: rgba(179, 139, 221, 0.24) !important;
 }
 body.trae-skin-theme-kimetsu-shinobu .solo-lite-chat-panel-container {
-  background-color: var(--trae-skin-chat-surface) !important;
   box-shadow: inset -1px 0 rgba(158, 208, 195, 0.11), inset 0 1px rgba(238, 234, 242, 0.035) !important;
-}
-body.trae-skin-theme-kimetsu-shinobu .solo-lite-main-area {
-  backdrop-filter: blur(6px) saturate(1.08) !important;
-  -webkit-backdrop-filter: blur(6px) saturate(1.08) !important;
 }
 
 /* 首页使用同一张全局主视觉；这里只叠加可读性遮罩，不再重复放置人物立绘。 */
-body.trae-skin-theme-kimetsu-shinobu .panel-container > .panel-content {
-  background-color: var(--trae-skin-landing-surface) !important;
-  background-image: linear-gradient(90deg,
-    rgba(9, 10, 20, calc(var(--trae-skin-landing-overlay-opacity, 0.38) * 2.32)) 0 34%,
-    rgba(9, 10, 20, calc(var(--trae-skin-landing-overlay-opacity, 0.38) * 1.53)) 52%,
-    rgba(9, 10, 20, calc(var(--trae-skin-landing-overlay-opacity, 0.38) * 0.37)) 78%,
-    rgba(9, 10, 20, calc(var(--trae-skin-landing-overlay-opacity, 0.38) * 0.11)) 100%) !important;
-  background-position: center !important;
-  background-size: 100% 100% !important;
-  background-repeat: no-repeat !important;
-}
 
 /* Banner：透明角色字标。头像的刀锋切入模式标题，形成一个整体 Logo。 */
 body.trae-skin-theme-kimetsu-shinobu[data-trae-skin-landing-banner="system-plate"] .welcomeTitleWrapper {
