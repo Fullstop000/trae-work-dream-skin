@@ -5,6 +5,29 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.5.8] - 2026-07-29
+
+### Fixed
+
+- Restored reliable reading contrast in `墨`, `极光`, `雾林`, `深海`, `樱夜`,
+  and `日落`. Their dark artwork now activates TRAE's dark appearance contract
+  and uses dark, opaque-enough working surfaces instead of pale panels over a
+  dark background.
+
+### Changed
+
+- Rebuilt the six monochrome-gradient theme backgrounds with their own visual
+  grammar: ink texture, aurora ribbons, mist layers, ocean currents, night
+  blossom branches, and sunset dunes.
+- Bumped the six updated theme packages to `1.1.0` and added complete semantic
+  tokens for chat, menus, settings, focus, scrollbars, and the embedded
+  workbench.
+
+### For contributors
+
+- Added release coverage that keeps dark-art themes on the dark appearance
+  contract with complete panel and interaction roles.
+
 ## [0.5.7] - 2026-07-29
 
 ### Fixed
