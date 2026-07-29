@@ -5,6 +5,19 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.6.5] - 2026-07-29
+
+### Fixed
+
+- Updated `Solvay 1927 · Solarized Light` to theme version `1.0.14`. Marketplace
+  banners and skill previews now keep their authored artwork and prompt styling;
+  the archive-grid treatment remains limited to chat recommendations.
+
+### For contributors
+
+- Added regression coverage ensuring the Solvay recommendation-card rule cannot
+  match Marketplace cards.
+
 ## [0.6.4] - 2026-07-29
 
 ### Fixed
