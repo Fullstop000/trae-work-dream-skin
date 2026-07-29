@@ -36,7 +36,8 @@ Open Theme Manager from the palette button in the bottom-right corner of TRAE.
 | Load local themes | `twskin theme load <directory>` |
 | Restore TRAE | `twskin restore` |
 | Uninstall | `twskin uninstall` |
-| Show version or help | `twskin version` / `twskin help` |
+| Show version or help | `twskin version` / `twskin -V` / `twskin --version` / `twskin help` |
+| Preview a command without changes | `twskin <command> --dry-run` |
 
 ## Themes
 

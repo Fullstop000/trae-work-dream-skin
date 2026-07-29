@@ -50,8 +50,20 @@ twskin theme load <directory> Install one theme, or immediate child theme direct
 twskin doctor [--json]       Validate Node, TRAE, port and package integrity
 twskin restore               Restore the native TRAE appearance
 twskin uninstall [--yes]     Restore TRAE and remove TRAE Work Skin data
-twskin version               Print the CLI version
+twskin version, -V, --version Print the CLI version
 twskin help                  Print command help
+```
+
+## Dry run
+
+Append `--dry-run` (or the compatibility alias `--dryrun`) to preview any
+command without changing TRAE, local configuration, or theme files. Mutating
+commands return a planned action list; read-only commands return their normal
+inspection result with `dryRun: true` in JSON output.
+
+```sh
+twskin start --dry-run
+twskin theme sync --dry-run --json
 ```
 
 `twskin theme <id>` applies immediately while Theme Manager is active. Otherwise
