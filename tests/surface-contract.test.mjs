@@ -82,3 +82,53 @@ test("official theme CSS cannot replace runtime-owned layout surfaces", () => {
     assert.deepEqual(violations, [], `${path.relative(ROOT, file)} bypasses the surface contract`);
   }
 });
+
+test("runtime owns maintenance-action styles and maps them to semantic roles", () => {
+  const defaultActionRule = BASE_CSS.match(
+    /\.task-list-panel button:has\(\.progressCircleContainer\),\s*\nbody\.trae-skin-v2 \.soloUpdateStatusWrapper \.updateAlertActions > button\s*\{([\s\S]*?)\n\}/,
+  )?.[1];
+  const hoverActionRule = BASE_CSS.match(
+    /\.task-list-panel button:has\(\.progressCircleContainer\):hover:not\(:disabled\),\s*\nbody\.trae-skin-v2 \.soloUpdateStatusWrapper \.updateAlertActions > button:hover:not\(:disabled\)\s*\{([\s\S]*?)\n\}/,
+  )?.[1];
+  const styles = fs.readdirSync(THEMES, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => path.join(THEMES, entry.name, "theme.css"))
+    .filter((file) => fs.existsSync(file));
+
+  assert.ok(defaultActionRule, "sidebar and popover update actions need one shared runtime rule");
+  assert.match(defaultActionRule, /color:\s*var\(--trae-skin-text-secondary\)/);
+  assert.match(defaultActionRule, /border:\s*1px solid var\(--trae-skin-border-default\)/);
+  assert.match(defaultActionRule, /background:\s*var\(--trae-skin-popover\)/);
+  assert.match(defaultActionRule, /box-shadow:\s*none/);
+  assert.doesNotMatch(defaultActionRule, /#[0-9a-f]{3,8}/i, "runtime actions must not hard-code a theme color");
+  assert.ok(hoverActionRule, "sidebar and popover update actions need one shared runtime hover rule");
+  assert.match(hoverActionRule, /var\(--trae-skin-popover-hover\)/);
+  for (const file of styles) {
+    assert.doesNotMatch(
+      fs.readFileSync(file, "utf8"),
+      /progressCircleContainer|soloUpdateStatusWrapper/,
+      `${path.relative(ROOT, file)} redefines a runtime-owned maintenance action`,
+    );
+  }
+
+});
+
+test("Solvay composer has one visual boundary", () => {
+  const css = fs.readFileSync(
+    path.join(THEMES, "solvay-1927-solarized-light", "theme.css"),
+    "utf8",
+  );
+  const innerComposerRule = css.match(
+    /\.messageInputEditorWrapper \.messageInputChatInput > \.chat-input-v2-editor-part\s*\{([\s\S]*?)\n\}/,
+  )?.[1];
+  const focusRule = css.match(
+    /\.messageInputEditorWrapper:has\(\.chat-input-v2-input-box-editable:focus\)\s*\{([\s\S]*?)\n\}/,
+  )?.[1];
+
+  assert.ok(innerComposerRule, "Solvay needs an explicit inner composer reset");
+  assert.match(innerComposerRule, /border:\s*0 !important/);
+  assert.match(innerComposerRule, /border-radius:\s*0 !important/);
+  assert.match(innerComposerRule, /box-shadow:\s*none !important/);
+  assert.ok(focusRule, "Solvay needs a composer focus state");
+  assert.doesNotMatch(focusRule, /0 0 0 \d+px/, "focus must not add a second outline");
+});
