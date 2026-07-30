@@ -5,6 +5,13 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+### Fixed
+
+- Updated `Solvay 1927 · Solarized Light` to theme version `1.0.17`.
+- Improved its Work / Code / Design mode switcher, Markdown code blocks, and
+  inline-code treatment for clearer visual hierarchy.
+- Removed duplicate Markdown code-gutter accents in the Solvay theme.
+
 ## [0.6.6] - 2026-07-29
 
 ### Changed
