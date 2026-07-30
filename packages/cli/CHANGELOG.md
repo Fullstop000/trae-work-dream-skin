@@ -5,6 +5,8 @@ All notable changes to this package are documented here. This project follows
 
 ## [Unreleased]
 
+## [0.6.7] - 2026-07-30
+
 ### Fixed
 
 - Updated `Solvay 1927 · Solarized Light` to theme version `1.0.17`.
