@@ -537,6 +537,10 @@ body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer .code-block-
   border-right: 1px solid rgba(181, 137, 0, 0.22) !important;
   color: var(--solvay-ink) !important;
 }
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer .code-block-content .code-block-code {
+  border-left: 0 !important;
+  box-shadow: none !important;
+}
 body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer pre > code {
   color: var(--solvay-muted) !important;
   background: transparent !important;
