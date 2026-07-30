@@ -191,9 +191,10 @@ body.trae-skin-theme-solvay-1927-solarized-light:has(.messageInputContainer[data
   --solvay-mode-symbol: "λ";
 }
 
-/* 模式选择器：三张档案索引签。选中态像黄色荧光笔落下一道标记。 */
+/* 模式选择器：档案标尺。选中态是一条定位线，而不是悬浮的第四张卡片。 */
 body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn {
-  padding: 2px 0 6px !important;
+  position: relative !important;
+  padding: 0 0 3px !important;
   gap: var(--trae-skin-mode-tabs-gap) !important;
   border: 0 !important;
   border-bottom: 1px solid rgba(181, 137, 0, 0.38) !important;
@@ -202,44 +203,30 @@ body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launc
   background:
     linear-gradient(90deg, var(--solvay-ink), transparent 42%, transparent 72%, var(--solvay-photon)) bottom / 100% 1px no-repeat,
     rgba(238, 232, 213, 0.9) !important;
-  box-shadow: 0 12px 34px rgba(88, 110, 117, 0.18) !important;
+  box-shadow: 0 5px 14px rgba(88, 110, 117, 0.12) !important;
 }
 body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"] {
-  top: 2px !important;
+  top: auto !important;
+  bottom: 0 !important;
   left: 0 !important;
-  height: calc(var(--trae-skin-mode-tabs-height) - 7px) !important;
+  height: 3px !important;
   border: 0 !important;
   border-radius: 0 !important;
   clip-path: none !important;
-  background: linear-gradient(180deg, rgba(181, 137, 0, 0.18), rgba(181, 137, 0, 0.06)) !important;
-  box-shadow:
-    inset 0 -3px var(--solvay-ink),
-    inset 1px 0 rgba(181, 137, 0, 0.26),
-    inset -1px 0 rgba(181, 137, 0, 0.26) !important;
-  transition:
-    left 320ms var(--solvay-collapse),
-    transform 320ms var(--solvay-collapse),
-    box-shadow 320ms var(--solvay-collapse) !important;
+  background: linear-gradient(90deg, var(--solvay-ink) 0 72%, var(--solvay-photon) 72% 100%) !important;
+  box-shadow: none !important;
+  transition: left 240ms var(--solvay-collapse) !important;
 }
-body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"]::before,
-body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"]::after {
-  content: "";
-  position: absolute;
-  top: 7px;
-  bottom: 7px;
-  width: 1px;
-  pointer-events: none;
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn:has(> span:nth-of-type(2) button[aria-selected="true"]) [class*="indicator-"] {
+  left: calc(var(--trae-skin-mode-tabs-tab-width) + var(--trae-skin-mode-tabs-gap)) !important;
 }
-body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"]::before {
-  left: 3px;
-  background: var(--solvay-ink);
-}
-body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn [class*="indicator-"]::after {
-  right: 3px;
-  background: var(--solvay-photon);
+body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn:has(> span:nth-of-type(3) button[aria-selected="true"]) [class*="indicator-"] {
+  left: calc(var(--trae-skin-mode-tabs-tab-width) + var(--trae-skin-mode-tabs-gap) + var(--trae-skin-mode-tabs-tab-width) + var(--trae-skin-mode-tabs-gap)) !important;
 }
 body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"] {
   position: relative !important;
+  height: calc(var(--trae-skin-mode-tabs-height) - 4px) !important;
+  padding: 2px 8px 5px !important;
   border-radius: 0 !important;
   color: var(--solvay-muted) !important;
   font-family: var(--trae-skin-font-heading) !important;
@@ -249,17 +236,18 @@ body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launc
   text-shadow: none !important;
   transition:
     color 180ms ease,
-    letter-spacing 260ms var(--solvay-collapse),
     background-color 180ms ease !important;
 }
 body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"]:hover:not([aria-selected="true"]) {
   color: var(--solvay-paper) !important;
   background:
     linear-gradient(90deg, rgba(181, 137, 0, 0.08), rgba(38, 139, 210, 0.08)) !important;
+  transform: none !important;
 }
 body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tabs="launch-rail"] .mode-switcher-btn button[role="tab"][aria-selected="true"] {
   color: var(--solvay-paper) !important;
-  letter-spacing: 0.09em !important;
+  background: linear-gradient(180deg, rgba(255, 253, 245, 0.48), rgba(255, 253, 245, 0.08)) !important;
+  letter-spacing: 0.06em !important;
 }
 body.trae-skin-theme-solvay-1927-solarized-light[data-trae-skin-mode-tab-codes="true"] .mode-switcher-btn button[role="tab"]::after {
   top: 3px;
@@ -497,6 +485,16 @@ body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer h6,
 body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer strong {
   color: var(--solvay-muted) !important;
 }
+/* Solarized Light：正文使用 Base00；标题与强调使用更深一阶的 Base01。 */
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer h1,
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer h2,
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer h3,
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer h4,
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer h5,
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer h6,
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer strong {
+  color: var(--solvay-muted) !important;
+}
 body.trae-skin-theme-solvay-1927-solarized-light .core-finish-card::before {
   content: none !important;
 }
@@ -517,6 +515,49 @@ body.trae-skin-theme-solvay-1927-solarized-light pre,
 body.trae-skin-theme-solvay-1927-solarized-light .core-finish-card__code-card {
   border-left: 3px solid var(--solvay-photon) !important;
   box-shadow: -4px 0 rgba(181, 137, 0, 0.16) !important;
+}
+/* Markdown 代码：代码块是一整张实验记录纸；行内代码只保留细标记，不能出现白色切片。 */
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer .code-block-wrapper {
+  overflow: hidden !important;
+  border-color: rgba(101, 123, 131, 0.42) !important;
+  border-radius: 4px !important;
+  background: rgba(238, 232, 213, 0.88) !important;
+  box-shadow: 0 5px 14px rgba(88, 110, 117, 0.1) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer .code-block-toolbar {
+  border-bottom: 1px solid rgba(181, 137, 0, 0.22) !important;
+  background: rgba(253, 246, 227, 0.8) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer .code-block-content {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 20px, rgba(38, 139, 210, 0.07) 20px 21px),
+    rgba(253, 246, 227, 0.86) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer .code-block-line-numbers {
+  border-right: 1px solid rgba(181, 137, 0, 0.22) !important;
+  color: var(--solvay-ink) !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer .code-block-line-numbers pre {
+  border-left: 0 !important;
+  box-shadow: none !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer .code-block-content .code-block-code {
+  border-left: 0 !important;
+  box-shadow: none !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer pre > code {
+  color: var(--solvay-muted) !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+body.trae-skin-theme-solvay-1927-solarized-light .markdown-renderer :not(pre) > code {
+  color: var(--solvay-muted) !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(38, 139, 210, 0.32) !important;
+  box-shadow: inset -2px -1px 0 rgba(181, 137, 0, 0.12) !important;
+  padding: 0 0.08em !important;
 }
 body.trae-skin-theme-solvay-1927-solarized-light blockquote {
   border-left: 2px solid var(--solvay-ink) !important;

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "id": "solvay-1927-solarized-light",
-  "version": "1.0.14",
+  "version": "1.0.17",
   "engines": { "twskin": ">=0.6.1 <1.0.0" },
   "name": "索尔维 1927 · Solarized Light",
   "desc": "以暖纸、黄色光量子标记与实验档案重现第五届索尔维会议",
@@ -204,7 +204,7 @@
         },
         "content": {
           "iconPolicy": "always",
-          "showModeCode": true,
+          "showModeCode": false,
           "modes": {
             "work": {
               "code": "ψ"
